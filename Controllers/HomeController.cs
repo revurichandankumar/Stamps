@@ -9,10 +9,10 @@ namespace OneposStamps.Controllers
 {
     public class HomeController : BaseController
     {
-        //public ActionResult Zones( string storeid)
+        //public ActionResult Zones(string storeid)
         //{
-        //    // return PartialView("_OrderHistory", Zones);
-        //    return();
+        //    return PartialView("_OrderHistory", Zones);
+        //    return ();
         //}
     }
 }
