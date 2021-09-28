@@ -1,0 +1,7 @@
+﻿
+@{
+    var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
+    ViewBag.Title = $"{storeInfo.Name}-DashBoard";
+}
+<h2>Index</h2>
+
