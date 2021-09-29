@@ -1,0 +1,130 @@
+﻿
+
+@{
+    var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
+    ViewBag.Title = "AddZone";
+}
+
+<body data-layout="horizontal" class="dark-topbar">
+
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content">
+
+            <div class="container-fluid">
+                <!-- Page-Title -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+                        <div class="page-title-box d-flex align-items-center">
+                            <a href="index.html" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
+                            <h4 class="page-title font-weight-bold">Add Zone</h4>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+
+                </div>
+                <!-- end page title end breadcrumb -->
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-4">
+
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form action="" class="mb-5">
+                                    <div class="form-group">
+                                        <label for="">Zone Name</label>
+                                        <input type="text" class="form-control" placeholder="Zone name" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Carrier Name</label>
+                                        <select name="" id="" class="form-control">
+                                            <option value="">Select Carrier</option>
+                                            <option value="">USPA</option>
+                                            <option value="">World Wide</option>
+                                            <option value="">Zone 3</option>
+                                            <option value="">Zone 4</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Shipment Fee</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" placeholder="Payment" />
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Weight</label>
+                                                <div class="input-group mb-3">
+                                                    <input type="text" class="form-control" placeholder="Weight" />
+                                                    <span class="input-group-text">LB</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Service</label>
+                                                <select name="" id="" class="form-control">
+                                                    <option value="">Select Service</option>
+                                                    <option value="">UPSA</option>
+                                                    <option value="">UPS</option>
+                                                    <option value="">FedEx</option>
+                                                    <option value="">Service 4</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Package</label>
+                                                <select name="" id="" class="form-control">
+                                                    <option value="">Select Package</option>
+                                                    <option value="">UPSA</option>
+                                                    <option value="">UPS</option>
+                                                    <option value="">FedEx</option>
+                                                    <option value="">Service 4</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <button class="btn btn-primary">Add Zone</button>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div><!-- container -->
+
+            <footer class="footer text-center text-sm-left">
+                <div class="boxed-footer">
+                    &copy; 2021 OnePos
+                </div>
+            </footer><!--end footer-->
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
+
+
+    <div class="alert alert-success alert-dismissible fade show float-alert" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true"><i class="mdi mdi-close"></i></span>
+        </button>
+        Zone added <strong>Successfully.</strong>
+    </div>
+
+
+</body>

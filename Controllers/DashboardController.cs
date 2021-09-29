@@ -45,7 +45,7 @@ namespace OneposStamps.Controllers
                 switch (type)
                 {
                     case 1:
-                        return RedirectToAction("OrderHistory", "Report");
+                        return RedirectToAction("Index", "Zone");
                     
                 }
 
