@@ -1,0 +1,156 @@
+﻿
+@{
+    var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
+    ViewBag.Title = "Index";
+}
+
+<body data-layout="horizontal" class="dark-topbar">
+
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content">
+
+            <div class="container-fluid">
+                <!-- Page-Title -->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-flex align-items-center">
+
+                            <h4 class="page-title font-weight-bold">Zones</h4>
+                            <a onclick="openaddzoneview()" class="btn btn-primary ml-auto btn-sm">Add Zone</a>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+
+                </div>
+                <!-- end page title end breadcrumb -->
+
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="card">
+                            <div class="card-body">
+                                <table id="datatable4" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th># S.No</th>
+                                            <th>Zone Name</th>
+                                            <th>States</th>
+                                            <th>Cities</th>
+                                            <th>Zipcodes</th>
+                                            <th>Carrier</th>
+                                            <th>Shipment Fee</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr>
+                                            <td>1</td>
+                                            <td><a href="zone_details.html" class="text-primary"> <i class="fa fa-angle-right"></i> MV Vane</a></td>
+                                            <td>4</td>
+                                            <td>23</td>
+                                            <td>128</td>
+                                            <td><span class="btn btn-info table-btn">USPS</span></td>
+                                            <td><strong>$25.45</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>2</td>
+                                            <td><a href="#" class="text-primary"> <i class="fa fa-angle-right"></i> World Wide</a></td>
+                                            <td>4</td>
+                                            <td>23</td>
+                                            <td>240</td>
+                                            <td><span class="btn btn-info table-btn">UPS</span></td>
+                                            <td><strong>$25.45</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>3</td>
+                                            <td><a href="#" class="text-primary"> <i class="fa fa-angle-right"></i> Zone 3</a></td>
+                                            <td>4</td>
+                                            <td>23</td>
+                                            <td>58</td>
+                                            <td><span class="btn btn-info table-btn">USPS</span></td>
+                                            <td><strong>$25.45</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>4</td>
+                                            <td><a href="#" class="text-primary"> <i class="fa fa-angle-right"></i> Zone 4</a></td>
+                                            <td>4</td>
+                                            <td>13</td>
+                                            <td>32</td>
+                                            <td><span class="btn btn-info table-btn">FedEx</span></td>
+                                            <td><strong>$25.45</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>5</td>
+                                            <td><a href="#" class="text-primary"> <i class="fa fa-angle-right"></i> Zone 5</a></td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td><span class="btn btn-info table-btn">FedEx</span></td>
+                                            <td><strong>$13.45</strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div><!-- container -->
+
+           
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
+   
+</body>
+
+
+<script>
+    function openaddzoneview() {
+        window.location.href = "@Url.Action("AddZone", "Zone")";
+    }
+       
+</script>
