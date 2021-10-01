@@ -88,9 +88,9 @@ namespace OneposStamps.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddZoneinDB(InsertZones obj)
+        public ActionResult InsetZones(InsertZones obj)
         {
-            
+            DataSet ds = db.InsertZone("USP_InsertZones", obj);
 
             return View();
         }

@@ -111,7 +111,7 @@
                                     </div>
 
                                     <div class="text-center">
-                                        <button id="btnSave" onclick="onsave()" class="btn btn-primary">Add Zone</button>
+                                        <button id="btnSave" onclick="onsaveZones()" class="btn btn-primary">Add Zone</button>
                                     </div>
                                 </form>
 
@@ -152,7 +152,7 @@
         window.location.href = '@Url.Action("Index", "Zone")?StoreId=' + storeids;
     }
 
-    function onsave() {
+    function onsaveZones() {
         debugger
         var data = { 
             ZoneName : $("#txtZone").val(),
@@ -169,7 +169,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Zone/AddZoneinDB",
+                url: "/Zone/InsetZones",
                 //contentType: "application/json; charset=utf-8",
                 //dataType: "json",
                 data: data,
