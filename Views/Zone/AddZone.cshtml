@@ -16,7 +16,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-4">
                         <div class="page-title-box d-flex align-items-center">
-                            <a href="index.html" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
+                            <a onclick="openhomeview()" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
                             <h4 class="page-title font-weight-bold">Add Zone</h4>
                         </div><!--end page-title-box-->
                     </div><!--end col-->
@@ -128,3 +128,9 @@
 
 
 </body>
+
+<script>
+    function openhomeview() {
+         window.location.href = "@Url.Action("Index", "Zone")";
+    }
+</script>
