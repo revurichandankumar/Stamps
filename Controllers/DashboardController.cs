@@ -34,7 +34,7 @@ namespace OneposStamps.Controllers
                 switch (type)
                 {
                     case 1:
-                        return RedirectToAction( "Zone", "Home", new { store= storeId });
+                        return RedirectToAction("Index", "Zone", new { store= storeId });
 
                 }
 
