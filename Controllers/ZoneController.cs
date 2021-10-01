@@ -82,9 +82,17 @@ namespace OneposStamps.Controllers
             AddZonesData.CarrierList = cd;
             AddZonesData.PackageList = pd;
             AddZonesData.ServiceList = sd;
+            AddZonesData.Store_Id = StoreId;
 
             return View("AddZone", AddZonesData);
         }
 
+        [HttpPost]
+        public ActionResult AddZoneinDB(InsertZones obj)
+        {
+            
+
+            return View();
+        }
     }
 }

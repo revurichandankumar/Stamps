@@ -1,5 +1,6 @@
 ﻿@model OneposStamps.Models.Zones
 @{
+    int i = 1;
     var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
     ViewBag.Title = "Index";
 }
@@ -47,10 +48,11 @@
                                     </thead>
 
                                     <tbody>
-
+                                        ;
                                         @foreach (var d in Model.ZoneList)
                                         {
                                             <tr>
+                                                <td>@i</td>
                                                 <td>@d.ZoneName</td>
                                                 <td>@d.Statecount</td>
                                                 <td>@d.Citycount</td>
@@ -65,7 +67,7 @@
                                                 </td>
 
                                             </tr>
-
+                                            i++;
                                         }
 
 
@@ -98,23 +100,6 @@
         var storeids = "@Model.StoreId";
         window.location.href = '@Url.Action("AddZone", "Zone")?StoreId=' + storeids;
 
-        //$.ajax({
-        //    type: "GET",
-        //    url: "/Zone/AddZone?store=" + storeids + "",
-        //    contentType: "application/json; charset=utf-8",
-        //    dataType: "html",
-        //    success: function (response) {
-                
-        //        for (var i = 0; i < response.length; i++) {
-        //            var opt = new Option(data[i].Bname);
-        //            $("#op1").append(opt);
-        //        }  
-        //    },
-        //    error: function (response) {
-        //        alert(response.responseText);
-        //    }
-        //});
-
     }
-   /* ?StoreId = + storeids*/
+ 
 </script>
