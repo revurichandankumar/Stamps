@@ -20,18 +20,18 @@ namespace OneposStamps.Controllers
                 List<Zonelist> zl = new List<Zonelist>();
                 foreach (DataRow row in ds.Tables[0].Rows)
                 {
-                    
+
                     Zonelist a = new Zonelist();
-                    a.ZoneId= (row["Id"]).ToString();
+                    a.ZoneId = (row["Id"]).ToString();
                     a.Carrier = (row["Carrier"]).ToString();
                     a.Citycount = (row["City"]).ToString();
                     a.Shipmentfee = Convert.ToDecimal(row["ShipmentFee"]);
                     a.Statecount = (row["State"]).ToString();
                     a.Zipcount = (row["Zipcodes"]).ToString();
                     a.ZoneName = (row["ZoneName"]).ToString();
-                  
+
                     zl.Add(a);
-                    
+
                 }
                 ZoneData.StoreId = id;
                 ZoneData.ZoneList = zl;
@@ -92,6 +92,31 @@ namespace OneposStamps.Controllers
         {
             DataSet ds = db.InsertZone("USP_InsertZones", obj);
 
+            return View();
+        }
+
+        public ActionResult GetZonesData(string StoreId,string ZoneId)
+        {
+            DataSet ds = db.GetZonesData("USP_GetZoneDetails", StoreId, ZoneId);
+            GetZones ZoneData = new GetZones();
+            if (ds.Tables.Count > 0)
+            {
+                List<GetZoneData> Gz = new List<GetZoneData>();
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+                    GetZoneData a = new GetZoneData();
+                    a.ZipCode = (row["Zip"]).ToString();
+                    a.City = (row["City"]).ToString();
+                    a.State = (row["State"]).ToString();
+
+
+                    Gz.Add(a);
+
+                }
+                ZoneData.GetZoneList = Gz;
+               
+            }
             return View();
         }
     }

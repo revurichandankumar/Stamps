@@ -170,6 +170,7 @@
     </Compile>
     <Compile Include="Helper\DBConnections.cs" />
     <Compile Include="Models\AddZones.cs" />
+    <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Zones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

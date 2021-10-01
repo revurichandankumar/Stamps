@@ -123,6 +123,45 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+        public DataSet GetZonesData(string sqlStmt = "", string sid = "",string ZoneId="")
+        {
+
+            try
+            {
+                var connectionString = string.Empty;
+
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;
+
+
+               
+                con.ConnectionString = connectionString;
+                con.Open();
+              
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+             
+                cmd.Parameters.AddWithValue("@StoreId", sid);
+                cmd.Parameters.AddWithValue("@Zone_Id", ZoneId);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
         public DataSet GetCarrierdata(string sqlStmt = "")
         {
 
