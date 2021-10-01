@@ -39,5 +39,10 @@ namespace OneposStamps.Controllers
 
         }
 
+        public ActionResult AddZone()
+        {
+            return View();
+        }
+
     }
 }
