@@ -72,7 +72,6 @@ D:\Repos\Stamps\OneposStamps\bin\System.Web.WebPages.Razor.xml
 D:\Repos\Stamps\OneposStamps\bin\Newtonsoft.Json.xml
 D:\Repos\Stamps\OneposStamps\bin\Antlr3.Runtime.pdb
 D:\Repos\Stamps\OneposStamps\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.CoreCompileInputs.cache
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.CopyComplete
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.dll
@@ -200,3 +199,4 @@ D:\Repos\Stamps\OneposStamps\bin\System.Buffers.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Memory.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Numerics.Vectors.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Runtime.CompilerServices.Unsafe.xml
+D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache

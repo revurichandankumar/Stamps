@@ -83,7 +83,7 @@ namespace OneposStamps.Helper
             }
         }
 
-        public DataSet GetMysqlDataSet(string sqlStmt, DateTime startdate, DateTime enddate, string sid)
+        public DataSet GetMysqlDataSet(string sqlStmt="", string sid="")
         {
 
             try
@@ -100,9 +100,9 @@ namespace OneposStamps.Helper
                 cmd.Connection = con;
                 cmd.CommandText = sqlStmt;
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@startdate", startdate);
-                cmd.Parameters.AddWithValue("@enddate", enddate);
-                cmd.Parameters.AddWithValue("@SId", sid);
+                //cmd.Parameters.AddWithValue("@startdate", startdate);
+                //cmd.Parameters.AddWithValue("@enddate", enddate);
+                cmd.Parameters.AddWithValue("@StoreId", sid);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
 

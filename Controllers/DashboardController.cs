@@ -24,29 +24,18 @@ namespace OneposStamps.Controllers
             //TempData["Type"] = type;
             if ( !string.IsNullOrWhiteSpace(storeId))
             {
-                db.Dispose();
-               // DataTable dbconnection = GetDatabaseConnectionValues(domainId);
-              
-                    //db = Helper.SqlDBConnection.GetInstance(serverName: Convert.ToString(dbconnection.Rows[0]["Address"]), dbName: Convert.ToString(dbconnection.Rows[0]["DatabaseName"]), userName: Convert.ToString(dbconnection.Rows[0]["UserName"]), password: Convert.ToString(dbconnection.Rows[0]["Password"]));
+                //db.Dispose();
+
                 
 
 
                 var storeInfo = new Store();
-                //DataTable dt = db.GetDataTable(string.Format("SELECT Name,Id,Address1,Address2,VerticalDomainID FROM [dbo].[Stores] where Id='{0}'", storeId));
-                //if (dt.Rows.Count > 0)
-                //{
-                //    storeInfo.Id = new Guid(dt.Rows[0]["Id"].ToString());
-                //    storeInfo.Name = (string)dt.Rows[0]["Name"];
-                //    storeInfo.Address1 = dt.Rows[0]["Address1"] == DBNull.Value ? "" : (string)dt.Rows[0]["Address1"];
-                //    storeInfo.Address2 = dt.Rows[0]["Address2"] == DBNull.Value ? "" : (string)dt.Rows[0]["Address2"];
-                //    storeInfo.VerticalDomainID = dt.Rows[0]["VerticalDomainID"] == DBNull.Value ? "" : (string)dt.Rows[0]["VerticalDomainID"];
-                //}
-                //Session["StoreInfo"] = storeInfo;
+                
                 switch (type)
                 {
                     case 1:
-                        return RedirectToAction("Index", "Zone");
-                    
+                        return RedirectToAction( "Zone", "Home", new { store= storeId });
+
                 }
 
             }
