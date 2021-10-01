@@ -8,6 +8,7 @@ namespace OneposStamps.Models
     public class Zones
     {
        public List<Zonelist> ZoneList { get; set; }
+        public string StoreId { get; set; }
     }
     public class Zonelist
     {
@@ -18,6 +19,7 @@ namespace OneposStamps.Models
         public string Zipcount { get; set; }
         public decimal Shipmentfee { get; set; }
         public string Carrier { get; set; }
+        
     }
 
 }

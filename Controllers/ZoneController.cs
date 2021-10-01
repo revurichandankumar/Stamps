@@ -29,9 +29,11 @@ namespace OneposStamps.Controllers
                     a.Statecount = (row["State"]).ToString();
                     a.Zipcount = (row["Zipcodes"]).ToString();
                     a.ZoneName = (row["ZoneName"]).ToString();
+                  
                     zl.Add(a);
                     
                 }
+                ZoneData.StoreId = id;
                 ZoneData.ZoneList = zl;
             }
 
@@ -39,9 +41,49 @@ namespace OneposStamps.Controllers
 
         }
 
-        public ActionResult AddZone()
+        public ActionResult AddZone(string StoreId = null)
         {
-            return View();
+            var id = StoreId;
+            DataSet ds = db.GetCarrierdata("USP_GetCarrier");
+            AddZones AddZonesData = new AddZones();
+            List<CarrierData> cd = new List<CarrierData>();
+            List<ServicetypeData> sd = new List<ServicetypeData>();
+            List<PackageData> pd = new List<PackageData>();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+
+                CarrierData a = new CarrierData();
+                a.Id = (row["Id"]).ToString();
+                a.Name = (row["Carrier"]).ToString();
+
+                cd.Add(a);
+
+            }
+            foreach (DataRow row in ds.Tables[1].Rows)
+            {
+
+                ServicetypeData a = new ServicetypeData();
+                a.Id = (row["Id"]).ToString();
+                a.Name = (row["Carrier"]).ToString();
+
+                sd.Add(a);
+
+            }
+            foreach (DataRow row in ds.Tables[2].Rows)
+            {
+
+                PackageData a = new PackageData();
+                a.Id = (row["Id"]).ToString();
+                a.Name = (row["Carrier"]).ToString();
+
+                pd.Add(a);
+
+            }
+            AddZonesData.CarrierList = cd;
+            AddZonesData.PackageList = pd;
+            AddZonesData.ServiceList = sd;
+
+            return View("AddZone", AddZonesData);
         }
 
     }
