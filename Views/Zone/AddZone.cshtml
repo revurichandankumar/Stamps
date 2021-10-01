@@ -149,7 +149,7 @@
 <script>
     function openhomeview() {
         var storeids = "@Model.Store_Id";
-        window.location.href = '@Url.Action("Index", "Zone")?StoreId=' + storeids;
+        window.location.href = '@Url.Action("Index", "Zone")?store=' + storeids;
     }
 
     function onsave() {
