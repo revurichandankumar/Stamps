@@ -53,8 +53,8 @@ namespace OneposStamps.Controllers
             {
 
                 CarrierData a = new CarrierData();
-                a.Id = (row["Id"]).ToString();
-                a.Name = (row["Carrier"]).ToString();
+                a.Id = (row["CarrierId"]).ToString();
+                a.Name = (row["CarrierName"]).ToString();
 
                 cd.Add(a);
 
@@ -63,8 +63,8 @@ namespace OneposStamps.Controllers
             {
 
                 ServicetypeData a = new ServicetypeData();
-                a.Id = (row["Id"]).ToString();
-                a.Name = (row["Carrier"]).ToString();
+                a.Id = (row["ServiceTypeId"]).ToString();
+                a.Name = (row["ServiceTypeName"]).ToString();
 
                 sd.Add(a);
 
@@ -73,8 +73,8 @@ namespace OneposStamps.Controllers
             {
 
                 PackageData a = new PackageData();
-                a.Id = (row["Id"]).ToString();
-                a.Name = (row["Carrier"]).ToString();
+                a.Id = (row["PackageId"]).ToString();
+                a.Name = (row["PackageaName"]).ToString();
 
                 pd.Add(a);
 

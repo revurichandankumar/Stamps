@@ -1,4 +1,4 @@
-﻿
+﻿@model OneposStamps.Models.AddZones
 
 @{
     var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
@@ -17,7 +17,7 @@
                 <div class="row justify-content-center">
                     <div class="col-sm-4">
                         <div class="page-title-box d-flex align-items-center">
-                            <a href="index.html" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
+                            <a onclick="openhomeview()" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
                             <h4 class="page-title font-weight-bold">Add Zone</h4>
                         </div><!--end page-title-box-->
                     </div><!--end col-->
@@ -37,13 +37,13 @@
                                         <input type="text" class="form-control" placeholder="Zone name" />
                                     </div>
                                     <div class="form-group">
-                                        <label for="">Carrier Name</label>
-                                        <select name="" id="" class="form-control">
-                                            <option value="">Select Carrier</option>
-                                            <option value="">USPA</option>
-                                            <option value="">World Wide</option>
-                                            <option value="">Zone 3</option>
-                                            <option value="">Zone 4</option>
+                                        <label for="drlCarrier">Carrier Name</label>
+                                        <select name="drlCarrier" id="drlCarrier" class="form-control">
+                                            <option value="0">Select Carrier</option>
+                                            @foreach (var item in Model.CarrierList)
+                                            {
+                                                <option value="@item.Id">@item.Name</option>
+                                            }
                                         </select>
                                     </div>
                                     <div class="row">
@@ -69,25 +69,25 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="">Service Type</label>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">Select Service</option>
-                                                    <option value="">UPSA</option>
-                                                    <option value="">UPS</option>
-                                                    <option value="">FedEx</option>
-                                                    <option value="">Service 4</option>
+                                                <label for="drlServiceType">Service Type</label>
+                                                <select name="drlServiceType" id="drlServiceType" class="form-control">
+                                                    <option value="0">Select Service</option>
+                                                    @foreach (var item in Model.ServiceList)
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="">Package</label>
-                                                <select name="" id="" class="form-control">
-                                                    <option value="">Select Package</option>
-                                                    <option value="">UPSA</option>
-                                                    <option value="">UPS</option>
-                                                    <option value="">FedEx</option>
-                                                    <option value="">Service 4</option>
+                                                <label for="drlPackage">Package</label>
+                                                <select name="drlPackage" id="drlPackage" class="form-control">
+                                                    <option value="0">Select Package</option>
+                                                    @foreach (var item in Model.PackageList)
+                                                    {
+                                                        <option value="@item.Id">@item.Name</option>
+                                                    }
                                                 </select>
                                             </div>
                                         </div>
@@ -132,7 +132,7 @@
     <!-- end page-wrapper -->
 
 
-    <div class="alert alert-success alert-dismissible fade show float-alert" role="alert">
+    <div class="alert alert-success alert-dismissible fade show float-alert" style="display:none" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true"><i class="mdi mdi-close"></i></span>
         </button>
@@ -150,4 +150,5 @@
     function openhomeview() {
          window.location.href = "@Url.Action("Index", "Zone")";
     }
+
 </script>
