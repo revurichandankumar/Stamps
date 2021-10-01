@@ -199,4 +199,3 @@ D:\Repos\Stamps\OneposStamps\bin\System.Buffers.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Memory.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Numerics.Vectors.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Runtime.CompilerServices.Unsafe.xml
-D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache
