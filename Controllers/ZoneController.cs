@@ -88,11 +88,11 @@ namespace OneposStamps.Controllers
         }
 
         [HttpPost]
-        public ActionResult InsetZones(InsertZones obj)
+        public ActionResult InsertZones(InsertZones obj)
         {
             DataSet ds = db.InsertZone("USP_InsertZones", obj);
 
-            return View();
+            return Json(new { result = "Redirect", url = Url.Action("Index", "Zone") + "?store=" + obj.Store_Id });
         }
 
         public ActionResult GetZonesData(string StoreId,string ZoneId)

@@ -221,7 +221,7 @@ namespace OneposStamps.Helper
                 cmd.CommandType = CommandType.StoredProcedure;
                 //cmd.Parameters.AddWithValue("@startdate", startdate);
                 //cmd.Parameters.AddWithValue("@enddate", enddate);
-                cmd.Parameters.AddWithValue("@StoreId", req.Store_Id);
+                cmd.Parameters.AddWithValue("@Store_Id", req.Store_Id);
                 cmd.Parameters.AddWithValue("@ZoneName", req.ZoneName);
                 cmd.Parameters.AddWithValue("@CarrierId", req.CarrierId);
                 cmd.Parameters.AddWithValue("@ShipMentFee", req.ShipMentFee);

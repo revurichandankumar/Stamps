@@ -104,22 +104,24 @@
                                                 <div class="form-group d-flex align-items-center" style="margin-bottom:1%">
                                                     <input type="number" id="txtlength" class="form-control form-control-sm" placeholder="0" />
                                                     <span class="mx-2">(X)</span>
-                                                    
+
                                                     <input type="number" id="txtbreadth" class="form-control form-control-sm" placeholder="0" />
                                                     <span class="mx-2">(X)</span>
-                                                    
+
                                                     <input type="number" id="txtheight" class="form-control form-control-sm mr-3" placeholder="0" />
                                                     <span>(in)</span>
-                                                    
+
                                                 </div>
                                                 <div class="form-group d-flex align-items-center">
-                                                    
-                                                    <span role="alert" style="width:33%" class="text-danger" data-for="txtlength" id="span_txtlength">length required</span>
-                                                                                                       
-                                                    <span role="alert" style="width:33%" class="text-danger" data-for="txtbreadth" id="span_txtbreadth">breadth required</span>
-                                                                                                       
-                                                    <span role="alert" style="width:33%" class="text-danger" data-for="txtheight" id="span_txtheight">height required</span>
-
+                                                    <div style="width:33%">
+                                                        <span role="alert" class="text-danger" data-for="txtlength" id="span_txtlength">length required</span>
+                                                    </div>
+                                                    <div style="width:33%">
+                                                        <span role="alert"  class="text-danger" data-for="txtbreadth" id="span_txtbreadth">breadth required</span>
+                                                    </div>
+                                                    <div style="width:33%">
+                                                        <span role="alert"  class="text-danger" data-for="txtheight" id="span_txtheight">height required</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -129,7 +131,8 @@
                                     </div>
 
                                     <div class="text-center" style="margin-top:2%">
-                                        <button id="btnSave" onclick="performAction()" class="btn btn-primary">Add Zone</button>
+                                        <input type='button' onclick="performAction()" id='btnSave' class="btn btn-primary" value='Add Zone' />
+                                        @*<button id="btnSave" onclick="performAction()" class="btn btn-primary">Add Zone</button>*@
                                     </div>
                                 </form>
 
@@ -176,8 +179,113 @@
         $("#span_txtlength").attr("style", "display:none");
         $("#span_txtbreadth").attr("style", "display:none");
         $("#span_txtheight").attr("style", "display:none");
+
+        $('#txtZone').on('blur', function () {
+            if ($("#txtZone").val() == "") {
+                $("#span_txtZone").attr("style", "display:inline");
+                zoneflag = 1;
+            }
+            else if (/[^a-zA-Z ]/.test($("#txtZone").val())) {
+                $("#span_txtZone").html("please fill with text only, numbers not supported.");
+                $("#span_txtZone").attr("style", "display:inline");
+                zoneflag = 1;
+            }
+            else {
+                $("#span_txtZone").attr("style", "display:none");
+                zoneflag = 0;
+            }
+        });
+
+        $('#drlCarrier').on('blur', function () {
+            if ($("#drlCarrier").val() == "" || $("#drlCarrier").val() == 0) {
+                $("#span_drlCarrier").attr("style", "display:inline");
+                carrierflag = 1;
+            }
+            else {
+                $("#span_drlCarrier").attr("style", "display:none");
+                carrierflag = 0;
+            }
+        });
+
+        $('#txtShipFee').on('blur', function () {
+            if ($("#txtShipFee").val() == "") {
+                $("#span_txtShipFee").attr("style", "display:inline");
+                shipfeeflag = 1;
+            }
+            else {
+                $("#span_txtShipFee").attr("style", "display:none");
+                shipfeeflag = 0;
+            }
+        });
+
+        $('#txtWeight').on('blur', function () {
+            if ($("#txtWeight").val() == "") {
+                $("#span_txtWeight").attr("style", "display:inline");
+                weightflag = 1;
+            }
+            else {
+                $("#span_txtWeight").attr("style", "display:none");
+                weightflag = 0;
+            }
+        });
+
+        $('#drlServiceType').on('blur', function () {
+            if ($("#drlServiceType").val() == "" || $("#drlServiceType").val() == 0) {
+                $("#span_drlServiceType").attr("style", "display:inline");
+                servicetypeflag = 1;
+            }
+            else {
+                $("#span_drlServiceType").attr("style", "display:none");
+                servicetypeflag = 0;
+            }
+        });
+
+        $('#drlPackage').on('blur', function () {
+            if ($("#drlPackage").val() == "" || $("#drlPackage").val() == 0) {
+                $("#span_drlPackage").attr("style", "display:inline");
+                packageflag = 1;
+            }
+            else {
+                $("#span_drlPackage").attr("style", "display:none");
+                packageflag = 0;
+            }
+        });
+
+        $('#txtlength').on('blur', function () {
+            if ($("#txtlength").val() == "") {
+                $("#span_txtlength").attr("style", "display:inline;  ");
+                lengthflag = 1;
+            }
+            else {
+                $("#span_txtlength").attr("style", "display:none");
+                lengthflag = 0;
+            }
+        });
+
+        $('#txtbreadth').on('blur', function () {
+            if ($("#txtbreadth").val() == "") {
+                $("#span_txtbreadth").attr("style", "display:inline;  ");
+                breadthflag = 1;
+            }
+            else {
+                $("#span_txtbreadth").attr("style", "display:none");
+                breadthflag = 0;
+            }
+        });
+
+        $('#txtheight').on('blur', function () {
+            if ($("#txtheight").val() == "") {
+                $("#span_txtheight").attr("style", "display:inline;  ");
+                heightflag = 1;
+            }
+            else {
+                $("#span_txtheight").attr("style", "display:none");
+                heightflag = 0;
+            }
+        });
+
     });
-    
+
     function openhomeview() {
         var storeids = "@Model.Store_Id";
         window.location.href = '@Url.Action("Index", "Zone")?store=' + storeids;
@@ -195,15 +303,14 @@
 
     var ctr = 0;
     function performAction(e) {
-       
+
         if (ctr == 0) {
-            debugger
-            
+
             if ($("#txtZone").val() == "") {
                 $("#span_txtZone").attr("style", "display:inline");
                 zoneflag = 1;
             }
-            else if (/[^a-zA-Z]/.test($("#txtZone").val())) {
+            else if (/[^a-zA-Z ]/.test($("#txtZone").val())) {
                 $("#span_txtZone").html("please fill with only text, Numbers not supported.");
                 $("#span_txtZone").attr("style", "display:inline");
                 fnameflag = 1;
@@ -212,7 +319,7 @@
                 $("#span_txtZone").attr("style", "display:none");
                 zoneflag = 0;
             }
-            
+
             if ($("#drlCarrier").val() == "" || $("#drlCarrier").val() == 0) {
                 $("#span_drlCarrier").attr("style", "display:inline");
                 carrierflag = 1;
@@ -221,7 +328,7 @@
                 $("#span_drlCarrier").attr("style", "display:none");
                 carrierflag = 0;
             }
-            
+
             if ($("#txtShipFee").val() == "") {
                 $("#span_txtShipFee").attr("style", "display:inline");
                 shipfeeflag = 1;
@@ -230,7 +337,7 @@
                 $("#span_txtShipFee").attr("style", "display:none");
                 shipfeeflag = 0;
             }
-            
+
             if ($("#txtWeight").val() == "") {
                 $("#span_txtWeight").attr("style", "display:inline");
                 weightflag = 1;
@@ -239,7 +346,7 @@
                 $("#span_txtWeight").attr("style", "display:none");
                 weightflag = 0;
             }
-            
+
             if ($("#drlServiceType").val() == "" || $("#drlServiceType").val() == 0) {
                 $("#span_drlServiceType").attr("style", "display:inline");
                 servicetypeflag = 1;
@@ -259,7 +366,7 @@
             }
 
             if ($("#txtlength").val() == "") {
-                $("#span_txtlength").attr("style", "display:inline; width:33%");
+                $("#span_txtlength").attr("style", "display:inline;  ");
                 lengthflag = 1;
             }
             else {
@@ -268,7 +375,7 @@
             }
 
             if ($("#txtbreadth").val() == "") {
-                $("#span_txtbreadth").attr("style", "display:inline; width:33%");
+                $("#span_txtbreadth").attr("style", "display:inline;  ");
                 breadthflag = 1;
             }
             else {
@@ -277,7 +384,7 @@
             }
 
             if ($("#txtheight").val() == "") {
-                $("#span_txtheight").attr("style", "display:inline; width:33%");
+                $("#span_txtheight").attr("style", "display:inline;  ");
                 heightflag = 1;
             }
             else {
@@ -285,15 +392,16 @@
                 heightflag = 0;
             }
 
-            if (zoneflag == 0 && carrierflag == 0 && shipfeeflag == 0 && weightflag == 0 && servicetypeflag == 0 
+            if (zoneflag == 0 && carrierflag == 0 && shipfeeflag == 0 && weightflag == 0 && servicetypeflag == 0
                     && packageflag == 0 && lengthflag == 0 && breadthflag == 0 && heightflag == 0 ) {
                 onsave();
             }
             else {
                 event.preventDefault();
             }
-        } 
+        }
     }
+
 
     function onsave() {
         var data = {
@@ -311,18 +419,21 @@
 
         $.ajax({
             type: "POST",
-            url: "/Zone/AddZoneinDB",
+            url: "/Zone/InsertZones",
             //contentType: "application/json; charset=utf-8",
             //dataType: "json",
             data: data,
             success: function (response) {
-                $("#divSuccess").attr("style='display:visible'");
+                debugger
+                if (response.result == 'Redirect')
+                    window.location.href = response.url;
+                //$("#divSuccess").attr("style='display:visible'");
             },
             error: function (response) {
                 alert(response.responseText);
             }
         });
-    }    
+    }
 
 
 </script>
