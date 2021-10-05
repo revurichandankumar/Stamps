@@ -250,6 +250,52 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
+        public DataSet UpdateZone(string sqlStmt = "", OneposStamps.Models.InsertZones req = null)
+        {
+
+            try
+            {
+                var connectionString = string.Empty;
+
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;
+
+                con.ConnectionString = connectionString;
+                con.Open();
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;                
+                cmd.Parameters.AddWithValue("@Zone_Id", req.ZoneId);
+                cmd.Parameters.AddWithValue("@Store_Id", req.Store_Id);
+                cmd.Parameters.AddWithValue("@ZoneName", req.ZoneName);
+                cmd.Parameters.AddWithValue("@CarrierId", req.CarrierId);
+                cmd.Parameters.AddWithValue("@ShipMentFee", req.ShipMentFee);
+                cmd.Parameters.AddWithValue("@Weight", req.Weight);
+                cmd.Parameters.AddWithValue("@ServiceTypeId", req.ServiceTypeId);
+                cmd.Parameters.AddWithValue("@PackingId", req.PackingId);
+                cmd.Parameters.AddWithValue("@Length", req.Length);
+                cmd.Parameters.AddWithValue("@Breadth", req.Breadth);
+                cmd.Parameters.AddWithValue("@Height", req.Height);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
         public DataSet GetDataSet(string sqlStmt, bool IsStoredProcedure, params object[] parameters)
         {
             OpenConnection();

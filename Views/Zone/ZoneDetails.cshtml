@@ -1,0 +1,122 @@
+﻿@model OneposStamps.Models.GetZones
+@{
+    ViewBag.Title = "ZoneDetails";
+}
+
+<body data-layout="horizontal" class="dark-topbar">
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content">
+
+            <div class="container-fluid">
+                <!-- Page-Title -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-9">
+                        <div class="page-title-box d-flex align-items-center">
+                            <a onclick="openhomeview()" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
+                            <h4 class="page-title font-weight-bold">@Model.ZoneName <span class="btn table-btn btn-dark">@Model.Carriername</span> <span class="btn table-btn btn-info">@("$ ")@(Model.Shipmentfee)</span></h4>
+                            <button class="btn btn-primary ml-auto btn-sm mr-2">Edit Zone</button>
+                            <button class="btn btn-danger btn-sm mr-2">Delete Zone</button>
+                            <a href="add_zipcodes.html" class="btn btn-dark btn-sm">Add Zipcodes</a>
+
+                            <div class="btn-group ml-3" aria-label="Basic example" role="group">
+                                <button type="button" class="btn btn-outline-primary"><i class="mdi mdi-arrow-left-bold"></i></button>
+                                <button type="button" class="btn btn-outline-primary"><i class="mdi mdi-arrow-right-bold"></i></button>
+                            </div>
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+
+                </div>
+                <!-- end page title end breadcrumb -->
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-9">
+
+                        <div class="card">
+                            <div class="card-body">
+
+                                <form action="" class="d-flex mb-5">
+                                    <div class="form-group col mb-0">
+                                        <label for="">Zip Code</label>
+                                        <input type="text" class="form-control" placeholder="Zip Code" />
+                                    </div>
+                                    <div class="form-group col mb-0">
+                                        <label for="">State</label>
+                                        <input type="text" class="form-control" placeholder="State name" />
+                                    </div>
+                                    <div class="form-group col mb-0">
+                                        <label for="">City</label>
+                                        <input type="text" class="form-control" placeholder="City name" />
+                                    </div>
+                                    <div class="col-auto align-self-end">
+                                        <button class="btn btn-primary">Filter</button>
+                                    </div>
+                                </form>
+
+                                <table id="datatable4" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <td>
+                                                <div class="checkbox">
+                                                    <div class="custom-control custom-checkbox">
+                                                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                        <label class="custom-control-label" for="customCheck3"></label>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <th>Zipcode</th>
+                                            <th>State name</th>
+                                            <th>City Name</th>
+
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var d in Model.GetZoneList)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck1" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="customCheck1"></label>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="font-weight-bold text-dark">@d.ZipCode</td>
+                                                <td>@d.State</td>
+                                                <td>@d.City</td>
+                                                <td>
+                                                    <button class="btn btn-sm table-btn btn-danger btn-round mr-2" name="btnDelete" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div><!-- container -->
+
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
+</body>
+
+<script>
+     function openhomeview() {
+        var storeids = '@Model.StoreId';
+        window.location.href = '@Url.Action("Index", "Zone")?store=' + storeids;
+    }
+</script>
