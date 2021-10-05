@@ -34,8 +34,8 @@ namespace OneposStamps.Controllers
                 switch (type)
                 {
                     case 1:
-                        return RedirectToAction("Index", "Zone", new { store= storeId });
-                        //return RedirectToAction("GetZipDefaultData", "Zone");
+                        //return RedirectToAction("Index", "Zone", new { store= storeId });
+                        return RedirectToAction("GetZonesData", "Zone");
 
                 }
 

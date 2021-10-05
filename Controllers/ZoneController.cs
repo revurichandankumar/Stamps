@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using OneposStamps.Models;
 
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace OneposStamps.Controllers
 {
@@ -90,34 +91,54 @@ namespace OneposStamps.Controllers
         }
 
         [HttpPost]
-        public ActionResult InsertZones(InsertZones obj)
+        public ActionResult InsertZones(InsertZones obj,int type=0)
         {
-            DataSet ds = db.InsertZone("USP_InsertZones", obj);
+            if(type==1)
+            {
+                DataSet ds = db.InsertZone("USP_InsertZones", obj);
+            }
+            else
+            {
+                DataSet ds = db.InsertZone("USP_UpdateZones", obj);
+            }
+            
+           
 
             return Json(new { result = "Redirect", url = Url.Action("Index", "Zone") + "?store=" + obj.Store_Id });
         }
 
-        public ActionResult GetZonesData(string StoreId,string ZoneId)
+        public ActionResult GetZonesData(string StoreId, string ZoneId)
         {
+
+
+
             DataSet ds = db.GetZonesData("USP_GetZoneDetails", StoreId, ZoneId);
             GetZones ZoneData = new GetZones();
             if (ds.Tables.Count > 0)
             {
-                List<GetZoneData> Gz = new List<GetZoneData>();
-                foreach (DataRow row in ds.Tables[0].Rows)
+                List<GetZoneDtsData> Gz = new List<GetZoneDtsData>();
+                foreach (DataRow row in ds.Tables[1].Rows)
                 {
 
-                    GetZoneData a = new GetZoneData();
+                    GetZoneDtsData a = new GetZoneDtsData();
                     a.ZipCode = (row["Zip"]).ToString();
                     a.City = (row["City"]).ToString();
                     a.State = (row["State"]).ToString();
+                    a.Id = (row["Id"]).ToString();
+                    a.StoreId = (row["Store_Id"]).ToString();
 
 
                     Gz.Add(a);
 
                 }
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    ZoneData.ZoneName = (row["ZoneName"]).ToString();
+                    ZoneData.Carriername = (row["CarrierName"]).ToString();
+                    ZoneData.Shipmentfee = Convert.ToDecimal(row["ShipmentFee"]);
+                }
                 ZoneData.GetZoneList = Gz;
-               
+
             }
             return View();
         }
@@ -138,30 +159,70 @@ namespace OneposStamps.Controllers
                 ZipData.ZipCodeList = Gz;
 
                 var groupedCustomerList = Gz.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
-                //foreach(ZipData.ZipCodeList a in groupedCustomerList)
-                //{
 
-                //}
-                
-
-                //var json = JsonConvert.SerializeObject(groupedCustomerList);
 
 
             }
             return View();
         }
+        public ActionResult GetStampsOrderScreen(string StoreId)
+        {
+            DataSet ds = db.GetMysqlDataSet("USP_GetDataBaseDetails", StoreId);
+            DbData data = new DbData();
+            if (ds.Tables.Count > 0)
+            {
+               
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    data.Address= (row["Address"]).ToString();
+                    data.DatabaseName= (row["DatabaseName"]).ToString();
+                    data.Password= (row["Password"]).ToString();
+                    data.UserName= (row["UserName"]).ToString();
+                }
+            }
+            DataSet ds1 = db.GetMysqlDataSet("USP_GetDataBaseDetails", StoreId);
+
+
+            return View();
+        }
+        public ActionResult GetZonesdetails(string Store_Id, string ZoneId)
+        {
+            DataSet ds = db.GetZonesData("USP_GetZonesData", Store_Id, ZoneId);
+            if (ds.Tables.Count > 0)
+            {
+                GetZoneSingleData ZoneData = new GetZoneSingleData();
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                   
+                    ZoneData.ZoneId = (row["ZoneId"]).ToString();
+                    ZoneData.ZoneName = (row["ZoneName"]).ToString();
+                    ZoneData.CarrierId= (row["CarrierId"]).ToString();
+                    ZoneData.PackageId= (row["zip"]).ToString();
+                    ZoneData.ServiceTypeId= (row["ServiceTypeId"]).ToString();
+                    ZoneData.ShipmentFee= Convert.ToDecimal(row["ShipmentFee"]);
+                    ZoneData.Store_Id= (row["zip"]).ToString();
+                    ZoneData.Weight= Convert.ToDecimal(row["Weight"]);
+                    ZoneData.Length= Convert.ToDecimal(row["Length"]);
+                    ZoneData.Breadth= Convert.ToDecimal(row["Breadth"]);
+                    ZoneData.Height= Convert.ToDecimal(row["Height"]);
+                    
+                }
+
+            }
+            return View();
+        }
+        public ActionResult DeleteZones(string Store_Id, string ZoneId)
+        {
+            DataSet ds = db.GetZonesData("USP_DeleteZone", Store_Id, ZoneId);
+            if (ds.Tables.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                  var status=(row["Status"]).ToString();
+                }
+            }
+                return View();
+        }
     }
-    public class zipvalue
-    {
-        public List<cityname> citylist { get; set; }
-    }
-    public class cityname
-    {
-        public string Cityname { get; set; }
-        public List<Ziplist> ziplists { get; set; }
-    }
-    public class Ziplist
-    {
-        public string Zipcode { get; set; }
-    }
+   
 }

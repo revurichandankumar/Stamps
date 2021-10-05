@@ -30,6 +30,7 @@ namespace OneposStamps.Models
 
     public class InsertZones
     {
+        public string ZoneId { get; set; }
         public string ZoneName { get; set; }
         public string CarrierId { get; set; }
         public decimal ShipMentFee { get; set; }
