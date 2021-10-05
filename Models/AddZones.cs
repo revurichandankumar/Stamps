@@ -7,6 +7,7 @@ namespace OneposStamps.Models
 {
     public class AddZones
     {
+        public string ZoneId { get; set; }
         public List<CarrierData> CarrierList { get; set; }
         public List<ServicetypeData> ServiceList { get; set; }
         public List<PackageData> PackageList { get; set; }

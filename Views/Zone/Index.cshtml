@@ -30,7 +30,7 @@
 
                         <div class="card">
                             <div class="card-body">
-                                <table id="datatable4" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                <table id="datatable4" name="tblZoneList" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                     <thead>
                                         <tr>
 
@@ -48,25 +48,31 @@
                                     </thead>
 
                                     <tbody>
-                                        ;
                                         @foreach (var d in Model.ZoneList)
                                         {
-                                            <tr>
-                                                <td>@i</td>
-                                                <td>@d.ZoneName</td>
-                                                <td>@d.Statecount</td>
-                                                <td>@d.Citycount</td>
-                                                <td>@d.Zipcount</td>
-                                                <td>@d.Carrier</td>
-                                                <td>@d.Shipmentfee</td>
-                                                <td>
-                                                    <button class="btn btn-sm table-btn btn-danger btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
-                                                    <button class="btn btn-sm table-btn btn-dark btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
-                                                    <button class="btn btn-sm table-btn btn-primary btn-round mr-2" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
+                                            var StoreId = "StoreId_" + Convert.ToString(Model.StoreId);
+                                            var ZoneId = "ZoneId_" + Convert.ToString(d.ZoneId);
 
-                                                </td>
+                                        <tr>
+                                            <td>@i</td>
+                                            <td style="display:none"><input type="hidden" id="@StoreId" data-name="hfstoreid" value="@Model.StoreId" /></td>
+                                            <td style="display:none"><input type="hidden" id="@ZoneId" data-name="hfzoneid" value="@d.ZoneId" /></td>
+                                            <td><a href="@Url.Action("GetZonesData", "Zone")?StoreId=@Model.StoreId&ZoneId=@d.ZoneId" data-zoneid="@d.ZoneId" data-storeid="@Model.StoreId" class="text-primary"> <i class="fa fa-angle-right">&nbsp;</i>@d.ZoneName</a></td>
+                                            @*<td data-name="lnkZoneName"><a class="text-primary"> <i class="fa fa-angle-right">&nbsp;</i>@d.ZoneName</a></td>*@
+                                            @*<td ><a>@d.ZoneName</a></td>*@
+                                            <td data-name="statcount">@d.Statecount</td>
+                                            <td data-name="citycount">@d.Citycount</td>
+                                            <td data-name="zipcount">@d.Zipcount</td>
+                                            <td data-name="carrier"><span class="btn btn-info table-btn">@d.Carrier</span></td>
+                                            <td data-name="shipfee"><strong>@("$")@(d.Shipmentfee) </strong></td>
+                                            <td>
+                                                <button class="btn btn-sm table-btn btn-danger btn-round mr-2 " name="btnDelete" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                <button class="btn btn-sm table-btn btn-dark btn-round mr-2" name="btnView" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-eye mr-1"></i> View</button>
+                                                <button class="btn btn-sm table-btn btn-primary btn-round mr-2" name="btnEdit" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-pen mr-1"></i> Edit</button>
 
-                                            </tr>
+                                            </td>
+
+                                        </tr>
                                             i++;
                                         }
 
@@ -101,5 +107,65 @@
         window.location.href = '@Url.Action("AddZone", "Zone")?StoreId=' + storeids;
 
     }
- 
+
+    $('button').on('click', function () {
+       
+        var storeid = $(this).closest('tr').find('[data-name="hfstoreid"]').val();
+        var zoneid = $(this).closest('tr').find('[data-name="hfzoneid"]').val();
+
+        if ($(this).prop("name") == 'btnView') {
+            window.location.href = '@Url.Action("GetZonesData", "Zone")?StoreId=' + storeid + '&ZoneId=' + zoneid ;
+        }
+        else if ($(this).prop("name") == 'btnEdit') {
+            window.location.href = '@Url.Action("EditZone", "Zone")?Store_Id=' + storeid + '&ZoneId=' + zoneid ;
+        }
+        else if ($(this).prop("name") == 'btnDelete') {
+            // confirm meg check for delete  
+            var result = confirm('Are you sure delete Emp Record?');
+            if (result) {
+                var row = $(this).closest("tr");
+                var data = {
+                    Store_Id: storeid,
+                    ZoneId: zoneid,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Zone/DeleteZone",
+                    data: data,
+                    //contentType: "application/json; charset=utf-8",
+                    //dataType: "json",
+                    success: function (response) {
+                        debugger
+                        if (response.result == 'Redirect')
+                            window.location.href = response.url;
+                        //$("#divSuccess").attr("style='display:visible'");
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                    //success: function (response) {
+                    //    debugger
+                    //    if ($("#datatable4 tr").length > 2) {
+                    //        row.remove();
+                    //    } else {
+                    //        row.find(".Delete").hide();
+                    //        row.find("span").html('&nbsp;');
+                    //    }
+                    //}
+                });
+            }  
+            //window.location.href = '@Url.Action("DeleteZone", "Zone")?Store_Id=' + storeid + '&ZoneId=' + zoneid ;
+        }
+
+    });
+
+    function onClickView(e) {
+        debugger
+        var $item = $(this).closest("tr")   // Finds the closest row <tr> 
+            .find(".nr")     // Gets a descendent with class="nr"
+            .text();         // Retrieves the text within <td>
+
+        $("#resultas").append($item);       // Outputs the answer
+    }
+
 </script>

@@ -7,13 +7,13 @@ namespace OneposStamps.Models
 {
     public class GetZones
     {
-       public List<GetZoneDtsData> GetZoneList { get; set; }
+        public List<GetZoneData> GetZoneList { get; set; }
         public string ZoneName { get; set; }
         public decimal Shipmentfee { get; set; }
         public string Carriername { get; set; }
-
+        public string StoreId { get; set; }
     }
-    public class GetZoneDtsData
+    public class GetZoneData
     {
         public string Id { get; set; }
         public string ZipCode { get; set; }

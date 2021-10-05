@@ -83,45 +83,6 @@ namespace OneposStamps.Helper
                 throw new ApplicationException("Error in close connection", ex);
             }
         }
-        public DataSet GetOrdersData(string sqlStmt = "",string StoreId="",string FromDate="",string Todate="", DbData data=null)
-        {
-
-            try
-            {
-                var connectionString = string.Empty;
-
-                connectionString = "server ="+data.Address+ "; user = "+ data .UserName+ "; database = "+data.DatabaseName+"; password = "+ data .Password+ "";
-
-
-                //MySqlConnection con = new MySqlConnection(connectionString);
-                con.ConnectionString = connectionString;
-                con.Open();
-                //string rtn = "SuperCategory";
-                cmd.Connection = con;
-                cmd.CommandText = sqlStmt;
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@startdate", FromDate);
-                cmd.Parameters.AddWithValue("@enddate", Todate);
-                cmd.Parameters.AddWithValue("@StoreId", StoreId);
-                cmd.CommandTimeout = int.MaxValue;
-                adp.SelectCommand = cmd;
-
-                if (dataSet != null)
-                    dataSet.Reset();
-                adp.Fill(dataSet);
-            }
-            catch (SqlException ex)
-            {
-                throw new ApplicationException(ex.Message);
-            }
-            finally
-            {
-                cmd.Dispose();
-                con.Close();
-                cmd.Parameters.Clear();
-            }
-            return dataSet;
-        }
 
         public DataSet GetMysqlDataSet(string sqlStmt="", string sid="")
         {
@@ -289,6 +250,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
         public DataSet UpdateZone(string sqlStmt = "", OneposStamps.Models.InsertZones req = null)
         {
 
@@ -298,15 +260,11 @@ namespace OneposStamps.Helper
 
                 connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;
 
-
-                //MySqlConnection con = new MySqlConnection(connectionString);
                 con.ConnectionString = connectionString;
                 con.Open();
-                //string rtn = "SuperCategory";
                 cmd.Connection = con;
                 cmd.CommandText = sqlStmt;
-                cmd.CommandType = CommandType.StoredProcedure;
-                //cmd.Parameters.AddWithValue("@startdate", startdate);
+                cmd.CommandType = CommandType.StoredProcedure;                
                 cmd.Parameters.AddWithValue("@Zone_Id", req.ZoneId);
                 cmd.Parameters.AddWithValue("@Store_Id", req.Store_Id);
                 cmd.Parameters.AddWithValue("@ZoneName", req.ZoneName);
@@ -337,6 +295,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
         public DataSet GetDataSet(string sqlStmt, bool IsStoredProcedure, params object[] parameters)
         {
             OpenConnection();

@@ -164,17 +164,16 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ZipCodeController.cs" />
     <Compile Include="Controllers\ZoneController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\DBConnections.cs" />
     <Compile Include="Models\AddZones.cs" />
-    <Compile Include="Models\DbData.cs" />
     <Compile Include="Models\GetZipCodeData.cs" />
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
-    <Compile Include="Models\Parameters.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\Zones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -321,6 +320,9 @@
     <Content Include="Views\Zone\Index.cshtml" />
     <Content Include="Views\Zone\_AddZone.cshtml" />
     <Content Include="Views\Zone\AddZone.cshtml" />
+    <Content Include="Views\Zone\ZoneDetails.cshtml" />
+    <Content Include="Views\Zone\EditZone.cshtml" />
+    <Content Include="Views\ZipCode\AddZipCodes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
