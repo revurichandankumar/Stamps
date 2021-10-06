@@ -13,7 +13,7 @@ namespace OneposStamps.Controllers
         // GET: ZipCode
         public ActionResult AddZipCodes()
         {
-            DataSet ds = db.GetCarrierdata("USP_GetZipcodesDefaultData");
+            DataSet ds = db.GetZoneData("USP_GetZipcodesDefaultData","CA");
             GetZipCodeData ZipData = new GetZipCodeData();
             if (ds.Tables.Count > 0)
             {
@@ -28,14 +28,7 @@ namespace OneposStamps.Controllers
                 ZipData.ZipCodeList = Gz;
 
                 var groupedCustomerList = Gz.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
-                //foreach(ZipData.ZipCodeList a in groupedCustomerList)
-                //{
-
-                //}
-
-
-                //var json = JsonConvert.SerializeObject(groupedCustomerList);
-
+               
 
             }
             return View();

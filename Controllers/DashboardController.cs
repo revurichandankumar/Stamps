@@ -35,7 +35,7 @@ namespace OneposStamps.Controllers
                 {
                     case 1:
                         //return RedirectToAction("Index", "Zone", new { store= storeId });
-                        return RedirectToAction("GetZonesData", "Zone");
+                        return RedirectToAction("AddZipCodes", "ZipCode");
 
                 }
 

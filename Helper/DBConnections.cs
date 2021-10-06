@@ -162,7 +162,41 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
         public DataSet GetCarrierdata(string sqlStmt = "")
+        {
+
+            try
+            {
+                var connectionString = string.Empty;
+
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;
+                //MySqlConnection con = new MySqlConnection(connectionString);
+                con.ConnectionString = connectionString;
+                con.Open();              
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;          
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+        public DataSet GetZoneData(string sqlStmt = "",string State="",string City="",string Zipcodes="")
         {
 
             try
@@ -179,9 +213,9 @@ namespace OneposStamps.Helper
                 cmd.Connection = con;
                 cmd.CommandText = sqlStmt;
                 cmd.CommandType = CommandType.StoredProcedure;
-                //cmd.Parameters.AddWithValue("@startdate", startdate);
-                //cmd.Parameters.AddWithValue("@enddate", enddate);
-               // cmd.Parameters.AddWithValue("@StoreId", sid);
+                cmd.Parameters.AddWithValue("@States", State);
+                cmd.Parameters.AddWithValue("@city", City);
+               cmd.Parameters.AddWithValue("@Zipcodes", Zipcodes);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
 
