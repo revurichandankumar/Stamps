@@ -1,4 +1,5 @@
-﻿using OneposStamps.Models;
+﻿using Newtonsoft.Json;
+using OneposStamps.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -73,9 +74,12 @@ namespace OneposStamps.Controllers
         }
 
 
-        public ActionResult InsertZipCodestoZone(GetZipCodeData zd)
+        public ActionResult InsertZipCodestoZone(GetZipCodeData zd,string ZoneId)
         {
+            var list = zd.ZipCodeList;
 
+            var jsons = JsonConvert.SerializeObject(list);
+            DataSet ds = db.GetZipInsertData("USP_InsertZoneMasterData", jsons);
             return View();
         }
 

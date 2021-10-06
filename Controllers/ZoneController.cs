@@ -221,6 +221,35 @@ namespace OneposStamps.Controllers
             return View();
         }
 
+        public ActionResult OrderDetails( string StoreId,string fromdate="2021-09-28",string todate="2021-09-30")
+        {
+            DataSet ds = db.GetMysqlDataSet("USP_GetDataBaseDetails", "731ba9b9-d84a-4866-b9c9-8e4d569e5cad"); //StoreId
+             DbDetails a = new DbDetails();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                
+                a.Address = (row["Address"]).ToString();
+                a.Username = (row["Username"]).ToString();
+                a.Password = (row["Password"]).ToString();
+                a.DatabaseName = (row["DatabaseName"]).ToString();
+                a.StampsUserName = (row["StampsUsername"]).ToString();
+                a.StampsUserPassword = (row["StampsPassword"]).ToString();
+                a.IntegrationId = (row["IntegrationId"]).ToString();
+            }
+            DataSet ds1 = db.GetOrders("USP_GetordersShip", StoreId, fromdate, todate,a.Address,a.Password,a.DatabaseName,a.Username);
+            GetordersData value = new GetordersData();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+                
+                value.OrderId = (row["OrderId"]).ToString();
+                value.OrderDate = (row["OrderDate"]).ToString();
+                value.OrderTotal = (row["OrderTotal"]).ToString();
+                value.CustomerName = (row["CustomerName"]).ToString();
+                value.Qty = Convert.ToDecimal(row["Qty"]);
+               
+            }
+            return View();
+        }
        
     }
     public class zipvalue
