@@ -1,4 +1,5 @@
-﻿using OneposStamps.Models;
+﻿using Newtonsoft.Json;
+using OneposStamps.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -64,16 +65,21 @@ namespace OneposStamps.Controllers
                 //ZipData.StoreId = zf.StoreId;
                 //ZipData.ZoneId = zf.ZoneId;
 
-                var groupedCustomerList = Gz.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
-                //foreach(ZipData.ZipCodeList a in groupedCustomerList)
-                //{
+            }
+            else
+            {
+                return new HttpStatusCodeResult(400, "No data found");
+            }
+            return PartialView("_AddZipCodes", ZipData);
+        }
 
-                //}
 
+        public ActionResult InsertZipCodestoZone(GetZipCodeData zd,string ZoneId)
+        {
+            var list = zd.ZipCodeList;
 
-                //var json = JsonConvert.SerializeObject(groupedCustomerList);
-
-
+            var jsons = JsonConvert.SerializeObject(list);
+            DataSet ds = db.GetZipInsertData("USP_InsertZoneMasterData", jsons);
             return View();
         }
 
