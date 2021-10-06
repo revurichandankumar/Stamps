@@ -51,7 +51,7 @@
                                     <a href="" data-name="aCityNameAdd" class="collapsed text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="false" aria-controls="collapseTwo">
                                         @item.Select(x => x.Name).FirstOrDefault()
                                     </a>
-                                    <button class="btn btn-primary table-btn ml-auto">Add</button>
+                                    <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
                                 </div>
                                 <div id="@collapseid" class="collapse" aria-labelledby="@headerid" data-parent="#divSearchResult">
                                     <div class="card-body">
@@ -152,122 +152,8 @@
 
 <script>
 
-    // --------- to create li with multiple zipcodes -----------
-    //var ar = new Array("a", "b", "c", "d", "e", "f");
-
-    //var list = "";
-    //for (var i = 0; i < ar.length; i++) {
-    //    list += '<li><span>' + ar[i] + '</span></li>';
-    //}
-
-
     $('span').on('click', function () {
-        debugger
         if ($(this).attr('name') == 'span_ZipcodeAdd') {
-            var cityname = $(this).closest('li').parent().parent().parent().parent().find('[data-name="aCityNameAdd"]')[0].innerText;
-            var zipcode = $(this).closest('li')[0].innerText;
-
-            var divAddedZipCode = $('#addedZipcodes').find('.card-header');
-
-            if (divAddedZipCode.length > 0) {
-                var checkExists = 0;
-                for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].innerText == cityname) {
-
-
-                        for (var j = 0; j < divAddedZipCode.length; j++) {
-                            if (divAddedZipCode[j].children[0].ariaExpanded == "true") {
-                                divAddedZipCode[j].children[0].ariaExpanded = false;
-                                divAddedZipCode[j].children[0].className = 'text-dark collapsed';
-                                divAddedZipCode[j].nextElementSibling.className = 'collapse';
-                                break;
-                            }
-                        }
-
-                        var appendStringLi = $('<li class="d-flex"><span class="ml-auto fa fa-minus text-danger"></span></li>');
-                        appendStringLi.html(zipcode + '<span class="ml-auto fa fa-minus text-danger"></span>');
-
-                        divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
-                        $(this).closest('li').remove();
-
-                        divAddedZipCode[i].children[0].ariaExpanded = true;
-                        divAddedZipCode[i].children[0].className = 'text-dark';
-                        divAddedZipCode[i].nextElementSibling.className = 'collapse show';
-
-                        checkExists = 1;
-                        break;
-                    }
-                }
-                if (checkExists == 0) {
-                    // to create a new card
-                    var idcount = divAddedZipCode.length;
-                    var headerid = 'Aheading' + idcount;
-                    var collapseid = 'Acollapse' + idcount;
-
-                    for (var i = 0; i < divAddedZipCode.length; i++) {
-                        if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
-                            divAddedZipCode[i].children[0].ariaExpanded = false;
-                            divAddedZipCode[i].children[0].className = 'text-dark collapsed';
-                            divAddedZipCode[i].nextElementSibling.className = 'collapse';
-                            break;
-                        }
-                    }
-
-                    var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
-                    var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
-                        ' data-target="#'+collapseid+'" aria-expanded="true" aria-controls="'+collapseid+'" >' + cityname + '</a> ' +
-                        ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
-                    appendStringMainDiv.html(appendStringChildDiv);
-
-                    var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
-                        ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
-                        ' <li class="d-flex"> ' + zipcode + ' <span class="ml-auto fa fa-minus text-danger"></span></li></ul></div></div>')
-                    appendStringMainDiv.append(appendStringSecondChildDiv);
-
-                    $("#addedZipcodes").append(appendStringMainDiv);
-
-                    $(this).closest('li').remove();
-                }
-            }
-            else {
-
-                var idcount = divAddedZipCode.length;
-                var headerid = 'Aheading' + idcount;
-                var collapseid = 'Acollapse' + idcount;
-
-                for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
-                        divAddedZipCode[i].children[0].ariaExpanded = false;
-                        divAddedZipCode[i].children[0].className = 'text-dark collapsed';
-                        divAddedZipCode[i].nextElementSibling.className = 'collapse';
-                        break;
-                    }
-                }
-
-                var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
-                var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
-                    ' data-target="#' + collapseid + '" aria-expanded="true" aria-controls="' + collapseid + '" >' + cityname + '</a> ' +
-                    ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
-                appendStringMainDiv.html(appendStringChildDiv);
-
-                var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
-                    ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
-                    ' <li class="d-flex"> ' + zipcode + ' <span class="ml-auto fa fa-minus text-danger"></span></li></ul></div></div>')
-                appendStringMainDiv.append(appendStringSecondChildDiv);
-
-                $("#addedZipcodes").append(appendStringMainDiv);
-
-                $(this).closest('li').remove();
-
-            }
-
-        }
-    })
-
-    $('button').on('click', function () {
-        debugger
-        if ($(this).attr('name') == 'btnAdd') {
-
             var cityname = $(this).closest('li').parent().parent().parent().parent().find('[data-name="aCityNameAdd"]')[0].innerText;
             var zipcode = $(this).closest('li')[0].innerText;
 
@@ -335,34 +221,173 @@
             }
             else {
 
-                //var idcount = divAddedZipCode.length;
-                //var headerid = 'Aheading' + idcount;
-                //var collapseid = 'Acollapse' + idcount;
+                var idcount = divAddedZipCode.length;
+                var headerid = 'Aheading' + idcount;
+                var collapseid = 'Acollapse' + idcount;
 
-                //for (var i = 0; i < divAddedZipCode.length; i++) {
-                //    if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
-                //        divAddedZipCode[i].children[0].ariaExpanded = false;
-                //        divAddedZipCode[i].children[0].className = 'text-dark collapsed';
-                //        divAddedZipCode[i].nextElementSibling.className = 'collapse';
-                //        break;
-                //    }
-                //}
+                for (var i = 0; i < divAddedZipCode.length; i++) {
+                    if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
+                        divAddedZipCode[i].children[0].ariaExpanded = false;
+                        divAddedZipCode[i].children[0].className = 'text-dark collapsed';
+                        divAddedZipCode[i].nextElementSibling.className = 'collapse';
+                        break;
+                    }
+                }
 
-                //var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
-                //var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
-                //    ' data-target="#' + collapseid + '" aria-expanded="true" aria-controls="' + collapseid + '" >' + cityname + '</a> ' +
-                //    ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
-                //appendStringMainDiv.html(appendStringChildDiv);
+                var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
+                var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
+                    ' data-target="#' + collapseid + '" aria-expanded="true" aria-controls="' + collapseid + '" >' + cityname + '</a> ' +
+                    ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
+                appendStringMainDiv.html(appendStringChildDiv);
 
-                //var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
-                //    ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
-                //    ' <li class="d-flex"> ' + zipcode + ' <span class="ml-auto fa fa-minus text-danger"></span></li></ul></div></div>')
-                //appendStringMainDiv.append(appendStringSecondChildDiv);
+                var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
+                    ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
+                    ' <li class="d-flex"> ' + zipcode + ' <span class="ml-auto fa fa-minus text-danger"></span></li></ul></div></div>')
+                appendStringMainDiv.append(appendStringSecondChildDiv);
 
-                //$("#addedZipcodes").append(appendStringMainDiv);
+                $("#addedZipcodes").append(appendStringMainDiv);
 
-                //$(this).closest('li').remove();
+                $(this).closest('li').remove();
 
+            }
+
+        }
+
+        //else if ($(this).attr('name') == 'span_ZipcodeAdd') {
+
+        //}
+    })
+
+    $('button').on('click', function () {
+        if ($(this).attr('name') == 'btnAdd') {
+
+            var cityname = $(this)[0].previousElementSibling.innerText;
+
+            var zipListNode = $(this).parent()[0].nextElementSibling.children[0].children[0].children;
+            var zipcodeList = [];
+            for (var i = 0; i < zipListNode.length; i++) {
+                zipcodeList.push(zipListNode[i].innerText);
+            }
+
+            if (zipListNode.length <= 0) {
+                alert("No zipcodes to be added.");
+                return false;
+            }
+
+            var divAddedZipCode = $('#addedZipcodes').find('.card-header');
+
+            if (divAddedZipCode.length > 0) {
+                var checkExists = 0;
+                for (var i = 0; i < divAddedZipCode.length; i++) {
+                    if (divAddedZipCode[i].children[0].innerText == cityname) {
+
+
+                        for (var j = 0; j < divAddedZipCode.length; j++) {
+                            if (divAddedZipCode[j].children[0].ariaExpanded == "true") {
+                                divAddedZipCode[j].children[0].ariaExpanded = false;
+                                divAddedZipCode[j].children[0].className = 'text-dark collapsed';
+                                divAddedZipCode[j].nextElementSibling.className = 'collapse';
+                                break;
+                            }
+                        }
+
+                        var appendStringLi = "";
+                        for (var i = 0; i < zipcodeList.length; i++) {
+                            appendStringLi += $('<li class="d-flex">' + zipcodeList[i].innerText + '<span class="ml-auto fa fa-minus text-danger"></span></li>');
+                            list += '<li><span>' + ar[i] + '</span></li>';
+                        }
+                        
+                        divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
+
+                        var nodeRemoveLength = zipListNode.length;
+                        for (var i = 0; i < nodeRemoveLength; i++) {
+                            zipListNode[0].remove();
+                        }
+
+                        divAddedZipCode[i].children[0].ariaExpanded = true;
+                        divAddedZipCode[i].children[0].className = 'text-dark';
+                        divAddedZipCode[i].nextElementSibling.className = 'collapse show';
+
+                        checkExists = 1;
+                        break;
+                    }
+                }
+                if (checkExists == 0) {
+                    // to create a new card
+                    var idcount = divAddedZipCode.length;
+                    var headerid = 'Aheading' + idcount;
+                    var collapseid = 'Acollapse' + idcount;
+
+                    for (var i = 0; i < divAddedZipCode.length; i++) {
+                        if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
+                            divAddedZipCode[i].children[0].ariaExpanded = false;
+                            divAddedZipCode[i].children[0].className = 'text-dark collapsed';
+                            divAddedZipCode[i].nextElementSibling.className = 'collapse';
+                            break;
+                        }
+                    }
+
+                    var appendStringLi = "";
+                    for (var i = 0; i < zipcodeList.length; i++) {
+                        appendStringLi += '<li class="d-flex">' + zipcodeList[i] + '<span class="ml-auto fa fa-minus text-danger"></span></li>';
+                    }
+
+                    var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
+                    var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
+                        ' data-target="#' + collapseid + '" aria-expanded="true" aria-controls="' + collapseid + '" >' + cityname + '</a> ' +
+                        ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
+                    appendStringMainDiv.html(appendStringChildDiv);
+
+                    var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
+                        ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
+                        ' ' + appendStringLi + '</ul></div></div>')
+                    appendStringMainDiv.append(appendStringSecondChildDiv);
+
+                    $("#addedZipcodes").append(appendStringMainDiv);
+
+                    var nodeRemoveLength = zipListNode.length;
+                    for (var i = 0; i < nodeRemoveLength; i++) {
+                        zipListNode[0].remove();
+                    }
+                }
+            }
+            else {
+
+                var idcount = divAddedZipCode.length;
+                var headerid = 'Aheading' + idcount;
+                var collapseid = 'Acollapse' + idcount;
+
+                for (var i = 0; i < divAddedZipCode.length; i++) {
+                    if (divAddedZipCode[i].children[0].ariaExpanded == "true") {
+                        divAddedZipCode[i].children[0].ariaExpanded = false;
+                        divAddedZipCode[i].children[0].className = 'text-dark collapsed';
+                        divAddedZipCode[i].nextElementSibling.className = 'collapse';
+                        break;
+                    }
+                }
+
+                var appendStringLi = "";
+                for (var i = 0; i < zipcodeList.length; i++) {
+                    appendStringLi += '<li class="d-flex">' + zipcodeList[i] + '<span class="ml-auto fa fa-minus text-danger"></span></li>';
+                }
+
+                var appendStringMainDiv = $('<div class="card mb-1 border shadow-none"></div>');
+                var appendStringChildDiv = $('<div class="card-header" id="' + headerid + '"><a href = "" class= "text-dark" data-toggle="collapse" ' +
+                    ' data-target="#' + collapseid + '" aria-expanded="true" aria-controls="' + collapseid + '" >' + cityname + '</a> ' +
+                    ' <button class="btn btn-danger table-btn ml-auto">Delete</button></div>');
+                appendStringMainDiv.html(appendStringChildDiv);
+
+                var appendStringSecondChildDiv = $('<div id = "' + collapseid + '" class= "collapse show" aria-labelledby="' + headerid + '" ' +
+                    ' data-parent="#addedZipcodes" > <div class="card-body"> <ul class="list-unstyled ziplist"> ' +
+                    ' ' + appendStringLi + '</ul></div></div>')
+                appendStringMainDiv.append(appendStringSecondChildDiv);
+
+                $("#addedZipcodes").append(appendStringMainDiv);
+
+                var nodeRemoveLength = zipListNode.length;
+                for (var i = 0; i < nodeRemoveLength; i++) {
+                    zipListNode[0].remove();
+                }
             }
 
 
