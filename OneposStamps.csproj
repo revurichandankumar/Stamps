@@ -175,6 +175,7 @@
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
     <Compile Include="Models\Store.cs" />
+    <Compile Include="Models\ZipcodeFilters.cs" />
     <Compile Include="Models\Zones.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -323,6 +324,7 @@
     <Content Include="Views\Zone\ZoneDetails.cshtml" />
     <Content Include="Views\Zone\EditZone.cshtml" />
     <Content Include="Views\ZipCode\AddZipCodes.cshtml" />
+    <Content Include="Views\ZipCode\_AddZipCodes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

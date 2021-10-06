@@ -208,6 +208,7 @@ namespace OneposStamps.Controllers
                     ZoneData.Carriername = (row["CarrierName"]).ToString();
                     ZoneData.Shipmentfee = Convert.ToDecimal(row["ShipmentFee"]);
                     ZoneData.StoreId = StoreId;
+                    ZoneData.ZoneId = ZoneId;
                 }
                 ZoneData.GetZoneList = Gz;
             }
