@@ -12,6 +12,7 @@ namespace OneposStamps.Models
         public decimal Shipmentfee { get; set; }
         public string Carriername { get; set; }
         public string StoreId { get; set; }
+        public string ZoneId { get; set; }
     }
     public class GetZoneData
     {

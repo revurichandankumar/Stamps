@@ -17,7 +17,7 @@
                             <h4 class="page-title font-weight-bold">@Model.ZoneName <span class="btn table-btn btn-dark">@Model.Carriername</span> <span class="btn table-btn btn-info">@("$ ")@(Model.Shipmentfee)</span></h4>
                             <button class="btn btn-primary ml-auto btn-sm mr-2">Edit Zone</button>
                             <button class="btn btn-danger btn-sm mr-2">Delete Zone</button>
-                            <a href="add_zipcodes.html" class="btn btn-dark btn-sm">Add Zipcodes</a>
+                            <a onclick="openaddzipview()" style="color:white" class="btn btn-dark btn-sm">Add Zipcodes</a>
 
                             <div class="btn-group ml-3" aria-label="Basic example" role="group">
                                 <button type="button" class="btn btn-outline-primary"><i class="mdi mdi-arrow-left-bold"></i></button>
@@ -118,5 +118,11 @@
      function openhomeview() {
         var storeids = '@Model.StoreId';
         window.location.href = '@Url.Action("Index", "Zone")?store=' + storeids;
+    }
+
+    function openaddzipview() {
+        var storeid = '@Model.StoreId';
+        var zoneid = '@Model.ZoneId';
+        window.location.href = '@Url.Action("AddZipCodes", "ZipCode")?StoreId=' + storeid + '&ZoneId=' + zoneid; //+ '&StateName=CA'
     }
 </script>
