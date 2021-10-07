@@ -426,7 +426,7 @@ namespace OneposStamps.Helper
             return dataTable;
         }
 
-        public DataSet GetZipcodeData(string sqlStmt = "", string State = "", string City = "", string Zipcodes = "")
+        public DataSet GetZipcodeData(string sqlStmt = "", string State = "", string City = "", string Zipcodes = "",string Store_Id="",string Zone_Id="")
         {
             try
             {
@@ -441,6 +441,8 @@ namespace OneposStamps.Helper
                 cmd.Parameters.AddWithValue("@States", State);
                 cmd.Parameters.AddWithValue("@city", City);
                 cmd.Parameters.AddWithValue("@Zipcodes", Zipcodes);
+                cmd.Parameters.AddWithValue("@StoreId", Store_Id);
+                cmd.Parameters.AddWithValue("@Zone_Id", Zone_Id);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
                 if (dataSet != null)

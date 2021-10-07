@@ -18,4 +18,5 @@ namespace OneposStamps.Models
         public string Zipcode { get; set; }
     }
 
+   
 }

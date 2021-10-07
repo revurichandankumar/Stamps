@@ -15,6 +15,7 @@ namespace OneposStamps.Controllers
         public ActionResult AddZipCodes(ZipcodeFilters zf)
         {
             GetZipCodeData ZipData = new GetZipCodeData();
+            GetZipCodeData ZipData2 = new GetZipCodeData();
 
             ZipData.StoreId = zf.StoreId;
             ZipData.ZoneId = zf.ZoneId;
@@ -41,7 +42,7 @@ namespace OneposStamps.Controllers
                 zipcode = zf.ZipCode;
             }
 
-            DataSet ds = db.GetZipcodeData("USP_GetZipcodesDefaultData", statename, cityname, zipcode);
+            DataSet ds = db.GetZipcodeData("USP_GetZipcodesDefaultData", statename, cityname, zipcode, ZipData.StoreId, ZipData.ZoneId);
             if (ds.Tables.Count > 0)
             {
                 if (ds.Tables[0].Rows.Count > 0)
@@ -62,8 +63,28 @@ namespace OneposStamps.Controllers
                 {
                     return new HttpStatusCodeResult(400, "No data found");
                 }
-                //ZipData.StoreId = zf.StoreId;
-                //ZipData.ZoneId = zf.ZoneId;
+
+
+                if (ds.Tables[1].Rows.Count > 0)
+                {
+
+                    List<ZipCodes> Gz = new List<ZipCodes>();
+                    foreach (DataRow row in ds.Tables[1].Rows)
+                    {
+                        ZipCodes a = new ZipCodes();
+                        a.Name = (row["CityName"]).ToString();
+                        a.Zipcode = (row["Zipcode"]).ToString();
+                        Gz.Add(a);
+                    }
+                    ZipData2.ZipCodeList = Gz;
+                    ZipData2.GroupbyZipCodeList = Gz.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
+                }
+                else
+                {
+                    return new HttpStatusCodeResult(400, "No data found");
+                }
+
+
 
             }
             else
