@@ -36,7 +36,7 @@ namespace OneposStamps.Controllers
                     case 1:
                         return RedirectToAction("Index", "Zone", new { store= storeId });
                     case 2:
-                       return RedirectToAction("OrderDetails", "Zone",new { store = storeId });
+                        return RedirectToAction("OrderDetails", "Order", new { StoreId = storeId } );
 
                 }
 

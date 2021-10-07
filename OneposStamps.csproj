@@ -163,7 +163,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
-    <Compile Include="Controllers\DbDetails.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Models\DbDetails.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ZipCodeController.cs" />
     <Compile Include="Controllers\ZoneController.cs" />
@@ -176,6 +177,7 @@
     <Compile Include="Models\GetZipCodeData.cs" />
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
+    <Compile Include="Models\OrdersDetail.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
     <Compile Include="Models\Zones.cs" />
@@ -327,6 +329,7 @@
     <Content Include="Views\Zone\EditZone.cshtml" />
     <Content Include="Views\ZipCode\AddZipCodes.cshtml" />
     <Content Include="Views\ZipCode\_AddZipCodes.cshtml" />
+    <Content Include="Views\Order\OrderDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

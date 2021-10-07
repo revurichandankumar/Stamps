@@ -123,7 +123,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
-        public DataSet GetOrders(string sqlStmt = "", string sid = "",string startdate="",string enddate="",string address="",string password="",string dbname="",string username="")
+        public DataSet GetOrders(string sqlStmt = "", string sid = "",string deliverdate="",string address="",string password="",string dbname="",string username="")
         {
 
             try
@@ -141,8 +141,7 @@ namespace OneposStamps.Helper
                 cmd.CommandText = sqlStmt;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@StoreId", sid);
-                cmd.Parameters.AddWithValue("@startdate", startdate);
-                cmd.Parameters.AddWithValue("@enddate", enddate);
+                cmd.Parameters.AddWithValue("@deliverdate", deliverdate);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
 
@@ -426,7 +425,7 @@ namespace OneposStamps.Helper
             return dataTable;
         }
 
-        public DataSet GetZipcodeData(string sqlStmt = "", string State = "", string City = "", string Zipcodes = "",string Store_Id="",string Zone_Id="")
+        public DataSet GetZipcodeData(string sqlStmt = "", string State = "", string City = "", string Zipcodes = "", string Store_Id = "", string Zone_Id = "")
         {
             try
             {
@@ -461,7 +460,8 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
-        public DataSet GetZipInsertData(string sqlStmt = "", string data="")
+
+        public DataSet GetZipInsertData(string sqlStmt = "", string data="", string StoreId = "", string ZoneId = "")
         {
             try
             {
@@ -474,6 +474,8 @@ namespace OneposStamps.Helper
                 cmd.CommandText = sqlStmt;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Myjason", data);
+                cmd.Parameters.AddWithValue("@StoreId", StoreId);
+                cmd.Parameters.AddWithValue("@ZoneId", ZoneId);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
                 if (dataSet != null)
@@ -492,6 +494,26 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
+        public DbDetails GetDbDetails( string StoreId)
+        {
+            DataSet ds = GetMysqlDataSet("USP_GetDataBaseDetails", "731ba9b9-d84a-4866-b9c9-8e4d569e5cad"); //StoreId
+            DbDetails dbdetails = new DbDetails();
+            foreach (DataRow row in ds.Tables[0].Rows)
+            {
+
+                dbdetails.Address = (row["Address"]).ToString();
+                dbdetails.Username = (row["Username"]).ToString();
+                dbdetails.Password = (row["Password"]).ToString();
+                dbdetails.DatabaseName = (row["DatabaseName"]).ToString();
+                dbdetails.StampsUserName = (row["StampsUsername"]).ToString();
+                dbdetails.StampsUserPassword = (row["StampsPassword"]).ToString();
+                dbdetails.IntegrationId = (row["IntegrationId"]).ToString();
+            }
+
+            return dbdetails;
+        }
+
 
         private bool _isDisposed = false;
         public void Dispose()
