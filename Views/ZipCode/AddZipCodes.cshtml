@@ -146,12 +146,18 @@
 
         }
 
+        var data = {
+            ZipCodeList : ziplist,
+            StoreId : '@Model.StoreId',
+            ZoneId : '@Model.ZoneId'
+        };
+
         $.ajax({
             type: "POST",
             url: "/ZipCode/InsertZipCodestoZone",
             //contentType: "application/json; charset=utf-8",
             //dataType: "json",
-            data: { ZipCodeList : ziplist },
+            data: data,
             success: function (response) {
                 debugger
                 if (response.result == 'Redirect')

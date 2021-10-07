@@ -9,6 +9,10 @@ namespace OneposStamps.Models
     {
         public List<ZipCodes> ZipCodeList { get; set; }
         public List<List<ZipCodes>> GroupbyZipCodeList { get; set; }
+
+        public List<ZipCodes> AddedZipCodeList { get; set; }
+        public List<List<ZipCodes>> GroupbyAddedZipCodeList { get; set; }
+
         public string StoreId { get; set; }
         public string ZoneId { get; set; }
     }

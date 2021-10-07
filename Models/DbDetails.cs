@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace OneposStamps.Controllers
+namespace OneposStamps.Models
 {
     public class DbDetails
     {
