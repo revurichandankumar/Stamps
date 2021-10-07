@@ -12,18 +12,17 @@ namespace OneposStamps.Controllers
     {
         // GET: Order
 
-        public ActionResult OrderDetails(string StoreId, string fromdate = "", string todate = "")
+        public ActionResult OrderDetails(string StoreId, string DeliverDate = "")
         {
             OrdersDetail od = new OrdersDetail();
-            if (string.IsNullOrEmpty(fromdate) && string.IsNullOrEmpty(todate))
+            od.StoreId = StoreId;
+            if (string.IsNullOrEmpty(DeliverDate))
             {
-                od.StoreId = StoreId;
-
                 return View(od);
             }
 
             DbDetails dbdetails = db.GetDbDetails(StoreId);
-            DataSet ds = db.GetOrders("USP_GetordersShip", StoreId, fromdate, todate, dbdetails.Address, dbdetails.Password, dbdetails.DatabaseName, dbdetails.Username);
+            DataSet ds = db.GetOrders("USP_GetordersShip", StoreId, DeliverDate, dbdetails.Address, dbdetails.Password, dbdetails.DatabaseName, dbdetails.Username);
 
 
             List<GetordersData> getorderslist = new List<GetordersData>();

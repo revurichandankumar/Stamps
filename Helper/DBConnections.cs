@@ -123,7 +123,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
-        public DataSet GetOrders(string sqlStmt = "", string sid = "",string startdate="",string enddate="",string address="",string password="",string dbname="",string username="")
+        public DataSet GetOrders(string sqlStmt = "", string sid = "",string deliverdate="",string address="",string password="",string dbname="",string username="")
         {
 
             try
@@ -141,8 +141,7 @@ namespace OneposStamps.Helper
                 cmd.CommandText = sqlStmt;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@StoreId", sid);
-                cmd.Parameters.AddWithValue("@startdate", startdate);
-                cmd.Parameters.AddWithValue("@enddate", enddate);
+                cmd.Parameters.AddWithValue("@deliverdate", deliverdate);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
 
