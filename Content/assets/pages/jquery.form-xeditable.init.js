@@ -16,7 +16,7 @@ $(function () {
   //inline
 
 
-  $('#zonename, #shipmentfee').editable({
+  $('#zonename, #shipmentfee, .editable').editable({
       type: 'text',
       pk: 1,
       name: 'username',

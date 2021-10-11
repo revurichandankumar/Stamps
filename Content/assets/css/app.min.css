@@ -202,3 +202,117 @@
 .collzips .accordion .card-header a{
     font-weight: 700;
 }
+.card{
+    overflow: hidden;
+}
+.order-card-title{
+    padding: 10px;
+    margin: 0px;
+    color: #fff;
+    background-color: #292e40 !important; /*#9ba7ca*/
+}
+.order-list{
+    padding: 0px;
+}
+.order-list li{
+    list-style-type: none;
+    padding: 3px 0px;
+}
+.order-list li strong{
+    width: 110px;
+    text-align: right;
+    display: inline-block;
+}
+.order-list ul li{
+    padding: 0px 0px 0px 0px;
+}
+.border-bottom{
+    border-bottom: 1px solid #ddd !important;
+}
+.order-btn{
+    padding: 0px 5px;
+    font-size: 11px;
+    color: #fff;
+}
+.vh-75-map{
+    height: 88vh;
+}
+.driver-list-map li.active img{
+    border: 3px solid #fd2323;
+    background-color: #fd2323;
+}
+.driver-list-map li{
+    position: relative;
+}
+.driver-list-map li.active::after{
+        content: '';
+        position: absolute;
+        right: 0px;
+        top: 35%;
+        width: 0;
+        height: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 10px solid #da0c0c;
+        clear: both;
+
+}
+.progress{
+    background-color: #d5d5d5;
+}
+
+.map-right-orders li{
+    position: relative;
+    margin-bottom: 15px;
+    list-style-type: none;
+}
+.map-right-orders li .map-marker{
+    position: absolute;
+    left: -40px;
+    top: 1px;
+}
+.map-marker .stopnumber{
+    position: absolute;
+    left: calc(50%);
+    transform: translateX(-50%);
+    top: 6px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+}
+.driverlist li{
+    padding: 10px 20px;
+}
+.driverlist li:not(:last-child){
+    margin-bottom: 10px;
+    border-bottom: 1px solid #bbb;
+}
+.driverlist li.active{
+    background-color: #ddd;
+}
+
+#imageUpload
+{
+    display: none;
+}
+
+#profileImage
+{
+    cursor: pointer;
+}
+
+#profile-container {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+#profile-container img {
+    width: 100px;
+    height: 100px;
+}

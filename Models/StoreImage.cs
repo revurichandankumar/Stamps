@@ -5,10 +5,9 @@ using System.Web;
 
 namespace OneposStamps.Models
 {
-    public class OrdersDetail
+    public class StoreImage
     {
-        public string DeliverDate { get; set; }
         public string StoreId { get; set; }
-        public List<GetordersData> OrderList { get; set; }
+        public string ImagePath { get; set; }
     }
 }

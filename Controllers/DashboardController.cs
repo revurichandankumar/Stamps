@@ -21,7 +21,8 @@ namespace OneposStamps.Controllers
         /// <returns></returns>
         public ActionResult Index( string storeId = null, int type = 0)
         {
-            //TempData["Type"] = type;
+
+            Session["StoreId"] = storeId;
             if ( !string.IsNullOrWhiteSpace(storeId))
             {
                 //db.Dispose();
@@ -65,5 +66,29 @@ namespace OneposStamps.Controllers
         //    }
         //    return ds.Tables[0];
         //}
+
+        public string LoadImageForStore()
+        {
+            string path = null;
+            if (Session["StoreId"] != null)
+            {
+                string storeid = Session["StoreId"].ToString();
+
+
+                if (storeid == "d73add35-876a-4c82-82f9-9591baf2c20d")
+                {
+                    path = Server.MapPath("~/Content/assets/images/logo.png");
+                }
+                else if (storeid == "f575a340-44a8-4f68-b5fc-efba3350a264")
+                {
+                    path = Server.MapPath("~/Content/StoreLogo/Mylapore Logo.jpg");
+                }
+
+
+            }
+
+            return path;
+
+        }
     }
 }

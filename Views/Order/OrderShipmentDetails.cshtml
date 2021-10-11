@@ -1,0 +1,714 @@
+﻿@model OneposStamps.Models.OrderDetails
+@{
+    ViewBag.Title = "OrderShipmentDetails";
+}
+
+<body data-layout="horizontal" class="dark-topbar">
+
+    <div class="page-wrapper">
+        <!-- Page Content-->
+        <div class="page-content">
+
+            <div class="container-fluid">
+                <!-- Page-Title -->
+                <div class="row justify-content-center">
+                    <div class="col-sm-12">
+                        <div class="page-title-box d-flex align-items-center">
+                            <a onclick="openorderdetailsview()" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
+                            <h4 class="page-title font-weight-bold">@Model.OrderId</h4>
+
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+
+                </div>
+                <!-- end page title end breadcrumb -->
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-8">
+                        <div class="row justify-content-center">
+                            <div class="col-sm-6">
+                                <div class="card border">
+                                    <div class="bg-dark d-flex align-items-center">
+                                        <h5 class="order-card-title bg-gray">Order Summery</h5>
+                                        <div class="col text-right">
+                                            <button class="btn btn-outline-light order-btn font-11">Edit</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (Model.orderSummary != null)
+                                        {
+                                            <input type="hidden" id="hfTransactionId" name="hfTransactionId" value="@Model.orderSummary.TransactionId" />
+                                            <input type="hidden" id="hfStoreAddress" name="hfStoreAddress" value="@Model.orderSummary.StoreAddress" />
+                                            <input type="hidden" id="hfStoreCity" name="hfStoreCity" value="@Model.orderSummary.StoreCity" />
+                                            <input type="hidden" id="hfStoreState" name="hfStoreState" value="@Model.orderSummary.StoreState" />
+                                            <input type="hidden" id="hfStoreCountry" name="hfStoreCountry" value="@Model.orderSummary.StoreCountry" />
+                                            <input type="hidden" id="hfStoreZipCode" name="hfStoreZipCode" value="@Model.orderSummary.StoreZipcode" />
+                                            <ul class="mb-0 order-list">
+                                                <li><strong class="mr-3">Store</strong><span id="spn_storeName">@Model.orderSummary.storeName</span></li>
+                                            </ul>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <ul class="mb-0 order-list">
+                                                        <li><strong class="mr-3">Order Date</strong><span id="liOrderDate">@(string.IsNullOrEmpty(Model.orderSummary.orderDate.ToString()) ? null : Model.orderSummary.orderDate.Value.ToString("MM'/'dd'/'yyyy"))</span></li>
+                                                        <li><strong class="mr-3">Paid Date</strong>@(string.IsNullOrEmpty(Model.orderSummary.paidDate.ToString()) ? null : Model.orderSummary.paidDate.Value.ToString("MM'/'dd'/'yyyy"))</li>
+                                                        <li><strong class="mr-3">Hold Until</strong>@Model.orderSummary.holdUntil</li>
+
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <ul class="mb-0 order-list">
+                                                        <li><strong class="mr-3">Product Total</strong>@("$")@Model.orderSummary.productTotal</li>
+                                                        <li><strong class="mr-3">Shipping Paid</strong>@("$")@Model.orderSummary.shippingPaid</li>
+                                                        <li><strong class="mr-3">Tax paid</strong>@("$")@Model.orderSummary.taxPaid</li>
+                                                        <li class="border bg-dark text-white">
+                                                            <strong class="mr-3">Total Order</strong>@("$")@Model.orderSummary.totalOrder
+                                                        </li>
+                                                        <li><strong class="mr-3">Total paid</strong>@("$")@Model.orderSummary.totalPaid</li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card border">
+                                    <div class="bg-dark d-flex align-items-center">
+                                        <h5 class="order-card-title bg-gray">Buyer Recipient Info</h5>
+                                        <div class="col text-right">
+                                            <button class="btn btn-outline-light order-btn font-11">Edit</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        @if (true)
+                                        {
+                                            <ul class="mb-0 order-list">
+                                                <li class="d-flex border-bottom mb-3 pb-3">
+                                                    <strong class="mr-3">Sold To</strong>
+                                                    <ul class="p-0">
+                                                        <li>@Model.BuyersDetails.name</li>
+                                                        <li> <a href="mailto:@Model.BuyersDetails.email" class="text-primary">@Model.BuyersDetails.email</a></li>
+                                                        <li>@Model.BuyersDetails.phoneNo</li>
+                                                    </ul>
+
+                                                </li>
+                                                <li class="d-flex">
+                                                    <strong class="mr-3">Ship To</strong>
+                                                    <ul class="p-0" style="width: 45%;">
+                                                        <li><span id="liBuyName">@Model.BuyersDetails.name</span></li>
+                                                        <li><span id="liBuyAddress">@Model.BuyersDetails.address</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")<span id="liBuyCity">@Model.BuyersDetails.city</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")</li>
+                                                        <li><span id="liBuyLandmark">@Model.BuyersDetails.landMark</span></li>
+                                                        <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
+                                                        <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
+                                                        <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i> Address Verified</a></li>
+                                                    </ul>
+                                                    <a onclick="onverifyAdrress()" style="cursor:pointer" class="ml-auto text-primary">Verify Address</a>
+                                                </li>
+
+                                            </ul>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="card border">
+                                    <h5 class="order-card-title bg-gray">Order Items</h5>
+                                    <div class="card-body p-0">
+                                        <table class="table mb-0 table-centered table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Item(s)</th>
+                                                    <th>Unit $</th>
+                                                    <th>QTY</th>
+                                                    <th>Stock</th>
+                                                    <th>Total $</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.OrderItemDetails != null && Model.OrderItemDetails.Count > 0)
+                                                {
+                                                    foreach (var od in Model.OrderItemDetails)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <p class="font-weight-bold mb-0">@od.name</p>
+                                                                <p class="mb-0"><strong>SKU : </strong>@od.sku</p>
+                                                                <p class="mb-0">@od.Itemlist</p>
+                                                            </td>
+                                                            <td>@("$")@od.UnitPrice</td>
+                                                            <td>@od.OrderQty</td>
+                                                            <td>In Stock</td>
+                                                            <td class="font-weight-bold mb-0">@("$")@od.TotalPrice</td>
+                                                        </tr>
+                                                    }
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <div class="card border">
+                                    <h5 class="order-card-title">Order Notes</h5>
+                                    <div class="card-body">
+                                        <ul class="mb-0 order-list">
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Customer</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">ME Vane</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">To Buyer</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Internal</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label font-weight-bold" for="customCheck3">This is a gift</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">No Gift Message</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Custom Field One</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Custom Field Two</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                            </li>
+                                            <li>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Custom Field Three</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card border">
+                            <div class="bg-dark d-flex align-items-center">
+                                <h5 class="order-card-title bg-gray">Shipments</h5>
+                                <div class="col text-right">
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-light order-btn font-11 dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Docs
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#">Packing Slips</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#">Order Summary</a>
+                                            <a class="dropdown-item" href="#">Pack List</a>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline-light order-btn font-11">Resend</button>
+                                    <button class="btn btn-outline-light order-btn font-11">Return</button>
+                                    <button class="btn btn-outline-light order-btn font-11">Void</button>
+                                    <button class="btn btn-outline-light order-btn font-11"><i class="fa fa-print"></i> Labels</button>
+
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <!-- <p class="text-muted text-center my-3">No Prior Shipments</p> -->
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Shipped</th>
+                                            <th>Tracking</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <p class="mb-0" id="p_ShipDate"></p>
+                                                <p class="mb-0" id="p_ShipZone"><i class="fa fa-arrow-right"></i></p>
+                                            </td>
+                                            <td>
+                                                <p class="mb-0 text-primary" id="p_TrackingId"></p>
+                                                <p class="mb-0 text-dark" id="p_Insurance"></p>
+                                            </td>
+                                            <td>
+                                                <i class="fa fa-check-circle text-success" id="ship_status" style="display:none"></i>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="card border">
+                            <h5 class="order-card-title bg-gray">Shipping Info</h5>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 text-right">
+                                        <label for="spn_Requested" class="text-right">Requested</label>
+                                    </div>
+                                    <div class="col-md-8 mb-2">
+                                        <strong><span id="spn_Requested">Local Delivery</span></strong>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="drlShipFrom" class="text-right">Ship From</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group d-flex align-items-center">
+                                            <select name="drlShipFrom" id="drlShipFrom" class="form-control-sm form-control">
+                                                @foreach (var item in Model.ZoneList)
+                                                {
+                                                    <option value="@item.ZoneId">@item.ZoneName</option>
+                                                }
+                                            </select>
+                                            <a href="#" class="ml-2 btn btn-primary table-btn">Calc</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="divWeight" class="text-right mb-4">Weight</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group d-flex align-items-center" id="divWeight">
+                                            <input type="number" id="txtWeightLB" name="txtWeightLB" class="form-control form-control-sm" placeholder="0" />
+                                            <span class="mx-3">(lb)</span>
+                                            <input type="number" id="txtWeightOZ" name="txtWeightOZ" class="form-control form-control-sm mr-3" placeholder="0" />
+                                            <span>(oz)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="drlService" class="text-right mb-4">Service</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <select name="drlService" id="drlService" class="form-control-sm form-control">
+                                                @foreach (var item in Model.ServiceList)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                                @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
+                                                  <option value="USPA">USPA</option>
+                                                  <option value="USP">USP</option>*@
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right align-self-start">
+                                        <label for="" class="text-right mt-2">Package</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group d-flex align-items-center">
+                                            <select name="drlPackage" id="drlPackage" class="form-control-sm form-control">
+                                                @foreach (var item in Model.PackageList)
+                                                {
+                                                    <option value="@item.Id">@item.Name</option>
+                                                }
+                                                @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
+                                                <option value="USPA">USPA</option>
+                                                <option value="USP">USP</option>*@
+                                            </select>
+                                            <a href="#" class="ml-2 text-primary"><i class="fa fa-plus"></i></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="txtSize" class="text-right mb-4">Size</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group d-flex align-items-center">
+                                            <input type="number" name="txtSize" id="txtsize1" class="form-control form-control-sm" placeholder="0" value="12" />
+                                            <span class="mx-2">(X)</span>
+                                            <input type="number" name="txtSize" id="txtsize2" class="form-control form-control-sm" placeholder="0" />
+                                            <span class="mx-2">(X)</span>
+                                            <input type="number" name="txtSize" id="txtsize3" class="form-control form-control-sm mr-1" placeholder="0" />
+                                            <span>(in)</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="drlConfirm" class="text-right mb-4">Confirm</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <select name="drlConfirm" id="drlConfirm" class="form-control-sm form-control">
+                                                <option value="Online">Online</option>
+                                                <option value="USPA">USPA</option>
+                                                <option value="USP">USP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="drlInsurance" class="text-right mb-4">Insurance</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <select name="drlInsurance" id="drlInsurance" class="form-control-sm form-control">
+                                                <option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
+                                                <option value="USPA">USPA</option>
+                                                <option value="USP">USP</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="" class="text-right">Rate</label>
+                                    </div>
+                                    <div class="col-md-8 mb-2">
+                                        <strong class="text-primary font-20">$<span id="span_Rate">0</span></strong>
+                                        <button id="btnRateRefresh" onclick="onBtnRateRefreshClick()" class="btn btn-info table-btn mb-2 ml-2"><i class="fas fa-sync-alt"></i></button>
+                                    </div>
+
+                                    <div class="col-md-4 text-right">
+                                        <label for="spn_deliveryTime" class="text-right">Delivery Time</label>
+                                    </div>
+                                    <div class="col-md-8 mb-2">
+                                        <span class="text-dark lead" id="spn_deliveryTime"></span>
+                                    </div>
+
+                                    <div class="col-md-12 text-center my-3">
+                                        <div class="checkbox">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" class="custom-control-input" id="chkIsShipDefault" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                <label class="custom-control-label font-weight-bold" for="chkIsShipDefault">Save as shipping defaults for this product</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <button id="btnCreateLabel" onclick="onCreateLabelClick()" class="btn btn-primary">Create Label</button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div><!-- container -->
+
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
+
+</body>
+
+
+<script>
+
+    function openorderdetailsview() {
+        var storeid = '@Model.StoreId';
+        var DeliverDate = '@Model.DeliverDate';
+        window.location.href = '@Url.Action("OrderDetails", "Order")?StoreId=' + storeid +'&redirectedDeliverDate=' + DeliverDate ;
+    }
+
+    function onverifyAdrress() {
+        var name = null;
+        var address1 = null;
+        var city = null;
+        var state = null;
+        var zipcode = null;
+
+        if ($("#liBuyName")[0].innerText != null && $("#liBuyName")[0].innerText != "" && $("#liBuyName")[0].innerText != undefined) {
+            name = $("#liBuyName")[0].innerText;
+        }
+        if ($("#liBuyAddress")[0].innerText != null && $("#liBuyAddress")[0].innerText != "" && $("#liBuyAddress")[0].innerText != undefined) {
+            address1 = $("#liBuyAddress")[0].innerText;
+        }
+        if ($("#liBuyCity")[0].innerText != null && $("#liBuyCity")[0].innerText != "" && $("#liBuyCity")[0].innerText != undefined) {
+            city = $("#liBuyCity")[0].innerText;
+        }
+        if ($("#liBuyState")[0].innerText != null && $("#liBuyState")[0].innerText != "" && $("#liBuyState")[0].innerText != undefined) {
+            state = $("#liBuyState")[0].innerText;
+        }
+        if ($("#liBuyZipcode")[0].innerText != null && $("#liBuyZipcode")[0].innerText != "" && $("#liBuyZipcode")[0].innerText != undefined) {
+            zipcode = $("#liBuyZipcode")[0].innerText;
+        }
+
+        var addressData = {
+            name: name,
+            address1: address1,
+            city: city,
+            state: state,
+            zipcode: zipcode
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Order/CheckAddress",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            data: { Addressrequest: addressData },
+            success: function (response) {
+                if (response == "true") {
+                    $("#addverifyStatus").attr('style', 'display: inline');
+                }
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    }
+
+    function onBtnRateRefreshClick() {
+        var fromzipcode = null;
+        var tozipcode = null;
+        var packagetype = null;
+        var shipdate = null;
+        var weightlb = null;
+        var weightoz = null;
+
+        if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val()  != undefined) {
+            fromzipcode = $("#hfStoreZipCode").val() ;
+        }
+        if ($("#liBuyZipcode")[0].innerText != null && $("#liBuyZipcode")[0].innerText != "" && $("#liBuyZipcode")[0].innerText != undefined) {
+            tozipcode = $("#liBuyZipcode")[0].innerText;
+        }
+        if ($("#drlPackage").val() != null && $("#drlPackage").val() != "" && $("#drlPackage").val() != undefined) {
+            //package = $("#drlPackage").val();
+            packagetype = 'Package';
+        }
+        else {
+            packagetype = 'Package';
+        }
+        if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
+            shipdate = $("#liOrderDate")[0].innerText;
+
+        }
+        if ($("#txtWeightLB").val() != null && $("#txtWeightLB").val() != "" && $("#txtWeightLB").val() != undefined) {
+            weightlb = $("#txtWeightLB").val();
+        }
+        if ($("#txtWeightOZ").val() != null && $("#txtWeightOZ").val() != "" && $("#txtWeightOZ").val() != undefined) {
+            weightoz = $("#txtWeightOZ").val();
+        }
+
+        var rateData = {
+            fromZipcode: fromzipcode,
+            toZipcode: tozipcode,
+            WeightLb: weightlb,
+            WeightOz: weightoz,
+            PackageType: packagetype,
+            shipdate: shipdate
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Order/GetShipRates",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            data: { getrates: rateData  },
+            success: function (response) {
+                if (response != null) {
+                    $("#span_Rate")[0].innerText = response;
+                }
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+
+    }
+
+    function onCreateLabelClick() {
+        var shipfrom = null;
+        var storename = null;
+
+        var transactionid = null;
+
+        var fromaddress = null;
+        var fromcity = null;
+        var fromstate = null;
+        var fromzipcode = null;
+        var fromcountry = null;
+
+        var tofullname = null;
+        var toaddress = null;
+        var tocity = null;
+        var tostate = null;
+        var tozipcode = null;
+        var tocountry = null;
+
+
+        var weightlb = null;
+        var weightoz = null;
+        var packagetype = null;
+        var shipdate = null;
+        var service = null;
+        var size1 = null;
+        var size2 = null;
+        var size3 = null;
+        var rate = null;
+
+        if ($('#drlShipFrom').find(":selected").text() != null && $('#drlShipFrom').find(":selected").text() != "" && $('#drlShipFrom').find(":selected").text() != undefined) {
+            shipfrom = $('#drlShipFrom').find(":selected").text();
+        }
+        if ($("#hfTransactionId").val() != null && $("#hfTransactionId").val() != "" && $("#hfTransactionId").val() != undefined) {
+            transactionid = $("#hfTransactionId").val();
+        }
+        if ($("#spn_storeName")[0].innerText != null && $("#spn_storeName")[0].innerText != "" && $("#spn_storeName")[0].innerText != undefined) {
+            storename = $("#spn_storeName")[0].innerText;
+        }
+        if ($("#hfStoreAddress").val() != null && $("#hfStoreAddress").val() != "" && $("#hfStoreAddress").val() != undefined) {
+            fromaddress = $("#hfStoreAddress").val();
+        }
+        if ($("#hfStoreCity").val() != null && $("#hfStoreCity").val() != "" && $("#hfStoreCity").val() != undefined) {
+            fromcity = $("#hfStoreCity").val();
+        }
+        if ($("#hfStoreState").val() != null && $("#hfStoreState").val() != "" && $("#hfStoreState").val() != undefined) {
+            fromstate = $("#hfStoreState").val();
+        }
+        if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val() != undefined) {
+            fromzipcode = $("#hfStoreZipCode").val();
+        }
+        if ($("#hfStoreCountry").val() != null && $("#hfStoreCountry").val() != "" && $("#hfStoreCountry").val() != undefined) {
+            fromcountry = $("#hfStoreCountry").val();
+        }
+
+        if ($("#liBuyName")[0].innerText != null && $("#liBuyName")[0].innerText != "" && $("#liBuyName")[0].innerText != undefined) {
+            tofullname = $("#liBuyName")[0].innerText;
+        }
+        if ($("#liBuyAddress")[0].innerText != null && $("#liBuyAddress")[0].innerText != "" && $("#liBuyAddress")[0].innerText != undefined) {
+            toaddress = $("#liBuyAddress")[0].innerText;
+        }
+        if ($("#liBuyCity")[0].innerText != null && $("#liBuyCity")[0].innerText != "" && $("#liBuyCity")[0].innerText != undefined) {
+            tocity = $("#liBuyCity")[0].innerText;
+        }
+        if ($("#liBuyState")[0].innerText != null && $("#liBuyState")[0].innerText != "" && $("#liBuyState")[0].innerText != undefined) {
+            tostate = $("#liBuyState")[0].innerText;
+        }
+        if ($("#liBuyZipcode")[0].innerText != null && $("#liBuyZipcode")[0].innerText != "" && $("#liBuyZipcode")[0].innerText != undefined) {
+            tozipcode = $("#liBuyZipcode")[0].innerText;
+        }
+        if ($("#liBuyCountry")[0].innerText != null && $("#liBuyCountry")[0].innerText != "" && $("#liBuyCountry")[0].innerText != undefined) {
+            tocountry = $("#liBuyCountry")[0].innerText;
+        }
+
+
+        if ($("#txtWeightLB").val() != null && $("#txtWeightLB").val() != "" && $("#txtWeightLB").val() != undefined) {
+            weightlb = $("#txtWeightLB").val();
+        }
+        if ($("#txtWeightOZ")[0].innerText != null && $("#txtWeightOZ")[0].innerText != "" && $("#txtWeightOZ")[0].innerText != undefined) {
+            weightoz = $("#txtWeightOZ")[0].innerText;
+        }
+
+        if ($("#drlPackage").val() != null && $("#drlPackage").val() != "" && $("#drlPackage").val() != undefined) {
+            //package = $("#drlPackage").val();
+            packagetype = 'Package';
+        }
+        else {
+            packagetype = 'Package';
+        }
+        if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
+            shipdate = $("#liOrderDate")[0].innerText;
+        }
+        if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
+            //service = $("#drlService").val();
+            service = 'US-PM';
+        }
+        else {
+            service = 'US-PM';
+        }
+        if ($("#txtsize1").val() != null && $("#txtsize1").val() != "" && $("#txtsize1").val() != undefined) {
+            size1 = $("#txtsize1").val();
+        }
+        if ($("#txtsize2").val() != null && $("#txtsize2").val() != "" && $("#txtsize2").val() != undefined) {
+            size2 = $("#txtsize2").val();
+        }
+        if ($("#txtsize3").val() != null && $("#txtsize3").val() != "" && $("#txtsize3").val() != undefined) {
+            size3 = $("#txtsize3").val();
+        }
+        if ($("#span_Rate")[0].innerText != null && $("#span_Rate")[0].innerText != "" && $("#span_Rate")[0].innerText != undefined) {
+            rate = $("#span_Rate")[0].innerText;
+        }
+
+        var getLabelData = {
+            IntegratorTxID : transactionid,
+            FromFullName: storename,
+            Fromaddress : fromaddress,
+            FromCity : fromcity,
+            FromState: fromstate,
+            FromZIPCode: fromzipcode,
+            FromCountry: fromcountry,
+            ToFullName: tofullname,
+            Toaddress: toaddress,
+            ToCity: tocity,
+            ToState: tostate,
+            ToZIPCode: tozipcode,
+            ToCountry: tocountry,
+            WeightLb : weightlb,
+            WeightOz: weightoz,
+            PackageType: packagetype,
+            shipdate: shipdate,
+            ServiceType: service,
+            Length: size1,
+            Width: size2,
+            Height: size3,
+            Amount: rate,
+            ZoneName: shipfrom,
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Order/GetLabels",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            data: { getlabel: getLabelData },
+            success: function (response) {
+                if (response != null) {
+                    var res = response; spn_deliveryTime
+                    $("#spn_deliveryTime").val(res.DeliveryDate);
+                    $("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
+                    $("#p_ShipDate").val(res.ShipDate);
+                    $("#p_ShipDate")[0].innerText = res.DeliveryDate;
+                    $("#p_ShipZone").val(res.ZoneName);
+                    $("#p_ShipZone")[0].innerText = res.ZoneName;
+                    $("#p_TrackingId").val(res.TrackingNumber);
+                    $("#p_TrackingId")[0].innerText = res.TrackingNumber;
+                    $("#p_Insurance").val(res.ServiceType);
+                    $("#p_Insurance")[0].innerText = res.ServiceType;
+                    $("#ship_status").attr("style", "display:inline");
+                    
+                var win = window.open(response.Url, '_blank');
+                if (win) {
+                    //Browser has allowed it to be opened
+                    win.focus();
+                } else {
+                    //Browser has blocked it
+                    alert('Please allow popups for this website');
+                    }
+                }
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+
+    }
+
+
+
+    @*window.onbeforeunload = function () {
+        var storeid = '@Model.StoreId';
+        var DeliverDate = '@Model.DeliverDate';
+        window.location.href = '@Url.Action("OrderDetails", "Order")?StoreId=' + storeid +'&redirectedDeliverDate=' + DeliverDate ;
+    };*@
+
+</script>

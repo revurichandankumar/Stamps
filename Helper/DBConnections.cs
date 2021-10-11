@@ -123,7 +123,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
-        public DataSet GetOrders(string sqlStmt = "", string sid = "",string deliverdate="",string address="",string password="",string dbname="",string username="")
+        public DataSet GetOrders(string sqlStmt = "", string sid = "", string deliverdate = "", string address = "", string password = "", string dbname = "", string username = "")
         {
 
             try
@@ -161,6 +161,46 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
+        public DataSet GetOrderShippingDetails(string sqlStmt = "", string sid = "", string orderid = "", string address = "", string password = "", string dbname = "", string username = "")
+        {
+
+            try
+            {
+                var connectionString = string.Empty;
+
+                connectionString = "server = " + address + "; user = " + username + "; database = " + dbname + "; password = " + password + ";";
+
+
+
+                con.ConnectionString = connectionString;
+                con.Open();
+                //string rtn = "SuperCategory";
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StoreId", sid);
+                cmd.Parameters.AddWithValue("@OrderId", orderid);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
         public DataSet GetZonesData(string sqlStmt = "", string sid = "",string ZoneId="")
         {
 
