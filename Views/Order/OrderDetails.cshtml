@@ -33,7 +33,7 @@
                                         <span class="font-12 mr-2">2 Items Selected</span>
                                         <div class="mr-2">
                                             <div class="input-group">
-                                                <input type="text" onchange="onFilterClick()" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="Select Date" >
+                                                <input type="text" onchange="onFilterClick()" readonly="readonly" style="background-color:transparent" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="Select Date MM/DD/YYY" >
                                                 <div class="input-group-append">
                                                     <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                                 </div>
@@ -87,7 +87,17 @@
 <script>
 
     $(document).ready(function () {
-        debugger
+
+        var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+        $("#txtDeliverDate").datepicker({
+            format: 'mm/dd/yyyy',
+            container: container,
+            todayHighlight: true,
+            endDate: '+0d',
+            autoclose: true,
+            orientation: "bottom"
+        });
+
         var DeliverDate = '@Model.DeliverDate';
         if (DeliverDate != null && DeliverDate != "" && DeliverDate != undefined) {
             $("#txtDeliverDate").val(DeliverDate)

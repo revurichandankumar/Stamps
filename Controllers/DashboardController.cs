@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -27,11 +30,7 @@ namespace OneposStamps.Controllers
             {
                 //db.Dispose();
 
-                
 
-
-                var storeInfo = new Store();
-                
                 switch (type)
                 {
                     case 1:
@@ -67,9 +66,10 @@ namespace OneposStamps.Controllers
         //    return ds.Tables[0];
         //}
 
-        public string LoadImageForStore()
+        public ActionResult LoadImageForStore()
         {
             string path = null;
+            string base64String = null;
             if (Session["StoreId"] != null)
             {
                 string storeid = Session["StoreId"].ToString();
@@ -81,14 +81,66 @@ namespace OneposStamps.Controllers
                 }
                 else if (storeid == "f575a340-44a8-4f68-b5fc-efba3350a264")
                 {
-                    path = Server.MapPath("~/Content/StoreLogo/Mylapore Logo.jpg");
+                    path = Server.MapPath("~/Content/StoreLogo/png/Mylapore Logo-4.png");
                 }
+                try
+                {
+                    using (Image image = Image.FromFile(path))
+                    {
+                        //Bitmap b = new Bitmap(image);
 
+                        //Image i = resizeImage(b, new Size(134, 30));
 
+                        using (MemoryStream m = new MemoryStream())
+                        {
+                            image.Save(m, image.RawFormat);
+                            byte[] imageBytes = m.ToArray();
+
+                            // Convert byte[] to Base64 String
+                            base64String = Convert.ToBase64String(imageBytes);
+                            //return base64String;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                
             }
 
-            return path;
+            return Json(base64String);
 
+        }
+
+        private static System.Drawing.Image resizeImage(System.Drawing.Image imgToResize, Size size)
+        {
+            //Get the image current width  
+            int sourceWidth = imgToResize.Width;
+            //Get the image current height  
+            int sourceHeight = imgToResize.Height;
+            float nPercent = 0;
+            float nPercentW = 0;
+            float nPercentH = 0;
+            //Calulate  width with new desired size  
+            nPercentW = ((float)size.Width / (float)sourceWidth);
+            //Calculate height with new desired size  
+            nPercentH = ((float)size.Height / (float)sourceHeight);
+            if (nPercentH < nPercentW)
+                nPercent = nPercentH;
+            else
+                nPercent = nPercentW;
+            //New Width  
+            int destWidth = (int)(sourceWidth * nPercent);
+            //New Height  
+            int destHeight = (int)(sourceHeight * nPercent);
+            Bitmap b = new Bitmap(destWidth, destHeight);
+            Graphics g = Graphics.FromImage((System.Drawing.Image)b);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            // Draw image with new width and height  
+            g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
+            g.Dispose();
+            return (System.Drawing.Image)b;
         }
     }
 }

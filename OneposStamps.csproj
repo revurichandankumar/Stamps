@@ -319,6 +319,7 @@
     <Content Include="Content\StoreLogo\jpg\Mylapore Logo – 2.jpg" />
     <Content Include="Content\StoreLogo\jpg\Mylapore Logo – 3.jpg" />
     <Content Include="Content\StoreLogo\jpg\Mylapore Logo.jpg" />
+    <Content Include="Content\StoreLogo\png\Mylapore Logo-4.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 1.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 2.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 3.png" />
@@ -333,6 +334,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
