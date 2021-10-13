@@ -30,21 +30,17 @@ namespace OneposStamps.Models
         public string Height { get; set; }
         public string ServiceType { get; set; }
         public string Amount { get; set; }
+        public string ZoneName { get; set; }
 
     }
     public class CreateLabelResponse
     {
         public string Url { get; set; }
         public string DeliveryDate { get; set; }
-        public string ServiceType { get; set; }
+        public string ShipDate { get; set; }
         public string TrackingNumber { get; set; }
+        public string ServiceType { get; set; }
+        public string ZoneName { get; set; }
 
     }
 }
-
-               
-      
-                
- 
-          
-             

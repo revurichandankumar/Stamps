@@ -1,4 +1,5 @@
 ﻿@{
+    var storeid = Session["StoreId"];
     var storeInfo = Session["StoreInfo"] == null ? new OneposStamps.Models.Store() : (OneposStamps.Models.Store)Session["StoreInfo"];
 }
 
@@ -23,6 +24,13 @@
     <!-- Responsive datatable examples -->
     <link href="~/Content/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
+    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+
+    <!-- X-editable css -->
+    <link href="~/Content/assets/plugins/x-editable/css/bootstrap-editable.css" rel="stylesheet" />
+    <link href="~/Content/assets/plugins/select2/select2.min.css" rel="stylesheet" />
+    <link href="~/Content/assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+
     <!-- App css -->
     <link href="~/Content/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/assets/css/jquery-ui.min.css" rel="stylesheet">
@@ -45,7 +53,10 @@
             <div class="topbar-left text-center text-lg-left mr-5">
                 <a href="index.html" class="logo">
                     <span>
-                        <img src="~/Content/assets/images/logo.png" alt="logo-large" class="logo-lg logo-light">
+                        @*@* "@Url.Action("LoadImageForStore", "Dashboard")" *@
+                        @*@(Imagepath = Url.Action("LoadImageForStore", "Dashboard"));*@
+                        @*<img src="@Url.Action("LoadImageForStore", "Dashboard")" alt="logo-large" class="logo-lg logo-light">*@
+                        <img src="" alt="logo-large" id="imgLogo" class="logo-lg logo-light">
                     </span>
                 </a>
             </div>
@@ -82,15 +93,15 @@
                     <!-- Navigation Menu-->
                     <ul class="navigation-menu">
                         <li>
-                            <a href="#">
+                            <a href="@Url.Action("Index", "Zone")?store=@storeid">
                                 <i class="mdi mdi-image-filter-center-focus"></i>
                                 <span>Zones</span>
                             </a>
                         </li><!--end has-submenu-->
                         <li>
-                            <a href="#">
+                            <a href="@Url.Action("OrderDetails", "Order")?StoreId=@storeid">
                                 <i class="mdi mdi-truck-fast"></i>
-                                <span>ShipHub</span>
+                                <span>Order Shipment</span>
                             </a>
                         </li><!--end has-submenu-->
 
@@ -129,6 +140,18 @@
     <script src="~/Content/assets/plugins/datatables/responsive.bootstrap4.min.js"></script>
     <script src="~/Content/assets/pages/jquery.datatable.init.js"></script>
 
+    <script src="~/Content/assets/plugins/x-editable/js/bootstrap-editable.min.js"></script>
+    <script src="~/Content/assets/pages/jquery.form-xeditable.init.js"></script>
+
+    <script src="~/Content/assets/plugins/moment/moment.js"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <!-- select box -->
+    <script src="~/Content/assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="~/Content/assets/plugins/select2/select2.min.js"></script>
+
+    <script src="~/Content/assets/pages/jquery.forms-advanced.js"></script>
 
     <!-- App js -->
     <script src="~/Content/assets/js/app.js"></script>
@@ -136,3 +159,22 @@
     @RenderSection("scripts", false)
 </body>
 </html>
+
+<script>
+
+     $(document).ready(function () {
+         $.ajax({
+             type: "POST",
+             url: "/Dashboard/LoadImageForStore",
+             //contentType: "application/json; charset=utf-8",
+             //dataType: "json",
+             success: function (response) {
+                 $("#imgLogo").attr("src", 'data: image / png; base64, ' + response);
+             },
+             error: function (response) {
+                 alert(response.responseText);
+             }
+         });
+    });
+
+</script>

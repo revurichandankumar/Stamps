@@ -59,6 +59,10 @@ namespace OneposStamps.Controllers
                     ZipData.ZipCodeList = Gz;
                     ZipData.GroupbyZipCodeList = Gz.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
                 }
+                else
+                {
+                    ZipData.GroupbyZipCodeList = new List<List<ZipCodes>>();
+                }
                 if (ds.Tables[1].Rows.Count > 0)
                 {
                     List<ZipCodes> Gz = new List<ZipCodes>();
@@ -74,7 +78,7 @@ namespace OneposStamps.Controllers
                 }
                 else
                 {
-                    return new HttpStatusCodeResult(400, "No data found");
+                    ZipData.GroupbyAddedZipCodeList= new List<List<ZipCodes>>();
                 }
              
             }
@@ -96,7 +100,8 @@ namespace OneposStamps.Controllers
 
             var jsons = JsonConvert.SerializeObject(list);
             DataSet ds = db.GetZipInsertData("USP_InsertZoneMasterData", jsons, zd.StoreId, zd.ZoneId);
-            return View();
+
+            return Json(new { result = "Redirect", url = Url.Action("Index", "Zone") + "?store=" + zd.StoreId });
         }
 
     }

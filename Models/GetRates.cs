@@ -14,7 +14,7 @@ namespace OneposStamps.Models
         public decimal WeightOz { get; set; }
         public string PackageType { get; set; }
         public string shipdate { get; set; }
-        public string servicetype { get; set; }
+        public string servicetype { get; set; }        
     }
     public class GetRatesResponse
     {

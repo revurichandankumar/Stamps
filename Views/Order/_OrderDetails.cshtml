@@ -1,0 +1,78 @@
+﻿@model OneposStamps.Models.OrdersDetail
+@{
+    var i = 1;
+}
+<div class="row">
+    <div class="col-sm-12">
+
+        <div class="card">
+            <div class="card-body">
+                <table id="datatable4" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>
+                                <div class="checkbox">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                        <label class="custom-control-label" for="customCheck3"></label>
+                                    </div>
+                                </div>
+                            </th>
+                            <th>S.No</th>
+                            <th>Order ID</th>
+                            <th>Order Date</th>
+                            <th>Order Total</th>
+                            <th>Item Count</th>
+                            <th>Recipient Name</th>
+                            @*<th>Order notes</th>
+        <th>SKU Code</th>*@
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model.OrderList != null && Model.OrderList.Count > 0)
+                        {
+                            foreach (var d in Model.OrderList)
+                            {
+                                var StoreId = "StoreId_" + Convert.ToString(Model.StoreId);
+                        <tr>
+                            <td>
+                                <div class="checkbox">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                        <label class="custom-control-label" for="customCheck3"></label>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@i</td>
+                            <td style="display:none"><input type="hidden" id="@StoreId" data-name="hfstoreid" value="@Model.StoreId" /></td>
+                            <td><a href="@Url.Action("OrderShipmentDetails", "Order")?StoreId=@Model.StoreId&OrderId=@d.OrderId&DeliverDate=@d.OrderDate.Value.ToString("MM'/'dd'/'yyyy")" data-orderid="@d.OrderId" data-storeid="@Model.StoreId" class="text-primary font-weight-bold"> @d.OrderId</a></td>
+                            <td>@d.OrderDate.Value.ToString("MM'/'dd'/'yyyy")</td>
+                            <td><strong>@("$")@string.Format("{0:#,##0.##}", d.OrderTotal) </strong></td>
+                            <td>@d.Qty</td>
+                            <td>@d.CustomerName</td>
+                            @*<td>
+                                    <i class="fa fa-user"></i>
+                                </td>
+                                <td>10256</td>*@
+                        </tr>
+                                i++;
+                            }
+                        }
+                        else
+                        {
+                                <tr>
+                                    <td>No data found</td>
+                                </tr>  
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>

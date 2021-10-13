@@ -7,9 +7,8 @@ namespace OneposStamps.Models
 {
     public class OrdersDetail
     {
-        public string FromDate { get; set; }
-        public string ToDate { get; set; }
+        public string DeliverDate { get; set; }
         public string StoreId { get; set; }
-        public List<GetordersData> GetorderList { get; set; }
+        public List<GetordersData> OrderList { get; set; }
     }
 }
