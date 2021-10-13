@@ -83,6 +83,8 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -164,6 +166,9 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Models\AddressVerify.cs" />
+    <Compile Include="Models\AuthenticateUser.cs" />
+    <Compile Include="Models\CreateLabel.cs" />
     <Compile Include="Models\DbDetails.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ZipCodeController.cs" />
@@ -174,9 +179,11 @@
     <Compile Include="Helper\DBConnections.cs" />
     <Compile Include="Models\AddZones.cs" />
     <Compile Include="Models\GetOrders.cs" />
+    <Compile Include="Models\GetRates.cs" />
     <Compile Include="Models\GetZipCodeData.cs" />
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
+    <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrdersDetail.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
@@ -347,6 +354,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WebReferences Include="Web References\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

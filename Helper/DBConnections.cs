@@ -497,7 +497,7 @@ namespace OneposStamps.Helper
 
         public DbDetails GetDbDetails( string StoreId)
         {
-            DataSet ds = GetMysqlDataSet("USP_GetDataBaseDetails", "731ba9b9-d84a-4866-b9c9-8e4d569e5cad"); //StoreId
+            DataSet ds = GetMysqlDataSet("USP_GetDataBaseDetails", StoreId); //StoreId
             DbDetails dbdetails = new DbDetails();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
@@ -508,7 +508,7 @@ namespace OneposStamps.Helper
                 dbdetails.DatabaseName = (row["DatabaseName"]).ToString();
                 dbdetails.StampsUserName = (row["StampsUsername"]).ToString();
                 dbdetails.StampsUserPassword = (row["StampsPassword"]).ToString();
-                dbdetails.IntegrationId = (row["IntegrationId"]).ToString();
+                dbdetails.IntegrationId = Guid.Parse((row["IntegrationId"]).ToString());
             }
 
             return dbdetails;
