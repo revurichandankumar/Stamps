@@ -199,11 +199,4 @@ D:\Repos\Stamps\OneposStamps\bin\System.Memory.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Numerics.Vectors.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Runtime.CompilerServices.Unsafe.xml
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache
-D:\Repos\Stamps\OneposStamps\bin\System.Net.Http.Formatting.dll
-D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.dll
-D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.WebHost.dll
-D:\Repos\Stamps\OneposStamps\bin\System.Net.Http.Formatting.xml
-D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.xml
-D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.WebHost.xml
-D:\Repos\Stamps\OneposStamps\bin\Swashbuckle.Core.dll
-D:\Repos\Stamps\OneposStamps\bin\WebActivatorEx.dll
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csprojAssemblyReference.cache
