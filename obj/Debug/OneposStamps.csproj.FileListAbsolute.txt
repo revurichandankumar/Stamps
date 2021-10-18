@@ -207,3 +207,4 @@ D:\Repos\Stamps\OneposStamps\bin\WebActivatorEx.dll
 D:\Repos\Stamps\OneposStamps\bin\System.Net.Http.Formatting.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.xml
 D:\Repos\Stamps\OneposStamps\bin\System.Web.Http.WebHost.xml
+D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache
