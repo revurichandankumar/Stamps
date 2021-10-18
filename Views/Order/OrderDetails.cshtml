@@ -30,25 +30,109 @@
 
                                 <div class="border-bottom mt-3 mb-3 py-2">
                                     <div class="d-flex align-items-center">
-                                        <span class="font-12 mr-2">2 Items Selected</span>
+                                        <span class="font-12 mr-2">Select Delivery Date</span>
                                         <div class="mr-2">
                                             <div class="input-group">
-                                                <input type="text" onchange="onFilterClick()" readonly="readonly" style="background-color:transparent" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="Select Date MM/DD/YYY" >
+                                                <input type="text" onchange="onFilterClick()" readonly="readonly" style="background-color:transparent" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="Select Date MM/DD/YYY">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                                 </div>
                                             </div>
                                         </div>
-                                        @*<div class="btn-group">
+                                        <div class="btn-group">
                                             <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
                                             <div class="dropdown-menu" x-placement="bottom-start">
-                                                <a class="dropdown-item" href="#">USPA</a>
-                                                <a class="dropdown-item" href="#">FedEx</a>
-                                                <a class="dropdown-item" href="#">USA</a>
-                                                <a class="dropdown-item" href="#">Zone 2</a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck8" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="customCheck8"></label>
+                                                        </div>
+                                                    </div>
+                                                    ME Van
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck9" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="customCheck9"></label>
+                                                        </div>
+                                                    </div>
+                                                    Local
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck11" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="customCheck11"></label>
+                                                        </div>
+                                                    </div>
+                                                    Countrywide
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="customCheck12" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="customCheck12"></label>
+                                                        </div>
+                                                    </div>
+                                                    SoCal
+                                                </a>
                                             </div>
-                                        </div>*@
+                                        </div>
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-map-marker text-info"></i> Select City <i class="mdi mdi-chevron-down"></i></button>
+
+                                            <div class="dropdown-menu" x-placement="bottom-start">
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="one" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="one"></label>
+                                                        </div>
+                                                    </div>
+                                                    San Jose (12)
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="two" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="two"></label>
+                                                        </div>
+                                                    </div>
+                                                    Cupertino (4)
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="three" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="three"></label>
+                                                        </div>
+                                                    </div>
+                                                    Fremont (7)
+                                                </a>
+                                                <a class="dropdown-item d-flex" href="#">
+                                                    <div class="checkbox">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input" id="three" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                            <label class="custom-control-label" for="three"></label>
+                                                        </div>
+                                                    </div>
+                                                    Dublin (5)
+                                                </a>
+                                            </div>
+                                        </div>
+                                        @*<div class="btn-group">
+            <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
+
+            <div class="dropdown-menu" x-placement="bottom-start">
+                <a class="dropdown-item" href="#">USPA</a>
+                <a class="dropdown-item" href="#">FedEx</a>
+                <a class="dropdown-item" href="#">USA</a>
+                <a class="dropdown-item" href="#">Zone 2</a>
+            </div>
+        </div>*@
 
                                         <!-- <a href="#" class="btn btn-link btn-sm text-primary">Clear Selection</a> -->
 
@@ -58,7 +142,7 @@
                                         </div>
 
                                         <button class="btn btn-default btn-sm border mr-2"><i class="fa fa-file text-primary"></i> Create Label</button>
-                                        <button class="btn btn-default btn-sm border mr-2"><i class="fa fa-trash-alt text-danger"></i> Delete</button>
+                                        @*<button class="btn btn-default btn-sm border mr-2"><i class="fa fa-trash-alt text-danger"></i> Delete</button>*@
                                     </div>
                                 </div>
 
