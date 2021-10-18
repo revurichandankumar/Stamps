@@ -1,7 +1,11 @@
-﻿using OneposStamps.Models;
+﻿using BarcodeLib;
+using OneposStamps.Models;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -71,7 +75,7 @@ namespace OneposStamps.Controllers
 
             od.OrderList = getorderslist;
 
-            return PartialView("_OrderDetails",od);
+            return PartialView("_OrderDetails", od);
         }
 
         public ActionResult OrderShipmentDetails(string StoreId, string OrderId = "", string DeliverDate = null)
@@ -84,9 +88,9 @@ namespace OneposStamps.Controllers
             DataSet ds = db.GetOrderShippingDetails("USP_GetOrderShippingDetails", StoreId, OrderId, dbdetails.Address, dbdetails.Password, dbdetails.DatabaseName, dbdetails.Username);
             OrderDetail orderdetais = new OrderDetail();
             foreach (DataRow row in ds.Tables[0].Rows)
-            {                
+            {
                 orderdetais.storeName = (row["StoreName"]).ToString();
-                orderdetais.StoreAddress= (row["Address"]).ToString();
+                orderdetais.StoreAddress = (row["Address"]).ToString();
                 orderdetais.StoreCity = (row["City"]).ToString();
                 orderdetais.StoreState = (row["State"]).ToString();
                 orderdetais.StoreCountry = (row["Country"]).ToString();
@@ -101,6 +105,7 @@ namespace OneposStamps.Controllers
                 orderdetais.totalPaid = Convert.ToDecimal(row["TotalPaid"]);
                 orderdetais.holdUntil = "N/A";
                 orderdetais.TransactionId = (row["TransactionId"]).ToString();
+                orderdetais.OrderNotes = ds.Tables[0].Columns.Contains("OrderNotes") ? (row["OrderNotes"]).ToString() : null;
 
 
             }
@@ -178,7 +183,7 @@ namespace OneposStamps.Controllers
             od.ServiceList = sd;
 
             DataSet dsZoneList = db.GetMysqlDataSet("USP_GetZones", StoreId);
-            
+
             if (dsZoneList.Tables.Count > 0)
             {
                 List<Zonelist> zl = new List<Zonelist>();
@@ -196,7 +201,14 @@ namespace OneposStamps.Controllers
                 od.ZoneList = zl;
             }
 
+            string logoimagestring = null;
+            string barcodeimagestring = null;
 
+            logoimagestring = LoadImageForStore();
+            barcodeimagestring = LoadImageForBarode(od.OrderId);
+
+            od.LogoBase64String = logoimagestring;
+            od.BarcodeBase64String = barcodeimagestring;
 
             return View("OrderShipmentDetails", od);
         }
@@ -204,7 +216,7 @@ namespace OneposStamps.Controllers
         //public ActionResult CheckAddress(string StoreId, AddressVerify Addressrequest = null)
         //{
         //    DbDetails dbdetails = db.GetDbDetails(StoreId);
-            
+
         //    AddressVerifyResponse arv =  InvokeService(dbdetails, Addressrequest);
 
         //    return Json(arv.AddressMatched);
@@ -571,10 +583,10 @@ namespace OneposStamps.Controllers
 
         //    }
         //    AddressVerifyResponse avr = new AddressVerifyResponse();
-           
+
         //        Addressrequest.AuthenticationId = user.Authenticator;
         //        avr = CleanseAddress(Addressrequest);
-          
+
         //    return avr;
         //}
 
@@ -881,6 +893,97 @@ namespace OneposStamps.Controllers
 
             //return HttpWebRequest  
             return Req;
+        }
+
+        public string LoadImageForStore()
+        {
+            string path = null;
+            string base64String = null;
+            if (Session["StoreId"] != null)
+            {
+                string storeid = Session["StoreId"].ToString();
+
+
+                if (storeid == "d73add35-876a-4c82-82f9-9591baf2c20d")
+                {
+                    path = Server.MapPath("~/Content/assets/images/logo.png");
+                }
+                else if (storeid == "f575a340-44a8-4f68-b5fc-efba3350a264")
+                {
+                    path = Server.MapPath("~/Content/StoreLogo/png/Mylapore Logo – 2.png");
+                }
+                else if (storeid == "2cfb7b87-3e7d-486f-b14a-356730689fbd")
+                {
+                    path = Server.MapPath("~/Content/StoreLogo/png/Logo.png");
+                }
+                try
+                {
+                    using (Image image = Image.FromFile(path))
+                    {
+                        //Bitmap b = new Bitmap(image);
+
+                        //Image i = resizeImage(b, new Size(134, 30));
+
+                        using (MemoryStream m = new MemoryStream())
+                        {
+                            image.Save(m, image.RawFormat);
+                            byte[] imageBytes = m.ToArray();
+
+                            // Convert byte[] to Base64 String
+                            base64String = "data: image / png; base64, " + Convert.ToBase64String(imageBytes);
+                            //return base64String;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
+            }
+
+            return base64String;
+
+        }
+
+        public string LoadImageForBarode(string orderno = null)
+        {
+            string base64String = null;
+            if (!string.IsNullOrEmpty(orderno))
+            {
+
+                string prodCode = orderno;
+                if (prodCode.Length > 0)
+                {
+                    Image image = null;
+
+                    BarcodeLib.Barcode b = new BarcodeLib.Barcode();
+                    b.BackColor = System.Drawing.Color.White;
+                    b.ForeColor = System.Drawing.Color.Black;
+                    b.IncludeLabel = true;
+                    b.Alignment = BarcodeLib.AlignmentPositions.CENTER;
+                    b.LabelPosition = BarcodeLib.LabelPositions.BOTTOMCENTER;
+                    b.ImageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                    System.Drawing.Font font = new System.Drawing.Font("verdana", 8f);
+                    b.LabelFont = font;
+                    b.Height = 70;
+                    b.Width = 300;
+                    //b.AspectRatio = 2f;
+
+                    image = b.Encode(BarcodeLib.TYPE.CODE39, prodCode);
+
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, System.Drawing.Imaging.ImageFormat.Gif);
+                        byte[] imageBytes = m.ToArray();
+
+                        // Convert byte[] to Base64 String
+                        base64String = "data: image / png; base64, " + Convert.ToBase64String(imageBytes);
+                    }
+              
+                }
+            }
+            return base64String;
         }
     }
 }

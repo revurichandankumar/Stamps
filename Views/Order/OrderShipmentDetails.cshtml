@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "OrderShipmentDetails";
 }
+<link href="~/Content/ManualCSS/PrintOrderTable.css" rel="stylesheet" type="text/css" media="print" />
 
 <body data-layout="horizontal" class="dark-topbar">
 
@@ -159,7 +160,8 @@
                                         <ul class="mb-0 order-list">
                                             <li>
                                                 <div class="col-lg-3 d-inline-block text-right font-weight-bold">Customer</div>
-                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">ME Vane</a>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">@Model.BuyersDetails.name</a>
+                                                @*<label class="custom-control-label font-weight-bold" id="lbl_CustomerName">@Model.BuyersDetails.name</label>*@
                                             </li>
                                             <li>
                                                 <div class="col-lg-3 d-inline-block text-right font-weight-bold">To Buyer</div>
@@ -181,8 +183,9 @@
                                                 <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">No Gift Message</a>
                                             </li>
                                             <li>
-                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Custom Field One</div>
-                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">None</a>
+                                                <div class="col-lg-3 d-inline-block text-right font-weight-bold">Order Notes</div>
+                                                <a href="#" data-type="text" data-pk="1" data-title="Enter username" class="editable editable-click">@Model.orderSummary.OrderNotes</a>
+                                                @*<label class="custom-control-label font-weight-bold" id="lbl_OrderNotes">@Model.orderSummary.OrderNotes</label>*@
                                             </li>
                                             <li>
                                                 <div class="col-lg-3 d-inline-block text-right font-weight-bold">Custom Field Two</div>
@@ -211,7 +214,7 @@
                                             Docs
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#">Packing Slips</a>
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#packingslip">Packing Slips</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Order Summary</a>
                                             <a class="dropdown-item" href="#">Pack List</a>
@@ -303,8 +306,8 @@
                                                     <option value="@item.Id">@item.Name</option>
                                                 }
                                                 @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
-                                                  <option value="USPA">USPA</option>
-                                                  <option value="USP">USP</option>*@
+                                                    <option value="USPA">USPA</option>
+                                                    <option value="USP">USP</option>*@
                                             </select>
                                         </div>
                                     </div>
@@ -320,8 +323,8 @@
                                                     <option value="@item.Id">@item.Name</option>
                                                 }
                                                 @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
-                                                <option value="USPA">USPA</option>
-                                                <option value="USP">USP</option>*@
+                                                    <option value="USPA">USPA</option>
+                                                    <option value="USP">USP</option>*@
                                             </select>
                                             <a href="#" class="ml-2 text-primary"><i class="fa fa-plus"></i></a>
                                         </div>
@@ -409,11 +412,94 @@
         <!-- end page content -->
     </div>
     <!-- end page-wrapper -->
+    <!-- packingslip -->
 
+    <div class="modal" tabindex="-1" role="dialog" id="packingslip">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Packing Slip</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered border" id="tbl_PackingSlip">
+                        @*style=" display:flex;justify-content:center;align-items:center;height:100%;"*@
+                        <tbody>
+                            <tr>
+                                <td colspan="5" class="text-center" id="td_logo">
+                                    <img src="@Model.LogoBase64String" alt="" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="5" id="td_picklist">
+                                    <h3>PICK LIST</h3>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ship To</strong></td>
+                                <td colspan="4" id="td_shiptodetails">
+                                    <ul class="list-unstyled p-0">
+                                        <li><span id="liBuyName">@Model.BuyersDetails.name</span></li>
+                                        <li><span id="liBuyAddress">@Model.BuyersDetails.address</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")<span id="liBuyCity">@Model.BuyersDetails.city</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")</li>
+                                        <li><span id="liBuyLandmark">@Model.BuyersDetails.landMark</span></li>
+                                        <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
+                                        <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>S.No</strong></td>
+                                <td><strong>Item</strong> </td>
+                                <td><strong>SKU</strong> </td>
+                                <td><strong>QTY</strong> </td>
+                            </tr>
+                            @if (Model.OrderItemDetails != null && Model.OrderItemDetails.Count > 0)
+                            {
+                                int m = 1;
+                                foreach (var od in Model.OrderItemDetails)
+                                {
+                                    <tr>
+                                        <td>@m</td>
+                                        <td>@od.name</td>
+                                        <td>@od.sku</td>
+                                        <td>@od.OrderQty</td>
+                                    </tr>
+                                    m++;
+                                }
+                            }
+
+                            <tr>
+                                <td class="text-center" colspan="4" id="td_barcodeimg">
+                                    <strong class="text-dark">Order ID #</strong>
+                                    <br />
+                                    <img src="@Model.BarcodeBase64String" alt="" id="img_barcodeimg" style="max-width: 100%;">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="4" id="td_note">
+                                    <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae natus, rem provident quis ut dolore ipsa voluptas et numquam reprehenderit.</small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default border" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="btncreatepdf"><i class="fa fa-file mr-1"></i> Create PDF Slip</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
-
 <script>
+    $('#btncreatepdf').click(function () {
+        $("#tbl_PackingSlip").printThis({
+
+        });
+    });
 
     function openorderdetailsview() {
         var storeid = '@Model.StoreId';
@@ -448,7 +534,7 @@
             storeid = $("#hfStoreId").val();
         }
 
-        
+
 
         var addressData = {
             name: name,
@@ -483,7 +569,7 @@
         var weightlb = null;
         var weightoz = null;
         var storeid = null;
-        
+
         if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val()  != undefined) {
             fromzipcode = $("#hfStoreZipCode").val() ;
         }
@@ -702,7 +788,7 @@
                     $("#p_Insurance").val(res.ServiceType);
                     $("#p_Insurance")[0].innerText = res.ServiceType;
                     $("#ship_status").attr("style", "display:inline");
-                    
+
                 var win = window.open(response.Url, '_blank');
                 if (win) {
                     //Browser has allowed it to be opened

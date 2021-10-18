@@ -85,7 +85,7 @@ namespace OneposStamps.Controllers
                 }
                 else if (storeid == "2cfb7b87-3e7d-486f-b14a-356730689fbd")
                 {
-                    path = Server.MapPath("~/Content/StoreLogo/png/Mylapore Logo-4.png");
+                    path = Server.MapPath("~/Content/StoreLogo/png/Logo.png");
                 }
                 try
                 {

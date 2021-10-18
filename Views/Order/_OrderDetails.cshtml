@@ -13,8 +13,8 @@
                             <th>
                                 <div class="checkbox">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                        <label class="custom-control-label" for="customCheck3"></label>
+                                        <input type="checkbox" class="custom-control-input" name="chkSelectMaster" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                        <label class="custom-control-label" for="chkSelectMaster"></label>
                                     </div>
                                 </div>
                             </th>
@@ -39,8 +39,8 @@
                             <td>
                                 <div class="checkbox">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                        <label class="custom-control-label" for="customCheck3"></label>
+                                        <input type="checkbox" class="custom-control-input" name="chkSelect" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                        <label class="custom-control-label" for="chkSelect"></label>
                                     </div>
                                 </div>
                             </td>
@@ -76,3 +76,20 @@
 
 
 </div>
+
+<script>
+
+    $(document).ready(function () {
+      debugger
+        $('input[name="chkSelectMaster"]').change(function () {
+            debugger
+            if (this.checked) {
+                $('input[name="chkSelect"]').prop("checked", true);
+            }
+            else {
+                $('input[name="chkSelect"]').prop("checked", false);
+            }
+        });
+    });
+  
+</script>
