@@ -19,4 +19,14 @@ namespace OneposStamps.Models
     {
         public string AddressMatched { get; set; }
     }
+
+    public class ShipengineAddressRequest
+    {
+        public string name { get; set; }
+        public string address_line1 { get; set; }
+        public string city_locality { get; set; }
+        public string state_province { get; set; }
+        public string postal_code { get; set; }
+        public string country_code { get; set; }
+    }
 }

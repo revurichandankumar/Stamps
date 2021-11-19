@@ -20,6 +20,7 @@ namespace OneposStamps.Models
         public string DeliverDate { get; set; }
         public string LogoBase64String { get; set; }
         public string BarcodeBase64String { get; set; }
+        public string AddressVerified { get; set; }
     }
     public class OrderDetail
     {

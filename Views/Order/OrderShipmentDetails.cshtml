@@ -103,7 +103,8 @@
                                                         <li><span id="liBuyLandmark">@Model.BuyersDetails.landMark</span></li>
                                                         <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
                                                         <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
-                                                        <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i> Address Verified</a></li>
+                                                        @*<li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i> Address Verified</a></li>*@
+                                                        <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i>@Model.AddressVerified </a></li>
                                                     </ul>
                                                     <a onclick="onverifyAdrress()" style="cursor:pointer" class="ml-auto text-primary">Verify Address</a>
                                                 </li>

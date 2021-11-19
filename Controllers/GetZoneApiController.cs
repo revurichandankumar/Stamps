@@ -37,8 +37,9 @@ namespace OneposStamps.Controllers
 
                         GetZoneResponse.ZoneId = (row["ZoneId"]).ToString();
                         GetZoneResponse.Shipmentfee = Convert.ToDecimal((row["ShipmentFee"]));
+                        GetZoneResponse.Zonename= (row["Zonename"]).ToString();
 
-                            
+
 
                         }
                         

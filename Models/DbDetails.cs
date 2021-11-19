@@ -14,6 +14,6 @@ namespace OneposStamps.Models
         public string StoreId { get; set; }
         public string StampsUserName { get; set; }
         public string StampsUserPassword { get; set; }
-        public Guid IntegrationId { get; set; }
+        public string IntegrationId { get; set; }
     }
 }

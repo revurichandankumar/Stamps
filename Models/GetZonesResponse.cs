@@ -9,5 +9,6 @@ namespace OneposStamps.Models
     {
         public string ZoneId { get; set; }
         public decimal Shipmentfee { get; set; }
+        public string Zonename { get; set; }
     }
 }

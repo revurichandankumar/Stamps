@@ -579,14 +579,13 @@ namespace OneposStamps.Helper
             DbDetails dbdetails = new DbDetails();
             foreach (DataRow row in ds.Tables[0].Rows)
             {
-
                 dbdetails.Address = (row["Address"]).ToString();
                 dbdetails.Username = (row["Username"]).ToString();
                 dbdetails.Password = (row["Password"]).ToString();
                 dbdetails.DatabaseName = (row["DatabaseName"]).ToString();
                 dbdetails.StampsUserName = (row["StampsUsername"]).ToString();
                 dbdetails.StampsUserPassword = (row["StampsPassword"]).ToString();
-                dbdetails.IntegrationId = Guid.Parse((row["IntegrationId"]).ToString());
+                dbdetails.IntegrationId = (row["IntegrationId"]).ToString();
             }
 
             return dbdetails;
