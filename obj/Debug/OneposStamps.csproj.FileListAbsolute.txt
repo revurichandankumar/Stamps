@@ -226,3 +226,7 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Text.Encodings
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Text.Json.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Threading.Tasks.Extensions.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.ValueTuple.xml
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.dll
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.xml
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Html.dep
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csprojAssemblyReference.cache

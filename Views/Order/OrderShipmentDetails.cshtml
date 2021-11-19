@@ -103,7 +103,8 @@
                                                         <li><span id="liBuyLandmark">@Model.BuyersDetails.landMark</span></li>
                                                         <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
                                                         <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
-                                                        <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i> Address Verified</a></li>
+                                                        <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i><strong>Address Verified</strong></a></li>
+                                                        <li><a style="display:none" id="addverifyStatus2" class="text-danger font-12"><i class="fa fa-times-circle" style="color:red"></i><strong>Address Not Verified</strong></a></li>
                                                     </ul>
                                                     <a onclick="onverifyAdrress()" style="cursor:pointer" class="ml-auto text-primary">Verify Address</a>
                                                 </li>
@@ -553,6 +554,11 @@
             success: function (response) {
                 if (response == "true") {
                     $("#addverifyStatus").attr('style', 'display: inline');
+                    $("#addverifyStatus2").attr('style', 'display: none');
+                }
+                else {
+                    $("#addverifyStatus2").attr('style', 'display: inline');
+                    $("#addverifyStatus").attr('style', 'display: none');
                 }
             },
             error: function (response) {
@@ -776,7 +782,7 @@
             data: { getlabel: getLabelData, StoreId:storeid },
             success: function (response) {
                 if (response != null) {
-                    var res = response; spn_deliveryTime
+                    var res = response; //spn_deliveryTime
                     $("#spn_deliveryTime").val(res.DeliveryDate);
                     $("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
                     $("#p_ShipDate").val(res.ShipDate);
@@ -789,14 +795,21 @@
                     $("#p_Insurance")[0].innerText = res.ServiceType;
                     $("#ship_status").attr("style", "display:inline");
 
-                var win = window.open(response.Url, '_blank');
-                if (win) {
-                    //Browser has allowed it to be opened
-                    win.focus();
-                } else {
-                    //Browser has blocked it
-                    alert('Please allow popups for this website');
+                    if (res.Url != null && res.Url != '' && res.Url != undefined) {
+                        var orderid = '@Model.OrderId';
+                        window.location = '/Order/DownloadPDF?fileName=' + orderid;
                     }
+                    else {
+                        alert("Unable to download Label");
+                    }
+                //var win = window.open(response.Url, '_blank');
+                //if (win) {
+                //    //Browser has allowed it to be opened
+                //    win.focus();
+                //} else {
+                //    //Browser has blocked it
+                //    alert('Please allow popups for this website');
+                //    }
                 }
             },
             error: function (response) {
@@ -805,7 +818,6 @@
         });
 
     }
-
 
 
     @*window.onbeforeunload = function () {

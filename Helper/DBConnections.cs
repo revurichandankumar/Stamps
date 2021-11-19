@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 using System.Configuration;
 using System.Data;
 using OneposStamps.Models;
+using System.Web.Mvc;
 
 namespace OneposStamps.Helper
 {
@@ -592,6 +593,27 @@ namespace OneposStamps.Helper
             return dbdetails;
         }
 
+        // To get the model from view result
+        public T ModelFromActionResult<T>(ActionResult actionResult)
+        {
+            object model;
+            if (actionResult.GetType() == typeof(ViewResult))
+            {
+                ViewResult viewResult = (ViewResult)actionResult;
+                model = viewResult.Model;
+            }
+            else if (actionResult.GetType() == typeof(PartialViewResult))
+            {
+                PartialViewResult partialViewResult = (PartialViewResult)actionResult;
+                model = partialViewResult.Model;
+            }
+            else
+            {
+                throw new InvalidOperationException(string.Format("Actionresult of type {0} is not supported by ModelFromResult extractor.", actionResult.GetType()));
+            }
+            T typedModel = (T)model;
+            return typedModel;
+        }
 
         private bool _isDisposed = false;
         public void Dispose()

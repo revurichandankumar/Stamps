@@ -1,5 +1,8 @@
 ﻿using BarcodeLib;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OneposStamps.Models;
+using SelectPdf;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -323,11 +326,80 @@ namespace OneposStamps.Controllers
             getlabel.AuthenticationId = response.Authenticator;
             CreateLabelResponse res = GetLabel(getlabel, "CreateIndicium");
 
-            DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
+            DateTime del = res.DeliveryDate != null ? DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null) : DateTime.Now;
             res.DeliveryDate = del.ToString("MM/dd/yyyy");
             res.ShipDate = shipDate.ToString("MM/dd/yyyy");
             res.ZoneName = getlabel.ZoneName;
+            //return Json(res);
+
+            Session["pdfData"] = null;
+            if (res.Url != null)
+            {
+                string url = res.Url;
+
+                string pdf_page_size = PdfPageSize.A4.ToString();
+                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                    pdf_page_size, true);
+
+                string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                PdfPageOrientation pdfOrientation =
+                    (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                    pdf_orientation, true);
+
+                int webPageWidth = 1024;
+                try
+                {
+                    //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                }
+                catch { }
+
+                int webPageHeight = 0;
+                try
+                {
+                    //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                }
+                catch { }
+
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+
+                // set converter options
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfOrientation;
+                converter.Options.WebPageWidth = webPageWidth;
+                converter.Options.WebPageHeight = webPageHeight;
+                converter.Options.MarginLeft = 150;
+                //converter.Options.MarginRight = 10;
+                converter.Options.MarginTop = 50;
+                //converter.Options.MarginBottom = 20;
+
+                // create a new pdf document converting an url
+                PdfDocument doc = converter.ConvertUrl(url);
+
+                // save pdf document
+                byte[] pdf = doc.Save();
+
+                // close pdf document
+                doc.Close();
+                Session["pdfData"] = pdf;
+                //// return resulted pdf document
+                //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                //fileResult.FileDownloadName = "Document.pdf";
+
+
+                //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                //return Json(pdf);
+                //return File(pdf, "application/pdf");
+                //return fileResult;
+                //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+            }
             return Json(res);
+        }
+
+        public virtual ActionResult DownloadPDF(string fileName)
+        {
+            string fullFileName = fileName + "_" + DateTime.Now.ToFileTime() + ".pdf";
+            return File((byte[])Session["pdfData"], "application/pdf", fullFileName);            
         }
 
         public AuthenticateUserResponse GetAuthentication(DbDetails dbdetails, string Apiname)
@@ -435,39 +507,48 @@ namespace OneposStamps.Controllers
             {
                 SOAPReqBody.Save(stream);
             }
-            //Geting response from request  
-            using (WebResponse Serviceres = request.GetResponse())
+            try
             {
-                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                //Geting response from request  
+                using (WebResponse Serviceres = request.GetResponse())
                 {
-                    //reading stream  
-                    var ServiceResult = rd.ReadToEnd();
-
-                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
-                    XDocument doc = XDocument.Parse(ServiceResult);
-                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
-                    IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
-                    IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rate");
-                    IEnumerable<XElement> responses2 = responses1.Descendants(ns + "From");
-                    //IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
-
-
-                    foreach (XElement response in responses)
+                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
                     {
+                        //reading stream  
+                        var ServiceResult = rd.ReadToEnd();
 
-                        Responses.Url = (string)response.Element(ns + "URL");
-                        Responses.TrackingNumber = (string)response.Element(ns + "TrackingNumber");
+                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                        XDocument doc = XDocument.Parse(ServiceResult);
+                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                        IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
+                        IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rate");
+                        IEnumerable<XElement> responses2 = responses1.Descendants(ns + "From");
+                        //IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
 
-                    }
-                    foreach (XElement response in responses1)
-                    {
-                        Responses.ServiceType = (string)response.Element(ns + "ServiceType");
-                        Responses.DeliveryDate = (string)response.Element(ns + "DeliveryDate");
+
+                        foreach (XElement response in responses)
+                        {
+
+                            Responses.Url = (string)response.Element(ns + "URL");
+                            Responses.TrackingNumber = (string)response.Element(ns + "TrackingNumber");
+
+                        }
+                        foreach (XElement response in responses1)
+                        {
+                            Responses.ServiceType = (string)response.Element(ns + "ServiceType");
+                            Responses.DeliveryDate = (string)response.Element(ns + "DeliveryDate");
+                        }
+
                     }
 
                 }
-
             }
+            catch (Exception ex)
+            {
+                //Responses.Url = null;
+                return Responses;
+            }
+
             return Responses;
         }
 
@@ -628,32 +709,40 @@ namespace OneposStamps.Controllers
                 SOAPReqBody.Save(stream);
             }
             //Geting response from request  
-            using (WebResponse Serviceres = request.GetResponse())
+            try
             {
-                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                using (WebResponse Serviceres = request.GetResponse())
                 {
-                    //reading stream  
-                    var ServiceResult = rd.ReadToEnd();
-                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
-                    XDocument doc = XDocument.Parse(ServiceResult);
-                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
-                    IEnumerable<XElement> responses = doc.Descendants(ns + "GetRatesResponse");
-
-                    IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rates");
-                    IEnumerable<XElement> responses2 = responses1.Descendants(ns + "Rate");
-                    bool amountvalue = true;
-                    foreach (XElement response in responses2)
+                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
                     {
-                        if (amountvalue)
-                        {
-                            Responses.Amount = (string)response.Element(ns + "Amount");
-                            amountvalue = false;
-                        }
+                        //reading stream  
+                        var ServiceResult = rd.ReadToEnd();
+                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                        XDocument doc = XDocument.Parse(ServiceResult);
+                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                        IEnumerable<XElement> responses = doc.Descendants(ns + "GetRatesResponse");
 
+                        IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rates");
+                        IEnumerable<XElement> responses2 = responses1.Descendants(ns + "Rate");
+                        bool amountvalue = true;
+                        foreach (XElement response in responses2)
+                        {
+                            if (amountvalue)
+                            {
+                                Responses.Amount = (string)response.Element(ns + "Amount");
+                                amountvalue = false;
+                            }
+
+                        }
                     }
                 }
-
             }
+            catch (Exception ex)
+            {
+                Responses.Amount = "0";
+                return Responses;
+            }
+
             return Responses;
         }
 
@@ -750,26 +839,35 @@ namespace OneposStamps.Controllers
                 SOAPReqBody.Save(stream);
             }
             //Geting response from request  
-            using (WebResponse Serviceres = request.GetResponse())
+            try
             {
-                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                using (WebResponse Serviceres = request.GetResponse())
                 {
-                    //reading stream  
-                    var ServiceResult = rd.ReadToEnd();
-                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
-                    XDocument doc = XDocument.Parse(ServiceResult);
-                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
-                    IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
-
-                    foreach (XElement response in responses)
+                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
                     {
+                        //reading stream  
+                        var ServiceResult = rd.ReadToEnd();
+                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                        XDocument doc = XDocument.Parse(ServiceResult);
+                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                        IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
 
-                        Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
+                        foreach (XElement response in responses)
+                        {
+
+                            Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
+
+                        }
 
                     }
-
                 }
             }
+            catch (Exception ex)
+            {
+                Responses.AddressMatched = "false";
+                return Responses;
+            }
+
             return Responses;
         }
 
@@ -835,8 +933,8 @@ namespace OneposStamps.Controllers
             HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(@"https://swsim.testing.stamps.com/swsim/swsimv111.asmx");
             //SOAPAction  
             Req.Headers.Add(@"SOAPAction:http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111/" + Apiname + "");//AuthenticateUser
-            //Content_type  
-            // Req.ContentLength = "length";
+                                                                                                                   //Content_type  
+                                                                                                                   // Req.ContentLength = "length";
             Req.ContentType = "text/xml;charset=\"utf-8\"";
             Req.Accept = "text/xml";
             //HTTP method  
@@ -980,10 +1078,181 @@ namespace OneposStamps.Controllers
                         // Convert byte[] to Base64 String
                         base64String = "data: image / png; base64, " + Convert.ToBase64String(imageBytes);
                     }
-              
+
                 }
             }
             return base64String;
         }
+
+        public ActionResult CreateMultiLabel(OrderIdList OrderIdList)
+        {
+            List<string> uncreatedLabel = new List<string>();
+            foreach (var item in OrderIdList.OrderIds)
+            {
+                var shipDetails = OrderShipmentDetails(OrderIdList.StoreId, item, OrderIdList.DeliverDate);
+
+                OrderDetails shipResult = db.ModelFromActionResult<OrderDetails>(shipDetails);
+
+                AddressVerifyRequest addressVerifyRequest = new AddressVerifyRequest();
+
+                if (shipResult.BuyersDetails != null)
+                {
+                    addressVerifyRequest.name = shipResult.BuyersDetails.name;
+                    addressVerifyRequest.address1 = shipResult.BuyersDetails.address;
+                    addressVerifyRequest.city = shipResult.BuyersDetails.city;
+                    addressVerifyRequest.state = shipResult.BuyersDetails.state;
+                    addressVerifyRequest.zipcode = shipResult.BuyersDetails.zipcode;
+                }
+
+                var objAddressVerified = CheckAddress(OrderIdList.StoreId, addressVerifyRequest);
+
+                bool addressVerifiedStatus = false;
+
+                if (objAddressVerified.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultAddress = (JsonResult)objAddressVerified;
+                    if (jsonResultAddress.Data.ToString() == "true" || jsonResultAddress.Data.ToString() == "false")
+                    {
+                        addressVerifiedStatus = jsonResultAddress.Data != null ? Convert.ToBoolean(jsonResultAddress.Data) : false;
+                    }
+                }
+
+                GetRates getrates = new GetRates();
+
+                getrates.fromZipcode = shipResult.orderSummary.StoreZipcode;
+                getrates.toZipcode = shipResult.BuyersDetails.zipcode;
+                getrates.PackageType = "Package";
+                //DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
+                DateTime shipDate = DateTime.Now.AddDays(1);
+                getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
+                getrates.WeightLb = 10;
+                getrates.WeightOz = 5;
+
+                var shipRateDetails = GetShipRates(OrderIdList.StoreId, getrates);
+
+                decimal shipRateAmount = 0;
+
+                if (shipRateDetails.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultShiprate = (JsonResult)shipRateDetails;
+                    shipRateAmount = jsonResultShiprate.Data != null ? Convert.ToDecimal(jsonResultShiprate.Data) : 0;
+                }
+
+                CreateLabelRequest getlabel = new CreateLabelRequest();
+
+                getlabel.IntegratorTxID = shipResult.orderSummary.TransactionId;
+                getlabel.FromFullName = shipResult.orderSummary.storeName;
+                getlabel.Fromaddress = shipResult.orderSummary.StoreAddress;
+                getlabel.FromCity = shipResult.orderSummary.StoreCity;
+                getlabel.FromState = shipResult.orderSummary.StoreState;
+                getlabel.FromZIPCode = shipResult.orderSummary.StoreZipcode;
+                getlabel.FromCountry = shipResult.orderSummary.StoreCountry;
+                if (getlabel.FromCountry.ToLower() == "united states" || getlabel.FromCountry.ToLower() == "usa" || getlabel.FromCountry.ToLower() == "unitedstates" || getlabel.FromCountry.ToLower() == "us")
+                {
+                    getlabel.FromCountry = "US";
+                }
+
+                getlabel.ToFullName = shipResult.BuyersDetails.name;
+                getlabel.Toaddress = shipResult.BuyersDetails.address;
+                getlabel.ToCity = shipResult.BuyersDetails.city;
+                getlabel.ToState = shipResult.BuyersDetails.state;
+                getlabel.ToZIPCode = shipResult.BuyersDetails.zipcode;
+                getlabel.ToCountry = shipResult.BuyersDetails.country;
+                if (getlabel.ToCountry.ToLower() == "united states" || getlabel.ToCountry.ToLower() == "usa" || getlabel.ToCountry.ToLower() == "unitedstates" || getlabel.ToCountry.ToLower() == "us")
+                {
+                    getlabel.ToCountry = "US";
+                }
+
+                getlabel.WeightLb = 10;
+                getlabel.WeightOz = 5;
+                getlabel.PackageType = "Package";
+                DateTime shipDate2 = DateTime.Now.AddDays(1);
+                getlabel.shipdate = shipDate2.ToString("yyyy/MM/dd");
+                getlabel.Length = "1";
+                getlabel.Width = "1";
+                getlabel.Height = "1";
+                getlabel.ServiceType = "US-PM";// "US-FC";
+                getlabel.Amount = shipRateAmount.ToString();
+
+                var getLabelDetails = GetLabels(OrderIdList.StoreId, getlabel);
+
+                CreateLabelResponse labelRespose = new CreateLabelResponse();
+                dynamic LabelData;
+                if (getLabelDetails.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultLabel = (JsonResult)getLabelDetails;
+
+                    if (jsonResultLabel.Data != null)
+                    {
+                        LabelData = jsonResultLabel.Data;
+                        labelRespose = LabelData;
+                    }
+                }
+
+                if (labelRespose.Url != null)
+                {
+                    string url = labelRespose.Url;
+
+                    string pdf_page_size = PdfPageSize.A4.ToString();
+                    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                        pdf_page_size, true);
+
+                    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                    PdfPageOrientation pdfOrientation =
+                        (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                        pdf_orientation, true);
+
+                    int webPageWidth = 1024;
+                    try
+                    {
+                        //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                    }
+                    catch { }
+
+                    int webPageHeight = 0;
+                    try
+                    {
+                        //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                    }
+                    catch { }
+
+                    // instantiate a html to pdf converter object
+                    HtmlToPdf converter = new HtmlToPdf();
+
+                    // set converter options
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+                    converter.Options.WebPageWidth = webPageWidth;
+                    converter.Options.WebPageHeight = webPageHeight;
+
+                    // create a new pdf document converting an url
+                    PdfDocument doc = converter.ConvertUrl(url);
+
+                    // save pdf document
+                    byte[] pdf = doc.Save();
+
+                    // close pdf document
+                    doc.Close();
+
+                    // return resulted pdf document
+                    FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                    fileResult.FileDownloadName = "Document.pdf";
+
+
+                    //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                    //return Json(pdf);
+                    //return File(pdf, "application/pdf");
+                    return fileResult;
+                }
+                else
+                {
+                    uncreatedLabel.Add(item);                    
+                }
+
+            }
+            return null;
+        }
+
+
     }
 }

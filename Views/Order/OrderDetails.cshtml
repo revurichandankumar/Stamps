@@ -124,15 +124,15 @@
                                             </div>
                                         </div>
                                         @*<div class="btn-group">
-            <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
+                                                <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
-            <div class="dropdown-menu" x-placement="bottom-start">
-                <a class="dropdown-item" href="#">USPA</a>
-                <a class="dropdown-item" href="#">FedEx</a>
-                <a class="dropdown-item" href="#">USA</a>
-                <a class="dropdown-item" href="#">Zone 2</a>
-            </div>
-        </div>*@
+                                                <div class="dropdown-menu" x-placement="bottom-start">
+                                                    <a class="dropdown-item" href="#">USPA</a>
+                                                    <a class="dropdown-item" href="#">FedEx</a>
+                                                    <a class="dropdown-item" href="#">USA</a>
+                                                    <a class="dropdown-item" href="#">Zone 2</a>
+                                                </div>
+                                            </div>*@
 
                                         <!-- <a href="#" class="btn btn-link btn-sm text-primary">Clear Selection</a> -->
 
@@ -141,13 +141,13 @@
                                             <input type="text" class="form-control form-control-sm" placeholder="search" />
                                         </div>
 
-                                        <button class="btn btn-default btn-sm border mr-2"><i class="fa fa-file text-primary"></i> Create Label</button>
+                                        <button class="btn btn-default btn-sm border mr-2" onclick="onMultiLabelCreateClick()"><i class="fa fa-file text-primary"></i> Create Label</button>
                                         @*<button class="btn btn-default btn-sm border mr-2"><i class="fa fa-trash-alt text-danger"></i> Delete</button>*@
                                     </div>
                                 </div>
 
                                 <div id="divOrderDetails">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -159,7 +159,7 @@
                 </div>
 
 
-                </div><!-- container -->
+            </div><!-- container -->
 
         </div>
         <!-- end page content -->
@@ -211,5 +211,48 @@
             }
         });
     }
+
+
+    function onMultiLabelCreateClick() {
+        var orderidList = [];
+        $('input[name="chkSelect"]:checked').each(function () {
+            orderidList.push({ OrderId: $(this).val() });
+        });
+
+        var onlyorderidList = [];
+        $('input[name="chkSelect"]:checked').each(function () {
+            onlyorderidList.push($(this).val());
+        });
+
+        if (orderidList.length > 0) {
+            var data = {
+                OrderIds: orderidList,
+                StoreId: '@Model.StoreId',
+                DeliverDate: $("#txtDeliverDate").val()
+            }
+    
+            var url = '@Url.Action("CreateMultiLabel", "Order")?StoreId=' + data.StoreId + '&DeliverDate=' + data.DeliverDate + '&OrderIds=' + JSON.stringify(orderidList);
+            //var url = '@Url.Action("CreateMultiLabel", "Order")?OrderIdList=' + data;
+            window.location.href = url;
+
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/Order/CreateMultiLabel",
+            //    //contentType: "application/json; charset=utf-8",
+            //    //dataType: "json",
+            //    data: { OrderIdList: data },
+            //    success: function (response) {
+            //        window.open(response, '_blank');
+            //    },
+            //    error: function (response) {
+            //        alert(response.responseText);
+            //    }
+            //});
+        }
+        else {
+            alert("Please select at least one record");
+        }
+    }
+
 
 </script>
