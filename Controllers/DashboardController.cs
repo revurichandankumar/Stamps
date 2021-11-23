@@ -22,7 +22,7 @@ namespace OneposStamps.Controllers
         /// <param name="storeId"></param>
         /// <param name="reportid"></param>
         /// <returns></returns>
-        public ActionResult Index( string storeId = null, int type = 0)
+        public ActionResult Index( string storeId = null, int type = 0,string storeName="")
         {
 
             Session["StoreId"] = storeId;
@@ -35,9 +35,13 @@ namespace OneposStamps.Controllers
                 {
                     case 1:
                         return RedirectToAction("Index", "Zone", new { store= storeId });
+                        break;
                     case 2:
                         return RedirectToAction("OrderDetails", "Order", new { StoreId = storeId } );
-
+                        break;
+                    case 3:
+                        return RedirectToAction("InhouseLabel", "Order", new { StoreId = storeId,StoreName= storeName });
+                        break;
                 }
 
             }

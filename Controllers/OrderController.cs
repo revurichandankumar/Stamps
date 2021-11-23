@@ -1,6 +1,4 @@
 ﻿using BarcodeLib;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using OneposStamps.Models;
 using SelectPdf;
 using System;
@@ -14,9 +12,20 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
+using System.IO;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Aspose.BarCode;
+using System.Windows.Media.Imaging;
+using iText.Kernel.Pdf.Canvas;
+using Rectangle = iTextSharp.text.Rectangle;
+using Font = System.Drawing.Font;
+using RestSharp;
+using Newtonsoft.Json;
 
 namespace OneposStamps.Controllers
 {
@@ -80,7 +89,214 @@ namespace OneposStamps.Controllers
 
             return PartialView("_OrderDetails", od);
         }
+        public  ActionResult InhouseLabel(string StoreId,string StoreName)
+        {
+             var a= AddAddresDetails();
+            var pgSize = new iTextSharp.text.Rectangle(288, 432);
 
+            Document doc = new Document(pgSize, 0, 0, 0, 0);
+            string path_pdf = AppDomain.CurrentDomain.BaseDirectory;
+            string date = (DateTime.Today).ToString("MM-dd-yyyy");
+            string pdfname = StoreName + date;
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/"+ pdfname + ".pdf", FileMode.Create));
+            string FromAddress1 = "300 N Sunrise Avenue";
+            string FromAddress2 = "Suite 130";
+            string Fromaddress3 = "Roseville CA 95661";
+
+            doc.Open();
+            int i = 101;
+            
+            foreach (var b in a)
+            {
+                string Drivername = "C";
+                var No = i.ToString();
+                string barCode = "94055";
+                string Dname = Drivername + No;
+                string path = AppDomain.CurrentDomain.BaseDirectory;
+                string name = "Mylapore Logo – 1";
+                string filename = path + @"Images/" + name + ".png";
+
+                Paragraph ph = new Paragraph();
+                PdfPCell cell = new PdfPCell(ph);
+                cell.Border = Rectangle.ALIGN_BASELINE;
+               
+                cell.BorderWidth = 5f;
+                Paragraph ph2 = new Paragraph();
+                PdfPCell cell2 = new PdfPCell(ph);
+                cell2.Border = Rectangle.BOTTOM_BORDER;
+                
+                cell2.BorderWidth = 1f;
+
+                PdfPTable table = new PdfPTable(1);
+                table.AddCell(cell);
+                table.HorizontalAlignment = Element.ALIGN_LEFT;
+                table.WidthPercentage = 100f;
+                PdfPTable table2 = new PdfPTable(1);
+                table2.AddCell(cell2);
+                table2.HorizontalAlignment = Element.ALIGN_RIGHT;
+                table2.WidthPercentage = 100f;
+                
+                Paragraph p1 = new Paragraph();
+                p1.Font = FontFactory.GetFont("Arial", 9);
+                p1.Add("Shipment Date:");
+                p1.Add("\n");
+                p1.Add(date);
+                p1.IndentationLeft = 40f;
+               
+                Paragraph p2 = new Paragraph();
+                if (a.Count <= 9)
+                {
+                    p2.Font = FontFactory.GetFont("Corbel Light", 85);
+                }
+                else if (a.Count >= 10 & a.Count < 99)
+                {
+                    p2.Font = FontFactory.GetFont("Corbel Light", 75);
+                }
+                else if (a.Count >= 100 & a.Count < 999)
+                {
+                    p2.Font = FontFactory.GetFont("Corbel Light", 58);
+                }
+
+                p2.Add("\n");
+                p2.Add("\n");
+                p2.Add("\n");
+                p2.Add(Dname);
+                
+                Paragraph p3 = new Paragraph();
+                p3.IndentationLeft = 20f;
+                p3.Font = FontFactory.GetFont("Arial", 22);
+                p3.Add(StoreName);
+               
+                BarCodeBuilder builder = new BarCodeBuilder(b.BarcodeNumber, Symbology.Code128);
+                builder.CodeTextFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Regular);
+                BitmapImage bmp = new BitmapImage();
+                bmp = GetBitmapImage(new System.Drawing.Bitmap(builder.BarCodeImage));
+                iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance(getJPGFromImageControl(bmp));
+                png.ScaleAbsolute(125f, 5f);
+                png.Border = 0;
+
+                PdfPTable maintable = new PdfPTable(2);
+                maintable.SpacingBefore = 5f;
+                maintable.DefaultCell.Border = Rectangle.NO_BORDER;
+                PdfPCell cell1 = new PdfPCell();
+
+                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(filename);
+                image.ScalePercent(13f);
+                cell1 = new PdfPCell();
+                cell1.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell1.BorderWidth = 0;
+                cell1.AddElement(image);
+                maintable.AddCell(cell1);
+                cell1 = new PdfPCell();
+                cell1.AddElement(p1);
+                cell1.BorderWidth = 0;
+                maintable.AddCell(cell1);
+
+
+                PdfPTable maintable2 = new PdfPTable(1);
+                maintable2.SpacingBefore = 5f;
+                maintable2.DefaultCell.Border = Rectangle.NO_BORDER;
+                PdfPCell cell5 = new PdfPCell();
+                cell5.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell5.BorderWidth = 0;
+                cell5.AddElement(p3);
+                maintable2.SpacingAfter = 5f;
+                maintable2.AddCell(cell5);
+
+                PdfPTable maintable3 = new PdfPTable(1);
+                maintable3.SpacingBefore = 5f;
+                maintable3.DefaultCell.Border = Rectangle.NO_BORDER;
+                PdfPCell cell6 = new PdfPCell();
+                cell6.PaddingLeft = 30f;
+                           
+                cell6.BorderWidth = 0;
+                cell6.AddElement(png);              
+                maintable3.SpacingAfter = 5f;
+                maintable3.AddCell(cell6);
+
+                Paragraph c1 = new Paragraph();
+                c1.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                c1.IndentationLeft = 10f;
+                c1.Add("Ship To: ");
+                Paragraph c2 = new Paragraph();
+                c2.IndentationLeft = 70;
+                c2.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                c2.Add("www.mylaporeexpress.com");
+                c2.Add("\n");
+                Paragraph c3 = new Paragraph();
+                c3.IndentationLeft = 80;
+                c3.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+                c3.Add("Toll Free:9169256200");
+
+                Paragraph l1 = new Paragraph();
+                l1.Font = FontFactory.GetFont("Arial", 7);
+                l1.IndentationLeft = 12f;
+                l1.Add(FromAddress1);
+                l1.Add("\n");
+                l1.Add(FromAddress2);
+                l1.Add("\n");
+                l1.Add(Fromaddress3);
+                l1.Add("\n");
+
+                Paragraph l2 = new Paragraph();
+                l2.IndentationLeft = 12f;
+                l2.SpacingBefore = 5f;
+                l2.Font= FontFactory.GetFont("Arial", 12);
+                l2.Add(b.Username);
+                l2.Add("\n");
+                l2.Add(b.Address1);
+                l2.Add("\n");
+                Paragraph l3 = new Paragraph();
+                l3.IndentationLeft = 12f;
+                l3.SpacingBefore = 5f;
+                l3.Font = FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD);
+                l3.Add(b.Address2);
+                l3.SpacingAfter = 14f;
+
+                PdfPTable maintable4 = new PdfPTable(2);
+                maintable4.WidthPercentage = 100f;
+                maintable4.SpacingBefore = 5f;
+                maintable4.DefaultCell.Border = Rectangle.NO_BORDER;
+                PdfPCell cell7 = new PdfPCell();
+
+                cell7.BorderWidth = 0;
+                cell7.AddElement(l1);
+                maintable4.SpacingAfter = 5f;
+                maintable4.AddCell(cell7);
+                cell7 = new PdfPCell();
+                cell7.BorderWidth = 0;
+                cell7.AddElement(p2);
+                cell7.PaddingTop = 20f;
+                cell7.Rowspan = 3;
+                maintable4.AddCell(cell7);
+                cell7 = new PdfPCell();
+                cell7.BorderWidth = 0;
+                cell7.AddElement(c1);
+                cell7.AddElement(l2);
+                maintable4.AddCell(cell7);
+                cell7 = new PdfPCell();
+                cell7.BorderWidth = 0;
+                cell7.AddElement(l3);
+                maintable4.AddCell(cell7);
+
+                doc.Add(maintable);
+                doc.Add(maintable2);
+                doc.Add(maintable4);
+                doc.Add(table);
+                doc.Add(maintable3);
+                doc.Add(table);
+                doc.Add(c2);
+                doc.Add(c3);
+                doc.NewPage();
+                i++;
+            }
+            
+            doc.Close();
+            //var pdfPath = Path.Combine(Server.MapPath(path_name));
+
+            return PartialView();
+
+        }
         public ActionResult OrderShipmentDetails(string StoreId, string OrderId = "", string DeliverDate = null)
         {
             OrderDetails od = new OrderDetails();
@@ -131,6 +347,8 @@ namespace OneposStamps.Controllers
 
             }
             od.BuyersDetails = ShippingDetails;
+            
+
             List<OrderItemDetail> orderdetails = new List<OrderItemDetail>();
             foreach (DataRow row in ds.Tables[2].Rows)
             {
@@ -181,6 +399,8 @@ namespace OneposStamps.Controllers
                 pd.Add(a);
 
             }
+            
+
             od.CarrierList = cd;
             od.PackageList = pd;
             od.ServiceList = sd;
@@ -212,28 +432,30 @@ namespace OneposStamps.Controllers
 
             od.LogoBase64String = logoimagestring;
             od.BarcodeBase64String = barcodeimagestring;
+            AddressVerifyRequest addressrequest = new AddressVerifyRequest();
+            addressrequest.name = ShippingDetails.name;
+            addressrequest.address1 = ShippingDetails.address;
+            addressrequest.city = ShippingDetails.city;
+            addressrequest.state = ShippingDetails.state;
+            addressrequest.zipcode = ShippingDetails.zipcode;
+            addressrequest.AuthenticationId = dbdetails.IntegrationId;
+            CheckAddress(StoreId, addressrequest);
+            od.AddressVerified = Addressresponse.AddressMatched;
 
             return View("OrderShipmentDetails", od);
+            
         }
 
-        //public ActionResult CheckAddress(string StoreId, AddressVerify Addressrequest = null)
-        //{
-        //    DbDetails dbdetails = db.GetDbDetails(StoreId);
-
-        //    AddressVerifyResponse arv =  InvokeService(dbdetails, Addressrequest);
-
-        //    return Json(arv.AddressMatched);
-        //}
-
+        
+        AddressVerifyResponse Addressresponse = new AddressVerifyResponse();
         public ActionResult CheckAddress(string StoreId, AddressVerifyRequest Addressrequest = null)
         {
             DbDetails dbdetails = db.GetDbDetails(StoreId);
 
 
-            AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
-            Addressrequest.AuthenticationId = response.Authenticator;
-            AddressVerifyResponse Addressresponse = CleanseAddress(Addressrequest, "CleanseAddress");
-
+            //AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
+            Addressrequest.AuthenticationId = dbdetails.IntegrationId;
+            Addressresponse = CleanseAddress(Addressrequest, "CleanseAddress");
             return Json(Addressresponse.AddressMatched);
         }
 
@@ -405,53 +627,115 @@ namespace OneposStamps.Controllers
         public AuthenticateUserResponse GetAuthentication(DbDetails dbdetails, string Apiname)
         {
             AuthenticateUserResponse Responses = new AuthenticateUserResponse();
-            //Calling CreateSOAPWebRequest method  
-            HttpWebRequest request = CreateSOAPWebRequest(Apiname);
+            ////Calling CreateSOAPWebRequest method  
+            //HttpWebRequest request = CreateSOAPWebRequest(Apiname);
 
-            XmlDocument SOAPReqBody = new XmlDocument();
-            //SOAP Body Request  
-            SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
-            <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
-                xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
-                xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
-             <soap:Body> 
-                <AuthenticateUser xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">  
-                <Credentials>
-                  <IntegrationID>" + dbdetails.IntegrationId + @"</IntegrationID>  
-                  <Username>" + dbdetails.StampsUserName + @"</Username> 
-                  <Password>" + dbdetails.StampsUserPassword + @"</Password>
-                 </Credentials>
-                </AuthenticateUser>
-              </soap:Body>  
-            </soap:Envelope>");
+            //XmlDocument SOAPReqBody = new XmlDocument();
+            ////SOAP Body Request  
+            //SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+            //<soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+            //    xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+            //    xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+            // <soap:Body> 
+            //    <AuthenticateUser xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">  
+            //    <Credentials>
+            //      <IntegrationID>" + dbdetails.IntegrationId + @"</IntegrationID>  
+            //      <Username>" + dbdetails.StampsUserName + @"</Username> 
+            //      <Password>" + dbdetails.StampsUserPassword + @"</Password>
+            //     </Credentials>
+            //    </AuthenticateUser>
+            //  </soap:Body>  
+            //</soap:Envelope>");
 
 
-            using (Stream stream = request.GetRequestStream())
-            {
-                SOAPReqBody.Save(stream);
-            }
-            //Geting response from request  
-            using (WebResponse Serviceres = request.GetResponse())
-            {
-                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
-                {
-                    //reading stream  
-                    var ServiceResult = rd.ReadToEnd();
-                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
-                    XDocument doc = XDocument.Parse(ServiceResult);
-                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
-                    IEnumerable<XElement> responses = doc.Descendants(ns + "AuthenticateUserResponse");
-                    foreach (XElement response in responses)
-                    {
-                        var value = (string)response.Element(ns + "Authenticator");
-                        Responses.Authenticator = value.Replace("&", "&amp;");
+            //using (Stream stream = request.GetRequestStream())
+            //{
+            //    SOAPReqBody.Save(stream);
+            //}
+            ////Geting response from request  
+            //using (WebResponse Serviceres = request.GetResponse())
+            //{
+            //    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+            //    {
+            //        //reading stream  
+            //        var ServiceResult = rd.ReadToEnd();
+            //        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+            //        XDocument doc = XDocument.Parse(ServiceResult);
+            //        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+            //        IEnumerable<XElement> responses = doc.Descendants(ns + "AuthenticateUserResponse");
+            //        foreach (XElement response in responses)
+            //        {
+            //            var value = (string)response.Element(ns + "Authenticator");
+            //            Responses.Authenticator = value.Replace("&", "&amp;");
 
-                    }
+            //        }
 
-                }
-            }
+            //    }
+            //}
 
             return Responses;
+
+        }
+        public List<ClientAddress> AddAddresDetails()
+        {
+            List<ClientAddress> list = new List<ClientAddress>();
+            ClientAddress list1 = new ClientAddress();
+            list1.Username = "Priyanka Vivek";
+            list1.Address1 = "19363 Brockton Lane";
+            list1.Address2 = "Saratoga CA 95070";
+            list1.BarcodeNumber = "904556";
+            list.Add(list1);
+            ClientAddress list2 = new ClientAddress();
+            list2.Username = "Amit Shukla";
+            list2.Address1 = "1612 Stemel Way";
+            list2.Address2 = "Milpitas CA 95035";
+            list2.BarcodeNumber = "904557";
+            list.Add(list2);
+            ClientAddress list3 = new ClientAddress();
+            list3.Username = "Kausik Rajgopal";
+            list3.Address1 = "4008 Scottfield Street";
+            list3.Address2 = "Dublin CA 94568";
+            list3.BarcodeNumber = "904558";
+            list.Add(list3);
+            ClientAddress list4 = new ClientAddress();
+            list4.Username = "Neerja Jain";
+            list4.Address1 = "37794 Taro Terrace";
+            list4.Address2 = "Newark CA 94560";
+            list4.BarcodeNumber = "904559";
+            list.Add(list4);
+            ClientAddress list5 = new ClientAddress();
+            list5.Username = "Srividya Murali";
+            list5.Address1 = "19363 Brockton Lane";
+            list5.Address2 = "Saratoga CA 95070";
+            list5.BarcodeNumber = "904560";
+            list.Add(list5);
+            ClientAddress list6 = new ClientAddress();
+            list6.Username = "Divya Iyer";
+            list6.Address1 = "3164 Joanne Circle";
+            list6.Address2 = "Pleasanton CA 94588";
+            list6.BarcodeNumber = "904561";
+            list.Add(list6);
+            ClientAddress list7 = new ClientAddress();
+            list7.Username = "Ramesh Durairaj";
+            list7.Address1 = "283 Margarita Ave";
+            list7.Address2 = "Palo Alto CA 94306";
+            list7.BarcodeNumber = "904562";
+            list.Add(list7);
+            ClientAddress list8 = new ClientAddress();
+            list8.Username = "Prakash Krishna";
+            list8.Address1 = "1227 Fairview Avenue";
+            list8.Address2 = "San Jose CA 95125";
+            list8.BarcodeNumber = "904563";
+            list.Add(list8);
+            ClientAddress list9 = new ClientAddress();
+            list9.Username = "Leena Antony";
+            list9.Address1 = "34 Dias Dorados";
+            list9.Address2 = "Orinda CA 94563";
+            list9.BarcodeNumber = "904564";
+            list.Add(list9);
+
+
+            return list;
 
         }
 
@@ -839,35 +1123,26 @@ namespace OneposStamps.Controllers
                 SOAPReqBody.Save(stream);
             }
             //Geting response from request  
-            try
+            using (WebResponse Serviceres = request.GetResponse())
             {
-                using (WebResponse Serviceres = request.GetResponse())
+                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
                 {
-                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                    //reading stream  
+                    var ServiceResult = rd.ReadToEnd();
+                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                    XDocument doc = XDocument.Parse(ServiceResult);
+                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                    IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
+
+                    foreach (XElement response in responses)
                     {
-                        //reading stream  
-                        var ServiceResult = rd.ReadToEnd();
-                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
-                        XDocument doc = XDocument.Parse(ServiceResult);
-                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
-                        IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
 
-                        foreach (XElement response in responses)
-                        {
-
-                            Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
-
-                        }
+                        Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
 
                     }
+
                 }
             }
-            catch (Exception ex)
-            {
-                Responses.AddressMatched = "false";
-                return Responses;
-            }
-
             return Responses;
         }
 
@@ -1016,7 +1291,7 @@ namespace OneposStamps.Controllers
                 }
                 try
                 {
-                    using (Image image = Image.FromFile(path))
+                    using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
                     {
                         //Bitmap b = new Bitmap(image);
 
@@ -1043,6 +1318,28 @@ namespace OneposStamps.Controllers
             return base64String;
 
         }
+        public static BitmapImage GetBitmapImage(System.Drawing.Bitmap bitmap)
+        {
+            BitmapImage bitmapImage = new BitmapImage();
+            using (MemoryStream stream = new MemoryStream())
+            {
+                bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                stream.Position = 0;
+                bitmapImage.BeginInit();
+                bitmapImage.StreamSource = stream;
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.EndInit();
+            }
+            return bitmapImage;
+        }
+        public byte[] getJPGFromImageControl(BitmapImage imageC)
+        {
+            MemoryStream memStream = new MemoryStream();
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(imageC));
+            encoder.Save(memStream);
+            return memStream.ToArray();
+        }
 
         public string LoadImageForBarode(string orderno = null)
         {
@@ -1053,7 +1350,7 @@ namespace OneposStamps.Controllers
                 string prodCode = orderno;
                 if (prodCode.Length > 0)
                 {
-                    Image image = null;
+                    System.Drawing.Image image = null;
 
                     BarcodeLib.Barcode b = new BarcodeLib.Barcode();
                     b.BackColor = System.Drawing.Color.White;
