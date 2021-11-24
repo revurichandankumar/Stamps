@@ -22,4 +22,9 @@ namespace OneposStamps.Models
         public string State { get; set; }
         public string StoreId { get; set; }
     }
+
+    public class ZoneIdList
+    {
+        public List<string> ZoneId { get; set; }
+    }
 }

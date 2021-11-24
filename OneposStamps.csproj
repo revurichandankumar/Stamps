@@ -47,21 +47,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Aspose.BarCode, Version=21.10.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\barcode\barcode\barcode\bin\Debug\Aspose.BarCode.dll</HintPath>
+    <Reference Include="Aspose.BarCode, Version=8.0.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.BarCode.8.0.0\lib\net4.5\Aspose.BarCode.dll</HintPath>
     </Reference>
-    <Reference Include="Aspose.Cells">
-      <HintPath>..\..\barcode\barcode\barcode\bin\Debug\Aspose.Cells.dll</HintPath>
+    <Reference Include="Aspose.Cells, Version=21.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.Cells.21.11.0\lib\net40\Aspose.Cells.dll</HintPath>
     </Reference>
-    <Reference Include="Aspose.Pdf">
-      <HintPath>..\..\barcode\barcode\barcode\bin\Debug\Aspose.Pdf.dll</HintPath>
+    <Reference Include="Aspose.PDF, Version=21.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.PDF.21.11.0\lib\net4.0\Aspose.PDF.dll</HintPath>
     </Reference>
-    <Reference Include="Aspose.Slides">
-      <HintPath>..\..\barcode\barcode\barcode\bin\Debug\Aspose.Slides.dll</HintPath>
+    <Reference Include="Aspose.Slides, Version=21.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.Slides.NET.21.11.0\lib\net4.0-client\Aspose.Slides.dll</HintPath>
     </Reference>
-    <Reference Include="Aspose.Words">
-      <HintPath>..\..\barcode\barcode\barcode\bin\Debug\Aspose.Words.dll</HintPath>
+    <Reference Include="Aspose.Words, Version=21.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.Words.21.11.0\lib\net461\Aspose.Words.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Words.Pdf2Word, Version=21.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.Words.21.11.0\lib\net461\Aspose.Words.Pdf2Word.dll</HintPath>
     </Reference>
     <Reference Include="BarcodeStandard, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\BarcodeLib.2.4.0\lib\netstandard2.0\BarcodeStandard.dll</HintPath>
@@ -145,6 +147,9 @@
     <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=106.13.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>packages\RestSharp.106.13.0\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=21.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <HintPath>packages\Select.HtmlToPdf.21.1.0\lib\net40\Select.HtmlToPdf.dll</HintPath>
     </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
       <HintPath>packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
@@ -318,6 +323,7 @@
     <Compile Include="Models\AuthenticateUser.cs" />
     <Compile Include="Models\ClientAddress.cs" />
     <Compile Include="Models\CreateLabel.cs" />
+    <Compile Include="Models\CreateLabelResponse.cs" />
     <Compile Include="Models\DbDetails.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ZipCodeController.cs" />
@@ -329,6 +335,7 @@
     <Compile Include="Models\AddZones.cs" />
     <Compile Include="Models\GetOrders.cs" />
     <Compile Include="Models\GetRates.cs" />
+    <Compile Include="Models\GetRatesResponse.cs" />
     <Compile Include="Models\GetZipCodeData.cs" />
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
