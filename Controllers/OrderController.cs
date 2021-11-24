@@ -89,23 +89,23 @@ namespace OneposStamps.Controllers
 
             return PartialView("_OrderDetails", od);
         }
-        public  ActionResult InhouseLabel(string StoreId,string StoreName)
+        public ActionResult InhouseLabel(string StoreId, string StoreName)
         {
-             var a= AddAddresDetails();
+            var a = AddAddresDetails();
             var pgSize = new iTextSharp.text.Rectangle(288, 432);
 
             Document doc = new Document(pgSize, 0, 0, 0, 0);
             string path_pdf = AppDomain.CurrentDomain.BaseDirectory;
             string date = (DateTime.Today).ToString("MM-dd-yyyy");
             string pdfname = StoreName + date;
-            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/"+ pdfname + ".pdf", FileMode.Create));
+            PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/" + pdfname + ".pdf", FileMode.Create));
             string FromAddress1 = "300 N Sunrise Avenue";
             string FromAddress2 = "Suite 130";
             string Fromaddress3 = "Roseville CA 95661";
 
             doc.Open();
             int i = 101;
-            
+
             foreach (var b in a)
             {
                 string Drivername = "C";
@@ -119,12 +119,12 @@ namespace OneposStamps.Controllers
                 Paragraph ph = new Paragraph();
                 PdfPCell cell = new PdfPCell(ph);
                 cell.Border = Rectangle.ALIGN_BASELINE;
-               
+
                 cell.BorderWidth = 5f;
                 Paragraph ph2 = new Paragraph();
                 PdfPCell cell2 = new PdfPCell(ph);
                 cell2.Border = Rectangle.BOTTOM_BORDER;
-                
+
                 cell2.BorderWidth = 1f;
 
                 PdfPTable table = new PdfPTable(1);
@@ -135,14 +135,14 @@ namespace OneposStamps.Controllers
                 table2.AddCell(cell2);
                 table2.HorizontalAlignment = Element.ALIGN_RIGHT;
                 table2.WidthPercentage = 100f;
-                
+
                 Paragraph p1 = new Paragraph();
                 p1.Font = FontFactory.GetFont("Arial", 9);
                 p1.Add("Shipment Date:");
                 p1.Add("\n");
                 p1.Add(date);
                 p1.IndentationLeft = 40f;
-               
+
                 Paragraph p2 = new Paragraph();
                 if (a.Count <= 9)
                 {
@@ -161,12 +161,12 @@ namespace OneposStamps.Controllers
                 p2.Add("\n");
                 p2.Add("\n");
                 p2.Add(Dname);
-                
+
                 Paragraph p3 = new Paragraph();
                 p3.IndentationLeft = 20f;
                 p3.Font = FontFactory.GetFont("Arial", 22);
                 p3.Add(StoreName);
-               
+
                 BarCodeBuilder builder = new BarCodeBuilder(b.BarcodeNumber, Symbology.Code128);
                 builder.CodeTextFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Regular);
                 BitmapImage bmp = new BitmapImage();
@@ -208,9 +208,9 @@ namespace OneposStamps.Controllers
                 maintable3.DefaultCell.Border = Rectangle.NO_BORDER;
                 PdfPCell cell6 = new PdfPCell();
                 cell6.PaddingLeft = 30f;
-                           
+
                 cell6.BorderWidth = 0;
-                cell6.AddElement(png);              
+                cell6.AddElement(png);
                 maintable3.SpacingAfter = 5f;
                 maintable3.AddCell(cell6);
 
@@ -241,7 +241,7 @@ namespace OneposStamps.Controllers
                 Paragraph l2 = new Paragraph();
                 l2.IndentationLeft = 12f;
                 l2.SpacingBefore = 5f;
-                l2.Font= FontFactory.GetFont("Arial", 12);
+                l2.Font = FontFactory.GetFont("Arial", 12);
                 l2.Add(b.Username);
                 l2.Add("\n");
                 l2.Add(b.Address1);
@@ -290,7 +290,7 @@ namespace OneposStamps.Controllers
                 doc.NewPage();
                 i++;
             }
-            
+
             doc.Close();
             //var pdfPath = Path.Combine(Server.MapPath(path_name));
 
@@ -347,7 +347,7 @@ namespace OneposStamps.Controllers
 
             }
             od.BuyersDetails = ShippingDetails;
-            
+
 
             List<OrderItemDetail> orderdetails = new List<OrderItemDetail>();
             foreach (DataRow row in ds.Tables[2].Rows)
@@ -399,7 +399,7 @@ namespace OneposStamps.Controllers
                 pd.Add(a);
 
             }
-            
+
 
             od.CarrierList = cd;
             od.PackageList = pd;
@@ -443,10 +443,10 @@ namespace OneposStamps.Controllers
             od.AddressVerified = Addressresponse.AddressMatched;
 
             return View("OrderShipmentDetails", od);
-            
+
         }
 
-        
+
         AddressVerifyResponse Addressresponse = new AddressVerifyResponse();
         public ActionResult CheckAddress(string StoreId, AddressVerifyRequest Addressrequest = null)
         {
@@ -621,7 +621,7 @@ namespace OneposStamps.Controllers
         public virtual ActionResult DownloadPDF(string fileName)
         {
             string fullFileName = fileName + "_" + DateTime.Now.ToFileTime() + ".pdf";
-            return File((byte[])Session["pdfData"], "application/pdf", fullFileName);            
+            return File((byte[])Session["pdfData"], "application/pdf", fullFileName);
         }
 
         public AuthenticateUserResponse GetAuthentication(DbDetails dbdetails, string Apiname)
@@ -1543,7 +1543,7 @@ namespace OneposStamps.Controllers
                 }
                 else
                 {
-                    uncreatedLabel.Add(item);                    
+                    uncreatedLabel.Add(item);
                 }
 
             }
