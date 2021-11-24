@@ -318,6 +318,7 @@
     <Compile Include="Models\AuthenticateUser.cs" />
     <Compile Include="Models\ClientAddress.cs" />
     <Compile Include="Models\CreateLabel.cs" />
+    <Compile Include="Models\CreateLabelResponse.cs" />
     <Compile Include="Models\DbDetails.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ZipCodeController.cs" />
@@ -329,6 +330,7 @@
     <Compile Include="Models\AddZones.cs" />
     <Compile Include="Models\GetOrders.cs" />
     <Compile Include="Models\GetRates.cs" />
+    <Compile Include="Models\GetRatesResponse.cs" />
     <Compile Include="Models\GetZipCodeData.cs" />
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />

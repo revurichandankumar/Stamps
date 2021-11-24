@@ -22,6 +22,8 @@ namespace OneposStamps.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public string CarrierId { get; set; }
+        public string Service_Code { get; set; }
     }
     public class PackageData
     {

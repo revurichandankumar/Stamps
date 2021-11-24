@@ -304,7 +304,7 @@
                                             <select name="drlService" id="drlService" class="form-control-sm form-control">
                                                 @foreach (var item in Model.ServiceList)
                                                 {
-                                                    <option value="@item.Id">@item.Name</option>
+                                                    <option value="@item.Id" data-carrierid="@item.CarrierId" data-servicecode="@item.Service_Code">@item.Name</option>
                                                 }
                                                 @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
                                                     <option value="USPA">USPA</option>
