@@ -1,6 +1,6 @@
 ﻿using BarcodeLib;
-//using iText.Layout;
 using OneposStamps.Models;
+using SelectPdf;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +26,6 @@ using Rectangle = iTextSharp.text.Rectangle;
 using Font = System.Drawing.Font;
 using RestSharp;
 using Newtonsoft.Json;
-
 
 namespace OneposStamps.Controllers
 {
@@ -90,10 +89,9 @@ namespace OneposStamps.Controllers
 
             return PartialView("_OrderDetails", od);
         }
-        public  ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreName=null, string OrderId=null)
+        public  ActionResult InhouseLabel(string StoreId,string StoreName)
         {
-            OneposStamps.Models.CreateLabelRequest.CreateLabelResponse response = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
-            // var a= AddAddresDetails();
+             var a= AddAddresDetails();
             var pgSize = new iTextSharp.text.Rectangle(288, 432);
 
             Document doc = new Document(pgSize, 0, 0, 0, 0);
@@ -101,19 +99,18 @@ namespace OneposStamps.Controllers
             string date = (DateTime.Today).ToString("MM-dd-yyyy");
             string pdfname = StoreName + date;
             PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/"+ pdfname + ".pdf", FileMode.Create));
-            string FromAddress1 = getlabel.shipment.ship_from.address_line1;
-            string FromAddress2 = getlabel.shipment.ship_from.address_line2;
-            string Fromaddress3 = getlabel.shipment.ship_from.city_locality +" "+ getlabel.shipment.ship_from.state_province+" " + getlabel.shipment.ship_from.postal_code;
-               // "Roseville CA 95661";
+            string FromAddress1 = "300 N Sunrise Avenue";
+            string FromAddress2 = "Suite 130";
+            string Fromaddress3 = "Roseville CA 95661";
 
             doc.Open();
             int i = 101;
             
-            //foreach (var b in a)
-            //{
+            foreach (var b in a)
+            {
                 string Drivername = "C";
                 var No = i.ToString();
-                //string barCode = "94055";
+                string barCode = "94055";
                 string Dname = Drivername + No;
                 string path = AppDomain.CurrentDomain.BaseDirectory;
                 string name = "Mylapore Logo – 1";
@@ -147,18 +144,18 @@ namespace OneposStamps.Controllers
                 p1.IndentationLeft = 40f;
                
                 Paragraph p2 = new Paragraph();
-                //if (a.Count <= 9)
-                //{
+                if (a.Count <= 9)
+                {
                     p2.Font = FontFactory.GetFont("Corbel Light", 85);
-                //}
-                //else if (a.Count >= 10 & a.Count < 99)
-                //{
-                //    p2.Font = FontFactory.GetFont("Corbel Light", 75);
-                //}
-                //else if (a.Count >= 100 & a.Count < 999)
-                //{
-                //    p2.Font = FontFactory.GetFont("Corbel Light", 58);
-                //}
+                }
+                else if (a.Count >= 10 & a.Count < 99)
+                {
+                    p2.Font = FontFactory.GetFont("Corbel Light", 75);
+                }
+                else if (a.Count >= 100 & a.Count < 999)
+                {
+                    p2.Font = FontFactory.GetFont("Corbel Light", 58);
+                }
 
                 p2.Add("\n");
                 p2.Add("\n");
@@ -170,7 +167,7 @@ namespace OneposStamps.Controllers
                 p3.Font = FontFactory.GetFont("Arial", 22);
                 p3.Add(StoreName);
                
-                BarCodeBuilder builder = new BarCodeBuilder(OrderId, Symbology.Code128);
+                BarCodeBuilder builder = new BarCodeBuilder(b.BarcodeNumber, Symbology.Code128);
                 builder.CodeTextFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Regular);
                 BitmapImage bmp = new BitmapImage();
                 bmp = GetBitmapImage(new System.Drawing.Bitmap(builder.BarCodeImage));
@@ -245,16 +242,15 @@ namespace OneposStamps.Controllers
                 l2.IndentationLeft = 12f;
                 l2.SpacingBefore = 5f;
                 l2.Font= FontFactory.GetFont("Arial", 12);
-                l2.Add(getlabel.shipment.ship_from.name);
+                l2.Add(b.Username);
                 l2.Add("\n");
-                l2.Add(getlabel.shipment.ship_from.address_line1);
+                l2.Add(b.Address1);
                 l2.Add("\n");
-                 var address= getlabel.shipment.ship_from.city_locality +" "+ getlabel.shipment.ship_from.state_province+" " + getlabel.shipment.ship_from.postal_code;
-                 Paragraph l3 = new Paragraph();
+                Paragraph l3 = new Paragraph();
                 l3.IndentationLeft = 12f;
                 l3.SpacingBefore = 5f;
                 l3.Font = FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD);
-                l3.Add(address);
+                l3.Add(b.Address2);
                 l3.SpacingAfter = 14f;
 
                 PdfPTable maintable4 = new PdfPTable(2);
@@ -293,9 +289,7 @@ namespace OneposStamps.Controllers
                 doc.Add(c3);
                 doc.NewPage();
                 i++;
-            // }
-            response.ServiceType = "Mylapore Express";
-            response.ShipDate=
+            }
             
             doc.Close();
             //var pdfPath = Path.Combine(Server.MapPath(path_name));
@@ -391,8 +385,7 @@ namespace OneposStamps.Controllers
                 ServicetypeData a = new ServicetypeData();
                 a.Id = (row["ServiceTypeId"]).ToString();
                 a.Name = (row["ServiceTypeName"]).ToString();
-                a.CarrierId= (row["CarrierId"]).ToString();
-                a.Service_Code= (row["service_Code"]).ToString();
+
                 sd.Add(a);
 
             }
@@ -469,21 +462,21 @@ namespace OneposStamps.Controllers
         public ActionResult GetShipRates(string StoreId, GetRates getrates = null)
         {
             DbDetails dbdetails = db.GetDbDetails(StoreId);
-            //getrates.fromZipcode = getrates.fromZipcode;
-            //getrates.toZipcode = getrates.toZipcode;
-            //getrates.PackageType = getrates.PackageType;
-            ////DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
-            //DateTime shipDate = DateTime.Now.AddDays(1);
-            //getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
-            //getrates.WeightLb = getrates.WeightLb;
-            //getrates.WeightOz = getrates.WeightOz;
-            //getrates.servicetype = "US-PM";
-            //AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
-            // = dbdetails.IntegrationId;
-            GetRatesResponse val = GetRates(getrates, dbdetails.IntegrationId);
+            getrates.fromZipcode = getrates.fromZipcode;
+            getrates.toZipcode = getrates.toZipcode;
+            getrates.PackageType = getrates.PackageType;
+            //DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
+            DateTime shipDate = DateTime.Now.AddDays(1);
+            getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
+            getrates.WeightLb = getrates.WeightLb;
+            getrates.WeightOz = getrates.WeightOz;
+            getrates.servicetype = "US-PM";
+            AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
+            getrates.AuthenticationId = response.Authenticator;
+            GetRatesResponse val = GetRates(getrates, "GetRates");
 
             decimal RateAmount = 0;
-            if ((val.Amount) !=0)
+            if (!string.IsNullOrEmpty(val.Amount))
             {
                 RateAmount = Math.Round(Convert.ToDecimal(val.Amount), 2);
             }
@@ -491,48 +484,198 @@ namespace OneposStamps.Controllers
             return Json(RateAmount);
         }
 
-       
+        //public ActionResult GetShipRates(string StoreId, GetRates getrates = null)
+        //{
+        //    DbDetails dbdetails = db.GetDbDetails(StoreId);
+        //    getrates.fromZipcode = getrates.fromZipcode;
+        //    getrates.toZipcode = getrates.toZipcode;
+        //    getrates.PackageType = getrates.PackageType;
+        //    //DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
+        //    DateTime shipDate = DateTime.Now.AddDays(1);
+        //    getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
+        //    getrates.WeightLb = getrates.WeightLb;
+        //    getrates.WeightOz = getrates.WeightOz;
 
-        public ActionResult GetLabels(string StoreId, OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null)
+        //    GetRatesResponse val = GetShiprateService(dbdetails, getrates);
+
+        //    decimal RateAmount = 0;
+        //    if (!string.IsNullOrEmpty(val.Amount))
+        //    {
+        //        RateAmount = Math.Round(Convert.ToDecimal(val.Amount), 2);
+        //    }
+
+        //    return Json(RateAmount);
+        //}
+
+        public ActionResult GetLabels(string StoreId, CreateLabelRequest getlabel = null)
         {
             DbDetails dbdetails = db.GetDbDetails(StoreId);
 
-            ////getlabel.IntegratorTxID = ;
-            ////getlabel.FromFullName = "SWSIM API";
-            ////getlabel.Fromaddress = "1990 E GRAND AVE";
-            ////getlabel.FromCity = "EL SEGUNDO";
-            ////getlabel.FromState = "CA";
-            ////getlabel.FromZIPCode = "90245";
-            //if (getlabel.FromCountry.ToLower() == "united states" || getlabel.FromCountry.ToLower() == "usa" || getlabel.FromCountry.ToLower() == "unitedstates" || getlabel.FromCountry.ToLower() == "us")
-            //{
-            //    getlabel.FromCountry = "US";
-            //}
-            ////getlabel.ToFullName = "SWSIM API";
-            ////getlabel.Toaddress = "1990 E GRAND AVE";
-            ////getlabel.ToCity = "EL SEGUNDO";
-            ////getlabel.ToState = "CA";
-            ////getlabel.ToZIPCode = "90245";
-            //if (getlabel.ToCountry.ToLower() == "united states" || getlabel.ToCountry.ToLower() == "usa" || getlabel.ToCountry.ToLower() == "unitedstates" || getlabel.ToCountry.ToLower() == "us")
-            //{
-            //    getlabel.ToCountry = "US";
-            //}
-            ////getlabel.WeightLb = 0;
-            ////getlabel.WeightOz = 1;
-            ////getlabel.PackageType = "Package";
-            ////getlabel.shipdate = "2021-10-11";
-            //DateTime shipDate = DateTime.Now.AddDays(1);
-            //getlabel.shipdate = shipDate.ToString("yyyy/MM/dd");
-            
-            OneposStamps.Models.CreateLabelRequest.CreateLabelResponse res = GetLabel(getlabel, dbdetails.IntegrationId);
+            //getlabel.IntegratorTxID = ;
+            //getlabel.FromFullName = "SWSIM API";
+            //getlabel.Fromaddress = "1990 E GRAND AVE";
+            //getlabel.FromCity = "EL SEGUNDO";
+            //getlabel.FromState = "CA";
+            //getlabel.FromZIPCode = "90245";
+            if (getlabel.FromCountry.ToLower() == "united states" || getlabel.FromCountry.ToLower() == "usa" || getlabel.FromCountry.ToLower() == "unitedstates" || getlabel.FromCountry.ToLower() == "us")
+            {
+                getlabel.FromCountry = "US";
+            }
+            //getlabel.ToFullName = "SWSIM API";
+            //getlabel.Toaddress = "1990 E GRAND AVE";
+            //getlabel.ToCity = "EL SEGUNDO";
+            //getlabel.ToState = "CA";
+            //getlabel.ToZIPCode = "90245";
+            if (getlabel.ToCountry.ToLower() == "united states" || getlabel.ToCountry.ToLower() == "usa" || getlabel.ToCountry.ToLower() == "unitedstates" || getlabel.ToCountry.ToLower() == "us")
+            {
+                getlabel.ToCountry = "US";
+            }
+            //getlabel.WeightLb = 0;
+            //getlabel.WeightOz = 1;
+            //getlabel.PackageType = "Package";
+            //getlabel.shipdate = "2021-10-11";
+            DateTime shipDate = DateTime.Now.AddDays(1);
+            getlabel.shipdate = shipDate.ToString("yyyy/MM/dd");
+            //getlabel.Length = "1";
+            //getlabel.Width = "1";
+            //getlabel.Height = "1";
+            //getlabel.ServiceType = "US-PM";// "US-FC";
+            //getlabel.Amount = "7.36";
 
-            //DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
-           // res.DeliveryDate = del.ToString("MM/dd/yyyy");
-            //res.ShipDate = shipDate.ToString("MM/dd/yyyy");
-            //res.ZoneName = getlabel.ZoneName;
+
+
+            AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
+            getlabel.AuthenticationId = response.Authenticator;
+            CreateLabelResponse res = GetLabel(getlabel, "CreateIndicium");
+
+            DateTime del = res.DeliveryDate != null ? DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null) : DateTime.Now;
+            res.DeliveryDate = del.ToString("MM/dd/yyyy");
+            res.ShipDate = shipDate.ToString("MM/dd/yyyy");
+            res.ZoneName = getlabel.ZoneName;
+            //return Json(res);
+
+            Session["pdfData"] = null;
+            if (res.Url != null)
+            {
+                string url = res.Url;
+
+                string pdf_page_size = PdfPageSize.A4.ToString();
+                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                    pdf_page_size, true);
+
+                string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                PdfPageOrientation pdfOrientation =
+                    (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                    pdf_orientation, true);
+
+                int webPageWidth = 1024;
+                try
+                {
+                    //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                }
+                catch { }
+
+                int webPageHeight = 0;
+                try
+                {
+                    //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                }
+                catch { }
+
+                // instantiate a html to pdf converter object
+                HtmlToPdf converter = new HtmlToPdf();
+
+                // set converter options
+                converter.Options.PdfPageSize = pageSize;
+                converter.Options.PdfPageOrientation = pdfOrientation;
+                converter.Options.WebPageWidth = webPageWidth;
+                converter.Options.WebPageHeight = webPageHeight;
+                converter.Options.MarginLeft = 150;
+                //converter.Options.MarginRight = 10;
+                converter.Options.MarginTop = 50;
+                //converter.Options.MarginBottom = 20;
+
+                // create a new pdf document converting an url
+                PdfDocument doc = converter.ConvertUrl(url);
+
+                // save pdf document
+                byte[] pdf = doc.Save();
+
+                // close pdf document
+                doc.Close();
+                Session["pdfData"] = pdf;
+                //// return resulted pdf document
+                //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                //fileResult.FileDownloadName = "Document.pdf";
+
+
+                //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                //return Json(pdf);
+                //return File(pdf, "application/pdf");
+                //return fileResult;
+                //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+            }
             return Json(res);
         }
 
-        
+        public virtual ActionResult DownloadPDF(string fileName)
+        {
+            string fullFileName = fileName + "_" + DateTime.Now.ToFileTime() + ".pdf";
+            return File((byte[])Session["pdfData"], "application/pdf", fullFileName);            
+        }
+
+        public AuthenticateUserResponse GetAuthentication(DbDetails dbdetails, string Apiname)
+        {
+            AuthenticateUserResponse Responses = new AuthenticateUserResponse();
+            ////Calling CreateSOAPWebRequest method  
+            //HttpWebRequest request = CreateSOAPWebRequest(Apiname);
+
+            //XmlDocument SOAPReqBody = new XmlDocument();
+            ////SOAP Body Request  
+            //SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+            //<soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+            //    xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+            //    xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+            // <soap:Body> 
+            //    <AuthenticateUser xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">  
+            //    <Credentials>
+            //      <IntegrationID>" + dbdetails.IntegrationId + @"</IntegrationID>  
+            //      <Username>" + dbdetails.StampsUserName + @"</Username> 
+            //      <Password>" + dbdetails.StampsUserPassword + @"</Password>
+            //     </Credentials>
+            //    </AuthenticateUser>
+            //  </soap:Body>  
+            //</soap:Envelope>");
+
+
+            //using (Stream stream = request.GetRequestStream())
+            //{
+            //    SOAPReqBody.Save(stream);
+            //}
+            ////Geting response from request  
+            //using (WebResponse Serviceres = request.GetResponse())
+            //{
+            //    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+            //    {
+            //        //reading stream  
+            //        var ServiceResult = rd.ReadToEnd();
+            //        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+            //        XDocument doc = XDocument.Parse(ServiceResult);
+            //        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+            //        IEnumerable<XElement> responses = doc.Descendants(ns + "AuthenticateUserResponse");
+            //        foreach (XElement response in responses)
+            //        {
+            //            var value = (string)response.Element(ns + "Authenticator");
+            //            Responses.Authenticator = value.Replace("&", "&amp;");
+
+            //        }
+
+            //    }
+            //}
+
+            return Responses;
+
+        }
         public List<ClientAddress> AddAddresDetails()
         {
             List<ClientAddress> list = new List<ClientAddress>();
@@ -596,190 +739,534 @@ namespace OneposStamps.Controllers
 
         }
 
-        public OneposStamps.Models.CreateLabelRequest.CreateLabelResponse GetLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel, string AuthenticationId)
+        public CreateLabelResponse GetLabel(CreateLabelRequest getlabel, string Apiname)
         {
-            OneposStamps.Models.CreateLabelRequest.CreateLabelResponse Responses = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
-            var client = new RestClient("https://api.shipengine.com/v1/labels");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("API-Key", AuthenticationId);
-            request.AddHeader("Content-Type", "application/json");
-            OneposStamps.Models.CreateLabelRequest.CreateLabelRequest lbl = new OneposStamps.Models.CreateLabelRequest.CreateLabelRequest();
-            lbl.shipment =new Models.CreateLabelRequest.Shipment();
-            lbl.shipment.ship_from = new Models.CreateLabelRequest.ShipFrom();
-            lbl.shipment.ship_to = new Models.CreateLabelRequest.ShipTo();
-            lbl.shipment.service_code = "ups_ground";
-            lbl.shipment.ship_from.company_name = "Example Corp.";
-            lbl.shipment.ship_from.name = "John Doe";
-            lbl.shipment.ship_from.phone = "111-111-1111";
-            lbl.shipment.ship_from.address_line1 = "4009 Marathon Blvd";
-            lbl.shipment.ship_from.address_line2 = "Suite 300";
-            lbl.shipment.ship_from.city_locality = "Austin";
-            lbl.shipment.ship_from.state_province = "TX";
-            lbl.shipment.ship_from.postal_code = "78756";
-            lbl.shipment.ship_from.country_code = "US";
-            lbl.shipment.ship_from.address_residential_indicator = "no";
-            lbl.shipment.ship_to.name = "Amanda Miller";
-            lbl.shipment.ship_to.phone = "555-555-5555";
-            lbl.shipment.ship_to.address_line1 = "525 S Winchester Blvd";
-            lbl.shipment.ship_to.city_locality = "San Jose";
-            lbl.shipment.ship_to.state_province = "CA";
-            lbl.shipment.ship_to.postal_code = "95128";
-            lbl.shipment.ship_to.country_code = "US";
-            lbl.shipment.ship_to.address_residential_indicator = "yes";
-            lbl.shipment.packages = new List<Models.CreateLabelRequest.Package>();
-            Models.CreateLabelRequest.Package p = new Models.CreateLabelRequest.Package();
-            p.weight = new Models.CreateLabelRequest.Weight();
-            p.dimensions = new Models.CreateLabelRequest.Dimensions();
-            p.weight.unit = "ounce";
-            p.weight.value = 1.0;
-            p.dimensions.height = 6;
-            p.dimensions.length = 12;
-            p.dimensions.unit = "inch";
-            p.dimensions.width = 7.1;
-            lbl.shipment.packages.Add(p);
-            var body = JsonConvert.SerializeObject(lbl);
+            CreateLabelResponse Responses = new CreateLabelResponse();
+            //Calling CreateSOAPWebRequest method  
+            HttpWebRequest request = CreateSOAPWebRequest(Apiname);
 
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            if (response.StatusCode == HttpStatusCode.OK)
+            XmlDocument SOAPReqBody = new XmlDocument();
+            //SOAP Body Request  
+            SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+            <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+                xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+                xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+             <soap:Body>               
+             <CreateIndicium xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">
+            <Authenticator>" + getlabel.AuthenticationId + @"</Authenticator>                                                                                                           
+            <IntegratorTxID>" + getlabel.IntegratorTxID + @"</IntegratorTxID>                                                                                                           
+            <Rate>                                                                                                              
+                <From>                                                                                                            
+                    <FullName>" + getlabel.FromFullName + @"</FullName>                                                                                                                
+                    <Address1>" + getlabel.Fromaddress + @"</Address1>
+                    <City>" + getlabel.FromCity + @"</City>
+                    <State>" + getlabel.FromCity + @"</State>
+                    <ZIPCode>" + getlabel.FromZIPCode + @"</ZIPCode>
+                    <Country>" + getlabel.FromCountry + @"</Country>
+                </From>
+                <To>
+                    <FullName>" + getlabel.ToFullName + @"</FullName>                                                                                                                          
+                    <Address1>" + getlabel.Toaddress + @"</Address1>                                                                                                                              
+                    <City>" + getlabel.ToCity + @"</City>                                                                                                                                 
+                    <State>" + getlabel.ToState + @"</State>                                                                                                                                  
+                    <ZIPCode>" + getlabel.ToZIPCode + @"</ZIPCode>                                                                                                                                                                                                                                                                  
+                    <Country>" + getlabel.ToCountry + @"</Country>                                                                                                                                  
+                </To>                                                                                                                                                                                                                                                    
+                <Amount>" + getlabel.Amount + @"</Amount>                                                                                                                                                                                                                                                             
+                <ServiceType>" + getlabel.ServiceType + @"</ServiceType>                                                                                                                                                                                                                                                            
+                <WeightLb>" + getlabel.WeightLb + @"</WeightLb>                                                                                                                                
+                <WeightOz>" + getlabel.WeightOz + @"</WeightOz>                                                                                                                               
+                <PackageType>" + getlabel.PackageType + @"</PackageType>                                                                                                                               
+                <Length>" + getlabel.Length + @"</Length>                                                                                                                        
+                <Width>" + getlabel.Width + @"</Width>                                                                                                                            
+                <Height>" + getlabel.Height + @"</Height>                                                                                                                            
+                <ShipDate>" + getlabel.shipdate + @"</ShipDate>                                                                                                                            
+                </Rate>                                                                                                                              
+                </CreateIndicium>                                                                                                                                
+                </soap:Body>  
+                </soap:Envelope>");
+
+
+            using (Stream stream = request.GetRequestStream())
             {
+                SOAPReqBody.Save(stream);
+            }
+            try
+            {
+                //Geting response from request  
+                using (WebResponse Serviceres = request.GetResponse())
+                {
+                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                    {
+                        //reading stream  
+                        var ServiceResult = rd.ReadToEnd();
 
-                string result = response.Content;
-                OneposStamps.Models.CreateLabelResponse.Root value1 = JsonConvert.DeserializeObject<OneposStamps.Models.CreateLabelResponse.Root>(result);
-                Responses.TrackingNumber = value1.tracking_number;
-                Responses.ServiceType = value1.service_code;
-                Responses.ShipDate = value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss");
+                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                        XDocument doc = XDocument.Parse(ServiceResult);
+                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                        IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
+                        IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rate");
+                        IEnumerable<XElement> responses2 = responses1.Descendants(ns + "From");
+                        //IEnumerable<XElement> responses = doc.Descendants(ns + "CreateIndiciumResponse");
 
-                //Responses.DeliveryDate= value1..ToString("MM-dd-yyyy HH:mm:ss");
 
-                OneposStamps.Models.CreateLabelResponse.LabelDownload label = value1.label_download;
-                Responses.Url = label.pdf;
-                //OneposStamps.Models.GetRateResponse.Rate rate = rateResponse.rates.FirstOrDefault();
-                //Responses.Amount = rate.confirmation_amount.amount + rate.insurance_amount.amount + rate.shipping_amount.amount + rate.other_amount.amount;
-                //Responses.Deliverydate = rate.estimated_delivery_date.ToString("MM-dd-yyyy HH:mm:ss");
+                        foreach (XElement response in responses)
+                        {
+
+                            Responses.Url = (string)response.Element(ns + "URL");
+                            Responses.TrackingNumber = (string)response.Element(ns + "TrackingNumber");
+
+                        }
+                        foreach (XElement response in responses1)
+                        {
+                            Responses.ServiceType = (string)response.Element(ns + "ServiceType");
+                            Responses.DeliveryDate = (string)response.Element(ns + "DeliveryDate");
+                        }
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //Responses.Url = null;
+                return Responses;
             }
 
             return Responses;
         }
 
-      
+        //public GetRatesResponse GetShiprateService(DbDetails dbdetails, GetRates getratesrequest)
+        //{
 
-       
 
-        public GetRatesResponse GetRates(GetRates getrates,string AuthenticationId)
+        //    AuthenticateUserResponse user = new AuthenticateUserResponse();
+        //    //Calling CreateSOAPWebRequest method  
+        //    HttpWebRequest request = CreateSOAPWebRequest();
+
+        //    XmlDocument SOAPReqBody = new XmlDocument();
+        //    //SOAP Body Request  
+        //    SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+        //    <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+        //        xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+        //        xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+        //     <soap:Body> 
+        //        <AuthenticateUser xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">  
+        //        <Credentials>
+        //          <IntegrationID>" + dbdetails.IntegrationId + @"</IntegrationID>  
+        //          <Username>" + dbdetails.StampsUserName + @"</Username> 
+        //          <Password>" + dbdetails.StampsUserPassword + @"</Password>
+        //         </Credentials>
+        //        </AuthenticateUser>
+        //      </soap:Body>  
+        //    </soap:Envelope>");
+
+
+        //    using (Stream stream = request.GetRequestStream())
+        //    {
+        //        SOAPReqBody.Save(stream);
+        //    }
+        //    //Geting response from request  
+        //    using (WebResponse Serviceres = request.GetResponse())
+        //    {
+        //        using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+        //        {
+        //            //reading stream  
+        //            var ServiceResult = rd.ReadToEnd();
+        //            //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+        //            XDocument doc = XDocument.Parse(ServiceResult);
+        //            XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+        //            IEnumerable<XElement> responses = doc.Descendants(ns + "AuthenticateUserResponse");
+        //            foreach (XElement response in responses)
+        //            {
+        //                var value = (string)response.Element(ns + "Authenticator");
+        //                user.Authenticator = value.Replace("&", "&amp;");
+        //            }
+
+        //        }
+
+        //    }
+
+
+
+        //    getratesrequest.AuthenticationId = user.Authenticator;
+        //    GetRatesResponse gr = GetRates(getratesrequest);
+        //    return gr;
+
+
+
+        //}
+
+        //public AddressVerifyResponse InvokeService(DbDetails dbdetails, AddressVerifyRequest Addressrequest)
+        //{
+
+
+        //    AuthenticateUserResponse user = new AuthenticateUserResponse();
+        //    //Calling CreateSOAPWebRequest method  
+        //    HttpWebRequest request = CreateSOAPWebRequest();
+
+        //    XmlDocument SOAPReqBody = new XmlDocument();
+        //    //SOAP Body Request  
+        //    SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+        //    <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+        //        xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+        //        xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+        //     <soap:Body> 
+        //        <AuthenticateUser xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">  
+        //        <Credentials>
+        //          <IntegrationID>" + dbdetails.IntegrationId + @"</IntegrationID>  
+        //          <Username>" + dbdetails.StampsUserName + @"</Username> 
+        //          <Password>" + dbdetails.StampsUserPassword + @"</Password>
+        //         </Credentials>
+        //        </AuthenticateUser>
+        //      </soap:Body>  
+        //    </soap:Envelope>");
+
+
+        //    using (Stream stream = request.GetRequestStream())
+        //    {
+        //        SOAPReqBody.Save(stream);
+        //    }
+        //    //Geting response from request  
+        //    using (WebResponse Serviceres = request.GetResponse())
+        //    {
+        //        using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+        //        {
+        //            //reading stream  
+        //            var ServiceResult = rd.ReadToEnd();
+        //            //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+        //            XDocument doc = XDocument.Parse(ServiceResult);
+        //            XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+        //            IEnumerable<XElement> responses = doc.Descendants(ns + "AuthenticateUserResponse");
+        //            foreach (XElement response in responses)
+        //            {
+        //                var value = (string)response.Element(ns + "Authenticator");
+        //                user.Authenticator = value.Replace("&", "&amp;");
+        //            }
+
+        //        }
+
+        //    }
+        //    AddressVerifyResponse avr = new AddressVerifyResponse();
+
+        //        Addressrequest.AuthenticationId = user.Authenticator;
+        //        avr = CleanseAddress(Addressrequest);
+
+        //    return avr;
+        //}
+
+        public GetRatesResponse GetRates(GetRates getrates, string Apiname)
         {
             GetRatesResponse Responses = new GetRatesResponse();
-            var client = new RestClient("https://api.shipengine.com/v1/rates");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("API-Key", AuthenticationId);
-            request.AddHeader("Content-Type", "application/json");
+            //Calling CreateSOAPWebRequest method  
+            HttpWebRequest request = CreateSOAPWebRequest(Apiname);
 
-            GetRates g1 = new GetRates();
-            RateOptions r = new RateOptions();
-            //r.carrier_ids.Add("se-972447");
-            //g1.rate_options.carrier_ids = r.carrier_ids.Add(r);
-            //ShipFrom sf = new ShipFrom();
-            g1.rate_options = new RateOptions();
-            g1.rate_options.carrier_ids = new List<string>();
-            g1.rate_options.package_types = new List<string>();
-            g1.rate_options.service_codes = new List<string>();
-            g1.rate_options.carrier_ids.Add("se-972448");
-            g1.rate_options.package_types.Add("package");
-            g1.rate_options.service_codes.Add("ups_ground");
-            g1.shipment = new Shipment();
-            g1.shipment.ship_from = new ShipFrom();
-            g1.shipment.ship_to = new ShipTo();
-            g1.shipment.ship_from.company_name = "Example Corp.";
-            g1.shipment.ship_from.name = "John Doe";
-            g1.shipment.ship_from.phone = "111-111-1111";
-            g1.shipment.ship_from.address_line1 = "4009 Marathon Blvd";
-            g1.shipment.ship_from.address_line2 = "Suite 300";
-            g1.shipment.ship_from.city_locality = "Austin";
-            g1.shipment.ship_from.state_province = "TX";
-            g1.shipment.ship_from.postal_code = "78756";
-            g1.shipment.ship_from.country_code = "US";
-            g1.shipment.ship_from.address_residential_indicator = "no";
-            g1.shipment.ship_to.name = "Amanda Miller";
-            g1.shipment.ship_to.phone = "555-555-5555";
-            g1.shipment.ship_to.address_line1 = "525 S Winchester Blvd";          
-            g1.shipment.ship_to.city_locality = "San Jose";
-            g1.shipment.ship_to.state_province = "CA";
-            g1.shipment.ship_to.postal_code = "95128";
-            g1.shipment.ship_to.country_code = "US";
-            g1.shipment.ship_to.address_residential_indicator = "yes";
-            g1.shipment.validate_address = "no_validation";
-            
-            g1.shipment.packages = new List<Package>();
-            Package p = new Package();
-            p.weight = new Weight();
-            p.dimensions = new Dimensions();
-            p.weight.unit = "ounce";
-            p.weight.value = 1.0;           
-            p.dimensions.height = 6;
-            p.dimensions.length = 12;
-            p.dimensions.unit = "inch";
-            p.dimensions.width = 7.1;
-            g1.shipment.packages.Add(p);
+            XmlDocument SOAPReqBody = new XmlDocument();
+            //SOAP Body Request  
+            SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+            <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+                xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+                xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+             <soap:Body>               
+            <GetRates xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">
+            <Authenticator>" + getrates.AuthenticationId + @"</Authenticator>
+            <Rate >
+                <From>
+                    <ZIPCode>" + getrates.fromZipcode + @"</ZIPCode>
+                </From>
+                <To>
+                    <ZIPCode>" + getrates.toZipcode + @"</ZIPCode>
+                </To>
+                <ServiceType>" + getrates.servicetype + @"</ServiceType>
+               <WeightLb>" + getrates.WeightLb + @"</WeightLb>
+                <WeightOz>" + getrates.WeightOz + @"</WeightOz>
+                <PackageType>" + getrates.PackageType + @"</PackageType>
+                <ShipDate>" + getrates.shipdate + @"</ShipDate>
+            </Rate >
+            </GetRates >
+               </soap:Body>  
+            </soap:Envelope>");
 
-            var body = JsonConvert.SerializeObject(g1);
 
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            if(response.StatusCode==HttpStatusCode.OK)
+            using (Stream stream = request.GetRequestStream())
             {
-                
-                string result = response.Content;
-                OneposStamps.Models.GetRateResponse.Root value1 = JsonConvert.DeserializeObject<OneposStamps.Models.GetRateResponse.Root>(result);
-                OneposStamps.Models.GetRateResponse.RateResponse rateResponse = value1.rate_response;
-                OneposStamps.Models.GetRateResponse.Rate rate = rateResponse.rates.FirstOrDefault();
-                Responses.Amount = rate.confirmation_amount.amount + rate.insurance_amount.amount + rate.shipping_amount.amount + rate.other_amount.amount;
-                Responses.Deliverydate = rate.estimated_delivery_date.ToString("MM-dd-yyyy HH:mm:ss");
+                SOAPReqBody.Save(stream);
             }
+            //Geting response from request  
+            try
+            {
+                using (WebResponse Serviceres = request.GetResponse())
+                {
+                    using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                    {
+                        //reading stream  
+                        var ServiceResult = rd.ReadToEnd();
+                        //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                        XDocument doc = XDocument.Parse(ServiceResult);
+                        XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                        IEnumerable<XElement> responses = doc.Descendants(ns + "GetRatesResponse");
 
+                        IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rates");
+                        IEnumerable<XElement> responses2 = responses1.Descendants(ns + "Rate");
+                        bool amountvalue = true;
+                        foreach (XElement response in responses2)
+                        {
+                            if (amountvalue)
+                            {
+                                Responses.Amount = (string)response.Element(ns + "Amount");
+                                amountvalue = false;
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Responses.Amount = "0";
+                return Responses;
+            }
 
             return Responses;
         }
 
-      
+        //public GetRatesResponse GetRates(GetRates getrates)
+        //{
+        //    GetRatesResponse Responses = new GetRatesResponse();
+        //    //Calling CreateSOAPWebRequest method  
+        //    HttpWebRequest request = GetRatesSOAPWebRequest();
+
+        //    XmlDocument SOAPReqBody = new XmlDocument();
+        //    //SOAP Body Request  
+        //    SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+        //    <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+        //        xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+        //        xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+        //     <soap:Body>               
+        //    <GetRates xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111"">
+        //    <Authenticator>" + getrates.AuthenticationId + @"</Authenticator>
+        //    <Rate >
+        //        <From>
+        //            <ZIPCode>" + getrates.fromZipcode + @"</ZIPCode>
+        //        </From>
+        //        <To>
+        //            <ZIPCode>" + getrates.toZipcode + @"</ZIPCode>
+        //        </To>
+        //       <WeightLb>" + getrates.WeightLb + @"</WeightLb>
+        //        <WeightOz>" + getrates.WeightOz + @"</WeightOz>
+        //        <PackageType>" + getrates.PackageType + @"</PackageType>
+        //        <ShipDate>" + getrates.shipdate + @"</ShipDate>
+        //    </Rate >
+        //    </GetRates >
+        //       </soap:Body>  
+        //    </soap:Envelope>");
+
+
+        //    using (Stream stream = request.GetRequestStream())
+        //    {
+        //        SOAPReqBody.Save(stream);
+        //    }
+        //    //Geting response from request  
+        //    using (WebResponse Serviceres = request.GetResponse())
+        //    {
+        //        using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+        //        {
+        //            //reading stream  
+        //            var ServiceResult = rd.ReadToEnd();
+        //            //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+        //            XDocument doc = XDocument.Parse(ServiceResult);
+        //            XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+        //            IEnumerable<XElement> responses = doc.Descendants(ns + "GetRatesResponse");
+
+        //            IEnumerable<XElement> responses1 = responses.Descendants(ns + "Rates");
+        //            IEnumerable<XElement> responses2 = responses1.Descendants(ns + "Rate");
+        //            IEnumerable<XElement> responses3 = responses.Descendants(ns + "Amount");
+        //            var value = responses3.FirstOrDefault();
+        //            string[] valu2 = value.ToString().Split('>');
+        //            Responses.Amount = valu2[1].Replace("</Amount", "");
+
+        //        }
+        //    }
+        //    return Responses;
+        //}
 
         public AddressVerifyResponse CleanseAddress(AddressVerifyRequest Addressrequest, string ApiName)
         {
             AddressVerifyResponse Responses = new AddressVerifyResponse();
-            var client = new RestClient("https://api.shipengine.com/v1/addresses/validate");
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("API-Key", Addressrequest.AuthenticationId);
-            request.AddHeader("Content-Type", "application/json");
-            const string quote = "\"";
-            var body = @"[" + "\n" +
-            @"    {" + "\n" +
-            @"        ""name"": "+ quote + ""+ Addressrequest.name + "" + quote + "," + "\n" +
-            @"        ""address_line1"": " + quote + ""+ Addressrequest.address1 + "" + quote + "," + "\n" +
-            @"        ""city_locality"": " + quote + ""+ Addressrequest.city + "" + quote + "," + "\n" +
-            @"        ""state_province"": " + quote + ""+ Addressrequest.state + "" + quote + "," + "\n" +
-            @"        ""postal_code"": "+ quote +""+ Addressrequest.zipcode + "" + quote + "," + "\n" +
-            @"        ""country_code"": ""US""" + "\n" +
-            @"    }" + "\n" +
-            @"]";
-            request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
-            // Console.WriteLine(response.Content);
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                string result = response.Content;
-                List<OneposStamps.Models.Root> value1 = JsonConvert.DeserializeObject<List<OneposStamps.Models.Root>>(result);
-                var value = value1.FirstOrDefault();
-                Responses.AddressMatched = value.status;
-            }
 
+            //Calling CreateSOAPWebRequest method  
+            HttpWebRequest request = CreateSOAPWebRequest(ApiName);
+
+            XmlDocument SOAPReqBody = new XmlDocument();
+            //SOAP Body Request  
+            SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+            <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+                xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+                xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+             <soap:Body> 
+                <CleanseAddress xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111""> 
+                <Authenticator>" + Addressrequest.AuthenticationId + @"</Authenticator>
+                 <Address>
+                <FullName>" + Addressrequest.name + @"</FullName>
+                <Address1>" + Addressrequest.address1 + @"</Address1>
+                <City>" + Addressrequest.city + @"</City>
+                <State>" + Addressrequest.state + @"</State>
+                <ZIPCode>" + Addressrequest.zipcode + @"</ZIPCode>
+                </Address>             
+                </CleanseAddress>
+              </soap:Body>  
+            </soap:Envelope>");
+
+
+            using (Stream stream = request.GetRequestStream())
+            {
+                SOAPReqBody.Save(stream);
+            }
+            //Geting response from request  
+            using (WebResponse Serviceres = request.GetResponse())
+            {
+                using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+                {
+                    //reading stream  
+                    var ServiceResult = rd.ReadToEnd();
+                    //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+                    XDocument doc = XDocument.Parse(ServiceResult);
+                    XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+                    IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
+
+                    foreach (XElement response in responses)
+                    {
+
+                        Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
+
+                    }
+
+                }
+            }
             return Responses;
         }
 
-        
+        //public AddressVerifyResponse CleanseAddress(AddressVerify Addressrequest)
+        //{
+        //    AddressVerifyResponse Responses = new AddressVerifyResponse();
 
-        
+        //    //Calling CreateSOAPWebRequest method  
+        //    HttpWebRequest request = CleanseAddressSOAPWebRequest();
+
+        //    XmlDocument SOAPReqBody = new XmlDocument();
+        //    //SOAP Body Request  
+        //    SOAPReqBody.LoadXml(@"<?xml version=""1.0"" encoding=""utf-8""?>  
+        //    <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/""
+        //        xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" 
+        //        xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">  
+        //     <soap:Body> 
+        //        <CleanseAddress xmlns=""http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111""> 
+        //        <Authenticator>" + Addressrequest.AuthenticationId + @"</Authenticator>
+        //         <Address>
+        //        <FullName>" + Addressrequest.name + @"</FullName>
+        //        <Address1>" + Addressrequest.address1 + @"</Address1>
+        //        <City>" + Addressrequest.city + @"</City>
+        //        <State>" + Addressrequest.state + @"</State>
+        //        <ZIPCode>" + Addressrequest.zipcode + @"</ZIPCode>
+        //        </Address>             
+        //        </CleanseAddress>
+        //      </soap:Body>  
+        //    </soap:Envelope>");
+
+
+        //    using (Stream stream = request.GetRequestStream())
+        //    {
+        //        SOAPReqBody.Save(stream);
+        //    }
+        //    //Geting response from request  
+        //    using (WebResponse Serviceres = request.GetResponse())
+        //    {
+        //        using (StreamReader rd = new StreamReader(Serviceres.GetResponseStream()))
+        //        {
+        //            //reading stream  
+        //            var ServiceResult = rd.ReadToEnd();
+        //            //var otp = JsonConvert.DeserializeObject<AuthenticateUser>(ServiceResult);
+        //            XDocument doc = XDocument.Parse(ServiceResult);
+        //            XNamespace ns = "http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111";
+        //            IEnumerable<XElement> responses = doc.Descendants(ns + "CleanseAddressResponse");
+
+        //            foreach (XElement response in responses)
+        //            {
+
+        //                Responses.AddressMatched = (string)response.Element(ns + "AddressMatch");
+
+        //            }
+
+        //        }
+        //    }
+        //    return Responses;
+        //}
+
+        public HttpWebRequest CreateSOAPWebRequest(string Apiname)
+        {
+            //Making Web Request  
+            HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(@"https://swsim.testing.stamps.com/swsim/swsimv111.asmx");
+            //SOAPAction  
+            Req.Headers.Add(@"SOAPAction:http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111/" + Apiname + "");//AuthenticateUser
+                                                                                                                   //Content_type  
+                                                                                                                   // Req.ContentLength = "length";
+            Req.ContentType = "text/xml;charset=\"utf-8\"";
+            Req.Accept = "text/xml";
+            //HTTP method  
+            Req.Method = "POST";
+            Req.Host = "swsim.testing.stamps.com";
+
+            //return HttpWebRequest  
+            return Req;
+        }
+
+        //public HttpWebRequest CreateSOAPWebRequest()
+        //{
+        //    //Making Web Request  
+        //    HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(@"https://swsim.testing.stamps.com/swsim/swsimv111.asmx");
+        //    //SOAPAction  
+        //    Req.Headers.Add(@"SOAPAction:http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111/AuthenticateUser");
+        //    //Content_type  
+        //    // Req.ContentLength = "length";
+        //    Req.ContentType = "text/xml;charset=\"utf-8\"";
+        //    Req.Accept = "text/xml";
+        //    //HTTP method  
+        //    Req.Method = "POST";
+        //    Req.Host = "swsim.testing.stamps.com";
+
+        //    //return HttpWebRequest  
+        //    return Req;
+        //}
+        public HttpWebRequest CleanseAddressSOAPWebRequest()
+        {
+            //Making Web Request  
+            HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(@"https://swsim.testing.stamps.com/swsim/swsimv111.asmx");
+            //SOAPAction  
+            Req.Headers.Add(@"SOAPAction:http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111/CleanseAddress");
+            Req.ContentType = "text/xml;charset=\"utf-8\"";
+            Req.Accept = "text/xml";
+            //HTTP method  
+            Req.Method = "POST";
+            Req.Host = "swsim.testing.stamps.com";
+
+            //return HttpWebRequest  
+            return Req;
+        }
+        public HttpWebRequest GetRatesSOAPWebRequest()
+        {
+            //Making Web Request  
+            HttpWebRequest Req = (HttpWebRequest)WebRequest.Create(@"https://swsim.testing.stamps.com/swsim/swsimv111.asmx");
+            //SOAPAction  
+            Req.Headers.Add(@"SOAPAction:http://stamps.com/xml/namespace/2021/01/swsim/SwsimV111/GetRates");
+            Req.ContentType = "text/xml;charset=\"utf-8\"";
+            Req.Accept = "text/xml";
+            //HTTP method  
+            Req.Method = "POST";
+            Req.Host = "swsim.testing.stamps.com";
+
+            //return HttpWebRequest  
+            return Req;
+        }
 
         public string LoadImageForStore()
         {
@@ -888,10 +1375,181 @@ namespace OneposStamps.Controllers
                         // Convert byte[] to Base64 String
                         base64String = "data: image / png; base64, " + Convert.ToBase64String(imageBytes);
                     }
-              
+
                 }
             }
             return base64String;
         }
+
+        public ActionResult CreateMultiLabel(OrderIdList OrderIdList)
+        {
+            List<string> uncreatedLabel = new List<string>();
+            foreach (var item in OrderIdList.OrderIds)
+            {
+                var shipDetails = OrderShipmentDetails(OrderIdList.StoreId, item, OrderIdList.DeliverDate);
+
+                OrderDetails shipResult = db.ModelFromActionResult<OrderDetails>(shipDetails);
+
+                AddressVerifyRequest addressVerifyRequest = new AddressVerifyRequest();
+
+                if (shipResult.BuyersDetails != null)
+                {
+                    addressVerifyRequest.name = shipResult.BuyersDetails.name;
+                    addressVerifyRequest.address1 = shipResult.BuyersDetails.address;
+                    addressVerifyRequest.city = shipResult.BuyersDetails.city;
+                    addressVerifyRequest.state = shipResult.BuyersDetails.state;
+                    addressVerifyRequest.zipcode = shipResult.BuyersDetails.zipcode;
+                }
+
+                var objAddressVerified = CheckAddress(OrderIdList.StoreId, addressVerifyRequest);
+
+                bool addressVerifiedStatus = false;
+
+                if (objAddressVerified.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultAddress = (JsonResult)objAddressVerified;
+                    if (jsonResultAddress.Data.ToString() == "true" || jsonResultAddress.Data.ToString() == "false")
+                    {
+                        addressVerifiedStatus = jsonResultAddress.Data != null ? Convert.ToBoolean(jsonResultAddress.Data) : false;
+                    }
+                }
+
+                GetRates getrates = new GetRates();
+
+                getrates.fromZipcode = shipResult.orderSummary.StoreZipcode;
+                getrates.toZipcode = shipResult.BuyersDetails.zipcode;
+                getrates.PackageType = "Package";
+                //DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
+                DateTime shipDate = DateTime.Now.AddDays(1);
+                getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
+                getrates.WeightLb = 10;
+                getrates.WeightOz = 5;
+
+                var shipRateDetails = GetShipRates(OrderIdList.StoreId, getrates);
+
+                decimal shipRateAmount = 0;
+
+                if (shipRateDetails.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultShiprate = (JsonResult)shipRateDetails;
+                    shipRateAmount = jsonResultShiprate.Data != null ? Convert.ToDecimal(jsonResultShiprate.Data) : 0;
+                }
+
+                CreateLabelRequest getlabel = new CreateLabelRequest();
+
+                getlabel.IntegratorTxID = shipResult.orderSummary.TransactionId;
+                getlabel.FromFullName = shipResult.orderSummary.storeName;
+                getlabel.Fromaddress = shipResult.orderSummary.StoreAddress;
+                getlabel.FromCity = shipResult.orderSummary.StoreCity;
+                getlabel.FromState = shipResult.orderSummary.StoreState;
+                getlabel.FromZIPCode = shipResult.orderSummary.StoreZipcode;
+                getlabel.FromCountry = shipResult.orderSummary.StoreCountry;
+                if (getlabel.FromCountry.ToLower() == "united states" || getlabel.FromCountry.ToLower() == "usa" || getlabel.FromCountry.ToLower() == "unitedstates" || getlabel.FromCountry.ToLower() == "us")
+                {
+                    getlabel.FromCountry = "US";
+                }
+
+                getlabel.ToFullName = shipResult.BuyersDetails.name;
+                getlabel.Toaddress = shipResult.BuyersDetails.address;
+                getlabel.ToCity = shipResult.BuyersDetails.city;
+                getlabel.ToState = shipResult.BuyersDetails.state;
+                getlabel.ToZIPCode = shipResult.BuyersDetails.zipcode;
+                getlabel.ToCountry = shipResult.BuyersDetails.country;
+                if (getlabel.ToCountry.ToLower() == "united states" || getlabel.ToCountry.ToLower() == "usa" || getlabel.ToCountry.ToLower() == "unitedstates" || getlabel.ToCountry.ToLower() == "us")
+                {
+                    getlabel.ToCountry = "US";
+                }
+
+                getlabel.WeightLb = 10;
+                getlabel.WeightOz = 5;
+                getlabel.PackageType = "Package";
+                DateTime shipDate2 = DateTime.Now.AddDays(1);
+                getlabel.shipdate = shipDate2.ToString("yyyy/MM/dd");
+                getlabel.Length = "1";
+                getlabel.Width = "1";
+                getlabel.Height = "1";
+                getlabel.ServiceType = "US-PM";// "US-FC";
+                getlabel.Amount = shipRateAmount.ToString();
+
+                var getLabelDetails = GetLabels(OrderIdList.StoreId, getlabel);
+
+                CreateLabelResponse labelRespose = new CreateLabelResponse();
+                dynamic LabelData;
+                if (getLabelDetails.GetType() == typeof(JsonResult))
+                {
+                    JsonResult jsonResultLabel = (JsonResult)getLabelDetails;
+
+                    if (jsonResultLabel.Data != null)
+                    {
+                        LabelData = jsonResultLabel.Data;
+                        labelRespose = LabelData;
+                    }
+                }
+
+                if (labelRespose.Url != null)
+                {
+                    string url = labelRespose.Url;
+
+                    string pdf_page_size = PdfPageSize.A4.ToString();
+                    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                        pdf_page_size, true);
+
+                    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                    PdfPageOrientation pdfOrientation =
+                        (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                        pdf_orientation, true);
+
+                    int webPageWidth = 1024;
+                    try
+                    {
+                        //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                    }
+                    catch { }
+
+                    int webPageHeight = 0;
+                    try
+                    {
+                        //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                    }
+                    catch { }
+
+                    // instantiate a html to pdf converter object
+                    HtmlToPdf converter = new HtmlToPdf();
+
+                    // set converter options
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+                    converter.Options.WebPageWidth = webPageWidth;
+                    converter.Options.WebPageHeight = webPageHeight;
+
+                    // create a new pdf document converting an url
+                    PdfDocument doc = converter.ConvertUrl(url);
+
+                    // save pdf document
+                    byte[] pdf = doc.Save();
+
+                    // close pdf document
+                    doc.Close();
+
+                    // return resulted pdf document
+                    FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                    fileResult.FileDownloadName = "Document.pdf";
+
+
+                    //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                    //return Json(pdf);
+                    //return File(pdf, "application/pdf");
+                    return fileResult;
+                }
+                else
+                {
+                    uncreatedLabel.Add(item);                    
+                }
+
+            }
+            return null;
+        }
+
+
     }
 }

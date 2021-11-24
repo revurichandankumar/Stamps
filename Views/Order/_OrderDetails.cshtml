@@ -39,7 +39,7 @@
                             <td>
                                 <div class="checkbox">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" name="chkSelect" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                        <input type="checkbox" class="custom-control-input" name="chkSelect" value="@d.OrderId" data-parsley-multiple="groups" data-parsley-mincheck="2">
                                         <label class="custom-control-label" for="chkSelect"></label>
                                     </div>
                                 </div>
@@ -80,7 +80,6 @@
 <script>
 
     $(document).ready(function () {
-      debugger
         $('input[name="chkSelectMaster"]').change(function () {
             debugger
             if (this.checked) {
