@@ -29,12 +29,11 @@ namespace OneposStamps.Models
         public string postal_code { get; set; }
         public string country_code { get; set; }
     }
+
     //public class ShipengineAddressResponse
     //{
-        
     //    public List<Root> Shippingdetails { get; set; }
     //}
-
     public class OriginalAddress
     {
         public string name { get; set; }
@@ -49,7 +48,6 @@ namespace OneposStamps.Models
         public string country_code { get; set; }
         public string address_residential_indicator { get; set; }
     }
-
     public class MatchedAddress
     {
         public string name { get; set; }
@@ -64,14 +62,11 @@ namespace OneposStamps.Models
         public string country_code { get; set; }
         public string address_residential_indicator { get; set; }
     }
-
-    public class Root
+    public class ShipengineAddressResponse
     {
         public string status { get; set; }
         public OriginalAddress original_address { get; set; }
         public MatchedAddress matched_address { get; set; }
         public List<object> messages { get; set; }
     }
-
-
 }

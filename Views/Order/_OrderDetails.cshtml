@@ -51,6 +51,7 @@
                             <td><strong>@("$")@string.Format("{0:#,##0.##}", d.OrderTotal) </strong></td>
                             <td>@d.Qty</td>
                             <td>@d.CustomerName</td>
+                            <td style="display:none"><input type="hidden" id="@d.ZoneId" data-name="hfzoneid" value="@d.ZoneId" /></td>
                             @*<td>
                                     <i class="fa fa-user"></i>
                                 </td>

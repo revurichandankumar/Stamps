@@ -45,6 +45,7 @@
                                             <input type="hidden" id="hfStoreState" name="hfStoreState" value="@Model.orderSummary.StoreState" />
                                             <input type="hidden" id="hfStoreCountry" name="hfStoreCountry" value="@Model.orderSummary.StoreCountry" />
                                             <input type="hidden" id="hfStoreZipCode" name="hfStoreZipCode" value="@Model.orderSummary.StoreZipcode" />
+                                            <input type="hidden" id="hfStorePhone" name="hfStorePhone" value="1234567890" />
                                             <ul class="mb-0 order-list">
                                                 <li><strong class="mr-3">Store</strong><span id="spn_storeName">@Model.orderSummary.storeName</span></li>
                                             </ul>
@@ -60,7 +61,7 @@
                                                 <div class="col-md-6">
                                                     <ul class="mb-0 order-list">
                                                         <li><strong class="mr-3">Product Total</strong>@("$")@Model.orderSummary.productTotal</li>
-                                                        <li><strong class="mr-3">Shipping Paid</strong>@("$")@Model.orderSummary.shippingPaid</li>
+                                                        <li><strong class="mr-3">Shipping Paid</strong>@("$")<span id="liShippingPaid">@Model.orderSummary.shippingPaid</span></li>
                                                         <li><strong class="mr-3">Tax paid</strong>@("$")@Model.orderSummary.taxPaid</li>
                                                         <li class="border bg-dark text-white">
                                                             <strong class="mr-3">Total Order</strong>@("$")@Model.orderSummary.totalOrder
@@ -303,7 +304,7 @@
                                             <select name="drlService" id="drlService" class="form-control-sm form-control">
                                                 @foreach (var item in Model.ServiceList)
                                                 {
-                                                    <option value="@item.Id" data-carrierid="@item.CarrierId" data-servicecode="@item.Service_Code">@item.Name</option>
+                                                    <option value="@item.Id" data-carrierid="@item.CarrierId" data-servicecode="@item.Service_Code" data-inhouse="@item.INHouse">@item.Name</option>
                                                 }
                                                 @*<option value="UPS Next Day Air Saver">UPS Next Day Air Saver</option>
                                                     <option value="USPA">USPA</option>
@@ -551,7 +552,7 @@
             //dataType: "json",
             data: { Addressrequest: addressData, StoreId: storeid},
             success: function (response) {
-                if (response == "true") {
+                if (response == "verified") {
                     $("#addverifyStatus").attr('style', 'display: inline');
                     $("#addverifyStatus2").attr('style', 'display: none');
                 }
@@ -567,31 +568,128 @@
     }
 
     function onBtnRateRefreshClick() {
-        var fromzipcode = null;
-        var tozipcode = null;
-        var packagetype = null;
         var shipdate = null;
+        if ($('#drlService option:selected').attr('data-inhouse').toLowerCase() == "true" || $('#drlService option:selected').attr('data-inhouse').toLowerCase() == true) {
+            var shippaid = $('#liShippingPaid')[0].innerText;
+            if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
+                shipdate = $("#liOrderDate")[0].innerText;
+            }
+            $("#span_Rate")[0].innerText = shippaid;
+            $("#spn_deliveryTime").val(shipdate);
+            $("#spn_deliveryTime")[0].innerText = shipdate;
+            return;
+        }
+        // from address data
+        var fromcompanyname = null;
+        var fromname = null;
+        var fromphone = null;
+        var fromaddressline1 = null;
+        var fromaddressline2 = null;
+        var fromcitylocality = null;
+        var fromstateprovince = null;
+        var frompostalcode = null;
+        var fromcountrycode = null;
+        var fromaddress_residential_indicator = null;
+
+        // to address data
+        var toname = null;
+        var tophone = null;
+        var toaddressline1 = null;
+        var tocitylocality = null;
+        var tostateprovince = null;
+        var topostalcode = null;
+        var tocountrycode = null;
+        var toaddress_residential_indicator = null;
+
+        var carrierids = [];
+        var servicecodes = [];
+
+        var packagetypes = [];
+
+
         var weightlb = null;
         var weightoz = null;
+
+        var sizelength = null;
+        var sizewidth = null;
+        var sizeheight = null;
+
         var storeid = null;
 
-        if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val()  != undefined) {
-            fromzipcode = $("#hfStoreZipCode").val() ;
+        if ($("#spn_storeName")[0].innerText != null && $("#spn_storeName")[0].innerText != "" && $("#spn_storeName")[0].innerText != undefined) {
+            fromcompanyname = $("#spn_storeName")[0].innerText;
+        }
+        if ($('#drlShipFrom').find(":selected").text() != null && $('#drlShipFrom').find(":selected").text() != "" && $('#drlShipFrom').find(":selected").text() != undefined) {
+            fromname = $('#drlShipFrom').find(":selected").text();
+        }
+        if ($("#hfStoreAddress").val() != null && $("#hfStoreAddress").val() != "" && $("#hfStoreAddress").val() != undefined) {
+            fromaddressline1 = $("#hfStoreAddress").val();
+        }
+        if ($("#hfStoreCity").val() != null && $("#hfStoreCity").val() != "" && $("#hfStoreCity").val() != undefined) {
+            fromcitylocality = $("#hfStoreCity").val();
+        }
+        if ($("#hfStoreState").val() != null && $("#hfStoreState").val() != "" && $("#hfStoreState").val() != undefined) {
+            fromstateprovince = $("#hfStoreState").val();
+        }
+        if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val() != undefined) {
+            frompostalcode = $("#hfStoreZipCode").val();
+        }
+        if ($("#hfStoreCountry").val() != null && $("#hfStoreCountry").val() != "" && $("#hfStoreCountry").val() != undefined) {
+            fromcountrycode = $("#hfStoreCountry").val();
+        }
+        if ($("#hfStorePhone").val() != null && $("#hfStorePhone").val() != "" && $("#hfStorePhone").val() != undefined) {
+            fromphone = $("#hfStorePhone").val();
+        }
+
+        if ($("#liBuyName")[0].innerText != null && $("#liBuyName")[0].innerText != "" && $("#liBuyName")[0].innerText != undefined) {
+            toname = $("#liBuyName")[0].innerText;
+        }
+        if ($("#liBuyAddress")[0].innerText != null && $("#liBuyAddress")[0].innerText != "" && $("#liBuyAddress")[0].innerText != undefined) {
+            toaddressline1 = $("#liBuyAddress")[0].innerText;
+        }
+        if ($("#liBuyCity")[0].innerText != null && $("#liBuyCity")[0].innerText != "" && $("#liBuyCity")[0].innerText != undefined) {
+            tocitylocality = $("#liBuyCity")[0].innerText;
+        }
+        if ($("#liBuyState")[0].innerText != null && $("#liBuyState")[0].innerText != "" && $("#liBuyState")[0].innerText != undefined) {
+            tostateprovince = $("#liBuyState")[0].innerText;
         }
         if ($("#liBuyZipcode")[0].innerText != null && $("#liBuyZipcode")[0].innerText != "" && $("#liBuyZipcode")[0].innerText != undefined) {
-            tozipcode = $("#liBuyZipcode")[0].innerText;
+            topostalcode = $("#liBuyZipcode")[0].innerText;
         }
+        if ($("#liBuyCountry")[0].innerText != null && $("#liBuyCountry")[0].innerText != "" && $("#liBuyCountry")[0].innerText != undefined) {
+            tocountrycode = $("#liBuyCountry")[0].innerText;
+        }
+        if ($("#liBuyPhone")[0].innerText != null && $("#liBuyPhone")[0].innerText != "" && $("#liBuyPhone")[0].innerText != undefined) {
+            tophone = $("#liBuyPhone")[0].innerText;
+        }
+
         if ($("#drlPackage").val() != null && $("#drlPackage").val() != "" && $("#drlPackage").val() != undefined) {
-            //package = $("#drlPackage").val();
-            packagetype = 'Package';
+            var packageid = $("#drlPackage").val();
+            var packagename = $("#drlPackage")[0].innerText;
+            packagetypes.push(packagename);
         }
         else {
-            packagetype = 'Package';
+            packagetypes.push('Package');
         }
+
         if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
             shipdate = $("#liOrderDate")[0].innerText;
-
         }
+        if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
+            service = $("#drlService").val();
+            //service = 'US-PM';
+        }
+        else {
+            service = 'US-PM';
+        }
+
+        if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
+            var cid = $('#drlService option:selected').attr('data-carrierid');
+            var sercode = $('#drlService option:selected').attr('data-servicecode');
+            carrierids.push(cid);
+            servicecodes.push(sercode);
+        }
+
         if ($("#txtWeightLB").val() != null && $("#txtWeightLB").val() != "" && $("#txtWeightLB").val() != undefined) {
             weightlb = $("#txtWeightLB").val();
         }
@@ -599,28 +697,81 @@
             weightoz = $("#txtWeightOZ").val();
         }
 
+        if ($("#txtsize1").val() != null && $("#txtsize1").val() != "" && $("#txtsize1").val() != undefined) {
+            sizelength = $("#txtsize1").val();
+        }
+        if ($("#txtsize2").val() != null && $("#txtsize2").val() != "" && $("#txtsize2").val() != undefined) {
+            sizewidth = $("#txtsize2").val();
+        }
+        if ($("#txtsize3").val() != null && $("#txtsize3").val() != "" && $("#txtsize3").val() != undefined) {
+            sizeheight = $("#txtsize3").val();
+        }
+        if ($("#span_Rate")[0].innerText != null && $("#span_Rate")[0].innerText != "" && $("#span_Rate")[0].innerText != undefined) {
+            rate = $("#span_Rate")[0].innerText;
+        }
+
         if ($("#hfStoreId").val() != null && $("#hfStoreId").val() != "" && $("#hfStoreId").val() != undefined) {
             storeid = $("#hfStoreId").val();
         }
 
-        var rateData = {
-            fromZipcode: fromzipcode,
-            toZipcode: tozipcode,
-            WeightLb: weightlb,
-            WeightOz: weightoz,
-            PackageType: packagetype,
-            shipdate: shipdate
-        }
+        var jsonObjRates = {
+            "rate_options": {
+                "carrier_ids": carrierids,
+                "package_types": packagetypes,
+                "service_codes": servicecodes
+            },
+            "shipment": {
+                "validate_address": "no_validation",
+                "ship_to": {
+                    "name": toname,
+                    "phone": tophone,
+                    "address_line1": toaddressline1,
+                    "city_locality": tocitylocality,
+                    "state_province": tostateprovince,
+                    "postal_code": topostalcode,
+                    "country_code": tocountrycode,
+                    "address_residential_indicator": "yes"
+                },
+                "ship_from": {
+                    "company_name": fromcompanyname,
+                    "name": fromname,
+                    "phone": fromphone,
+                    "address_line1": fromaddressline1,
+                    "address_line2": fromaddressline2,
+                    "city_locality": fromcitylocality,
+                    "state_province": fromstateprovince,
+                    "postal_code": frompostalcode,
+                    "country_code": fromcountrycode,
+                    "address_residential_indicator": "no"
+                },
+                "packages": [
+                    {
+                        "weight": {
+                            "value": weightlb,
+                            "unit": "ounce"
+                        },
+                        "dimensions": {
+                            "unit": "inch",
+                            "length": sizelength,
+                            "width": sizewidth,
+                            "height": sizeheight
+                        }
+                    }
+                ]
+            }
+        };
 
         $.ajax({
             type: "POST",
             url: "/Order/GetShipRates",
             //contentType: "application/json; charset=utf-8",
             //dataType: "json",
-            data: { getrates: rateData, StoreId:storeid },
+            data: { getrates: jsonObjRates, StoreId:storeid },
             success: function (response) {
                 if (response != null) {
-                    $("#span_Rate")[0].innerText = response;
+                    $("#span_Rate")[0].innerText = response.Amount;
+                    $("#spn_deliveryTime").val(response.Deliverydate);
+                    $("#spn_deliveryTime")[0].innerText = response.Deliverydate;
                 }
             },
             error: function (response) {
@@ -631,113 +782,134 @@
     }
 
     function onCreateLabelClick() {
-        var shipfrom = null;
-        var storename = null;
-        var storeid = null;
 
-        var transactionid = null;
+        // from address data
+        var fromcompanyname = null;
+        var fromname = null;
+        var fromphone = null;
+        var fromaddressline1 = null;
+        var fromaddressline2 = null;
+        var fromcitylocality = null;
+        var fromstateprovince = null;
+        var frompostalcode = null;
+        var fromcountrycode = null;
+        var fromaddress_residential_indicator = null;
 
-        var fromaddress = null;
-        var fromcity = null;
-        var fromstate = null;
-        var fromzipcode = null;
-        var fromcountry = null;
+        // to address data
+        var toname = null;
+        var tophone = null;
+        var toaddressline1 = null;
+        var tocitylocality = null;
+        var tostateprovince = null;
+        var topostalcode = null;
+        var tocountrycode = null;
+        var toaddress_residential_indicator = null;
 
-        var tofullname = null;
-        var toaddress = null;
-        var tocity = null;
-        var tostate = null;
-        var tozipcode = null;
-        var tocountry = null;
+        var carrierids = [];
+        var servicecodes = [];
 
+        var packagetypes = [];
 
+        var shipdate = null;
         var weightlb = null;
         var weightoz = null;
-        var packagetype = null;
-        var shipdate = null;
-        var service = null;
-        var size1 = null;
-        var size2 = null;
-        var size3 = null;
+
+        var sizelength = null;
+        var sizewidth = null;
+        var sizeheight = null;
         var rate = null;
 
-        if ($('#drlShipFrom').find(":selected").text() != null && $('#drlShipFrom').find(":selected").text() != "" && $('#drlShipFrom').find(":selected").text() != undefined) {
-            shipfrom = $('#drlShipFrom').find(":selected").text();
-        }
-        if ($("#hfTransactionId").val() != null && $("#hfTransactionId").val() != "" && $("#hfTransactionId").val() != undefined) {
-            transactionid = $("#hfTransactionId").val();
-        }
+        var storeid = null;
+
         if ($("#spn_storeName")[0].innerText != null && $("#spn_storeName")[0].innerText != "" && $("#spn_storeName")[0].innerText != undefined) {
-            storename = $("#spn_storeName")[0].innerText;
+            fromcompanyname = $("#spn_storeName")[0].innerText;
+        }
+        if ($('#drlShipFrom').find(":selected").text() != null && $('#drlShipFrom').find(":selected").text() != "" && $('#drlShipFrom').find(":selected").text() != undefined) {
+            fromname = $('#drlShipFrom').find(":selected").text();
         }
         if ($("#hfStoreAddress").val() != null && $("#hfStoreAddress").val() != "" && $("#hfStoreAddress").val() != undefined) {
-            fromaddress = $("#hfStoreAddress").val();
+            fromaddressline1 = $("#hfStoreAddress").val();
         }
         if ($("#hfStoreCity").val() != null && $("#hfStoreCity").val() != "" && $("#hfStoreCity").val() != undefined) {
-            fromcity = $("#hfStoreCity").val();
+            fromcitylocality = $("#hfStoreCity").val();
         }
         if ($("#hfStoreState").val() != null && $("#hfStoreState").val() != "" && $("#hfStoreState").val() != undefined) {
-            fromstate = $("#hfStoreState").val();
+            fromstateprovince = $("#hfStoreState").val();
         }
         if ($("#hfStoreZipCode").val() != null && $("#hfStoreZipCode").val() != "" && $("#hfStoreZipCode").val() != undefined) {
-            fromzipcode = $("#hfStoreZipCode").val();
+            frompostalcode = $("#hfStoreZipCode").val();
         }
         if ($("#hfStoreCountry").val() != null && $("#hfStoreCountry").val() != "" && $("#hfStoreCountry").val() != undefined) {
-            fromcountry = $("#hfStoreCountry").val();
+            fromcountrycode = $("#hfStoreCountry").val();
+        }
+        if ($("#hfStorePhone").val() != null && $("#hfStorePhone").val() != "" && $("#hfStorePhone").val() != undefined) {
+            fromphone = $("#hfStorePhone").val();
         }
 
         if ($("#liBuyName")[0].innerText != null && $("#liBuyName")[0].innerText != "" && $("#liBuyName")[0].innerText != undefined) {
-            tofullname = $("#liBuyName")[0].innerText;
+            toname = $("#liBuyName")[0].innerText;
         }
         if ($("#liBuyAddress")[0].innerText != null && $("#liBuyAddress")[0].innerText != "" && $("#liBuyAddress")[0].innerText != undefined) {
-            toaddress = $("#liBuyAddress")[0].innerText;
+            toaddressline1 = $("#liBuyAddress")[0].innerText;
         }
         if ($("#liBuyCity")[0].innerText != null && $("#liBuyCity")[0].innerText != "" && $("#liBuyCity")[0].innerText != undefined) {
-            tocity = $("#liBuyCity")[0].innerText;
+            tocitylocality = $("#liBuyCity")[0].innerText;
         }
         if ($("#liBuyState")[0].innerText != null && $("#liBuyState")[0].innerText != "" && $("#liBuyState")[0].innerText != undefined) {
-            tostate = $("#liBuyState")[0].innerText;
+            tostateprovince = $("#liBuyState")[0].innerText;
         }
         if ($("#liBuyZipcode")[0].innerText != null && $("#liBuyZipcode")[0].innerText != "" && $("#liBuyZipcode")[0].innerText != undefined) {
-            tozipcode = $("#liBuyZipcode")[0].innerText;
+            topostalcode = $("#liBuyZipcode")[0].innerText;
         }
         if ($("#liBuyCountry")[0].innerText != null && $("#liBuyCountry")[0].innerText != "" && $("#liBuyCountry")[0].innerText != undefined) {
-            tocountry = $("#liBuyCountry")[0].innerText;
+            tocountrycode = $("#liBuyCountry")[0].innerText;
         }
-
-
-        if ($("#txtWeightLB").val() != null && $("#txtWeightLB").val() != "" && $("#txtWeightLB").val() != undefined) {
-            weightlb = $("#txtWeightLB").val();
-        }
-        if ($("#txtWeightOZ")[0].innerText != null && $("#txtWeightOZ")[0].innerText != "" && $("#txtWeightOZ")[0].innerText != undefined) {
-            weightoz = $("#txtWeightOZ")[0].innerText;
+        if ($("#liBuyPhone")[0].innerText != null && $("#liBuyPhone")[0].innerText != "" && $("#liBuyPhone")[0].innerText != undefined) {
+            tophone = $("#liBuyPhone")[0].innerText;
         }
 
         if ($("#drlPackage").val() != null && $("#drlPackage").val() != "" && $("#drlPackage").val() != undefined) {
-            //package = $("#drlPackage").val();
-            packagetype = 'Package';
+            var packageid = $("#drlPackage").val();
+            var packagename = $("#drlPackage")[0].innerText;
+            packagetypes.push(packagename);
         }
         else {
-            packagetype = 'Package';
+            packagetypes.push('Package');
         }
+
         if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
             shipdate = $("#liOrderDate")[0].innerText;
         }
         if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
-            //service = $("#drlService").val();
-            service = 'US-PM';
+            service = $('#drlService option:selected').attr('data-servicecode');
+            //service = 'US-PM';
         }
         else {
             service = 'US-PM';
         }
+
+        if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
+            var cid = $('#drlService option:selected').attr('data-carrierid')
+            var sercode = $('#drlService option:selected').attr('data-servicecode')
+            carrierids.push(cid);
+            servicecodes.push(sercode);
+        }
+
+        if ($("#txtWeightLB").val() != null && $("#txtWeightLB").val() != "" && $("#txtWeightLB").val() != undefined) {
+            weightlb = $("#txtWeightLB").val();
+        }
+        if ($("#txtWeightOZ").val() != null && $("#txtWeightOZ").val() != "" && $("#txtWeightOZ").val() != undefined) {
+            weightoz = $("#txtWeightOZ").val();
+        }
+
         if ($("#txtsize1").val() != null && $("#txtsize1").val() != "" && $("#txtsize1").val() != undefined) {
-            size1 = $("#txtsize1").val();
+            sizelength = $("#txtsize1").val();
         }
         if ($("#txtsize2").val() != null && $("#txtsize2").val() != "" && $("#txtsize2").val() != undefined) {
-            size2 = $("#txtsize2").val();
+            sizewidth = $("#txtsize2").val();
         }
         if ($("#txtsize3").val() != null && $("#txtsize3").val() != "" && $("#txtsize3").val() != undefined) {
-            size3 = $("#txtsize3").val();
+            sizeheight = $("#txtsize3").val();
         }
         if ($("#span_Rate")[0].innerText != null && $("#span_Rate")[0].innerText != "" && $("#span_Rate")[0].innerText != undefined) {
             rate = $("#span_Rate")[0].innerText;
@@ -747,75 +919,143 @@
             storeid = $("#hfStoreId").val();
         }
 
-        var getLabelData = {
-            IntegratorTxID : transactionid,
-            FromFullName: storename,
-            Fromaddress : fromaddress,
-            FromCity : fromcity,
-            FromState: fromstate,
-            FromZIPCode: fromzipcode,
-            FromCountry: fromcountry,
-            ToFullName: tofullname,
-            Toaddress: toaddress,
-            ToCity: tocity,
-            ToState: tostate,
-            ToZIPCode: tozipcode,
-            ToCountry: tocountry,
-            WeightLb : weightlb,
-            WeightOz: weightoz,
-            PackageType: packagetype,
-            shipdate: shipdate,
-            ServiceType: service,
-            Length: size1,
-            Width: size2,
-            Height: size3,
-            Amount: rate,
-            ZoneName: shipfrom,
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/Order/GetLabels",
-            //contentType: "application/json; charset=utf-8",
-            //dataType: "json",
-            data: { getlabel: getLabelData, StoreId:storeid },
-            success: function (response) {
-                if (response != null) {
-                    var res = response; //spn_deliveryTime
-                    $("#spn_deliveryTime").val(res.DeliveryDate);
-                    $("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
-                    $("#p_ShipDate").val(res.ShipDate);
-                    $("#p_ShipDate")[0].innerText = res.DeliveryDate;
-                    $("#p_ShipZone").val(res.ZoneName);
-                    $("#p_ShipZone")[0].innerText = res.ZoneName;
-                    $("#p_TrackingId").val(res.TrackingNumber);
-                    $("#p_TrackingId")[0].innerText = res.TrackingNumber;
-                    $("#p_Insurance").val(res.ServiceType);
-                    $("#p_Insurance")[0].innerText = res.ServiceType;
-                    $("#ship_status").attr("style", "display:inline");
-
-                    if (res.Url != null && res.Url != '' && res.Url != undefined) {
-                        var orderid = '@Model.OrderId';
-                        window.location = '/Order/DownloadPDF?fileName=' + orderid;
+        var jsonObjLabel = {
+            "shipment": {
+                "service_code": service,
+                "ship_to": {
+                    "name": toname,
+                    "phone": tophone,
+                    "address_line1": toaddressline1,
+                    "city_locality": tocitylocality,
+                    "state_province": tostateprovince,
+                    "postal_code": topostalcode,
+                    "country_code": tocountrycode,
+                    "address_residential_indicator": "yes"
+                },
+                "ship_from": {
+                    "company_name": fromcompanyname,
+                    "name": fromname,
+                    "phone": fromphone,
+                    "address_line1": fromaddressline1,
+                    "address_line2": fromaddressline2,
+                    "city_locality": fromcitylocality,
+                    "state_province": fromstateprovince,
+                    "postal_code": frompostalcode,
+                    "country_code": fromcountrycode,
+                    "address_residential_indicator": "no"
+                },
+                "packages": [
+                    {
+                        "weight": {
+                            "value": weightlb,
+                            "unit": "ounce"
+                        },
+                        "dimensions": {
+                            "unit": "inch",
+                            "length": sizelength,
+                            "width": sizewidth,
+                            "height": sizeheight
+                        }
                     }
-                    else {
-                        alert("Unable to download Label");
-                    }
-                //var win = window.open(response.Url, '_blank');
-                //if (win) {
-                //    //Browser has allowed it to be opened
-                //    win.focus();
-                //} else {
-                //    //Browser has blocked it
-                //    alert('Please allow popups for this website');
-                //    }
-                }
-            },
-            error: function (response) {
-                alert(response.responseText);
+                ]
             }
-        });
+        };
 
+        if ($('#drlService option:selected').attr('data-inhouse').toLowerCase() == "true" || $('#drlService option:selected').attr('data-inhouse').toLowerCase() == true) {
+            var orderid = '@Model.OrderId';
+            $.ajax({
+                type: "POST",
+                url: "/Order/InhouseLabel",
+                //contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                data: { getlabel: jsonObjLabel, StoreId: storeid, OrderId: orderid },
+                success: function (response) {
+                    if (response != null) {
+                        var res = response; //spn_deliveryTime
+                        //$("#spn_deliveryTime").val(res.DeliveryDate);
+                        //$("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
+                        $("#p_ShipDate").val($("#spn_deliveryTime").val());
+                        $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
+                        //$("#p_ShipZone").val(res.ZoneName);
+                        //$("#p_ShipZone")[0].innerText = res.ZoneName;
+                        $("#p_TrackingId").val(orderid);
+                        $("#p_TrackingId")[0].innerText = orderid;
+                        $("#p_Insurance").val(service);
+                        $("#p_Insurance")[0].innerText = service;
+                        $("#ship_status").attr("style", "display:inline");
+
+                        if (res != null && res != '' && res != undefined) {
+                            if (res.success) {
+                                var orderid = '@Model.OrderId';
+                                window.location = '/Order/DownloadPDF?fileName=' + orderid;
+                            }
+                            else {
+                                alert("Unable to download Label");
+                            }
+
+                        }
+                        else {
+                            alert("Unable to download Label");
+                        }
+                        //var win = window.open(response.Url, '_blank');
+                        //if (win) {
+                        //    //Browser has allowed it to be opened
+                        //    win.focus();
+                        //} else {
+                        //    //Browser has blocked it
+                        //    alert('Please allow popups for this website');
+                        //    }
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: "POST",
+                url: "/Order/GetLabels",
+                //contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                data: { getlabel: jsonObjLabel, StoreId: storeid },
+                success: function (response) {
+                    if (response != null) {
+                        var res = response; //spn_deliveryTime
+                        //$("#spn_deliveryTime").val(res.DeliveryDate);
+                        //$("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
+                        $("#p_ShipDate").val($("#spn_deliveryTime").val());
+                        $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
+                        $("#p_ShipZone").val(res.ZoneName);
+                        $("#p_ShipZone")[0].innerText = res.ZoneName;
+                        $("#p_TrackingId").val(res.TrackingNumber);
+                        $("#p_TrackingId")[0].innerText = res.TrackingNumber;
+                        $("#p_Insurance").val(res.ServiceType);
+                        $("#p_Insurance")[0].innerText = res.ServiceType;
+                        $("#ship_status").attr("style", "display:inline");
+
+                        if (res.Url != null && res.Url != '' && res.Url != undefined) {
+                            var orderid = '@Model.OrderId';
+                            window.location = '/Order/DownloadPDF?fileName=' + orderid;
+                        }
+                        else {
+                            alert("Unable to download Label");
+                        }
+                        //var win = window.open(response.Url, '_blank');
+                        //if (win) {
+                        //    //Browser has allowed it to be opened
+                        //    win.focus();
+                        //} else {
+                        //    //Browser has blocked it
+                        //    alert('Please allow popups for this website');
+                        //    }
+                    }
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
     }
 
 

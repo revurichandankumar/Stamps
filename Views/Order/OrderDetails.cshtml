@@ -43,42 +43,57 @@
                                             <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
                                             <div class="dropdown-menu" x-placement="bottom-start">
-                                                <a class="dropdown-item d-flex" href="#">
-                                                    <div class="checkbox">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck8" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                                            <label class="custom-control-label" for="customCheck8"></label>
-                                                        </div>
-                                                    </div>
-                                                    ME Van
-                                                </a>
-                                                <a class="dropdown-item d-flex" href="#">
-                                                    <div class="checkbox">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck9" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                                            <label class="custom-control-label" for="customCheck9"></label>
-                                                        </div>
-                                                    </div>
-                                                    Local
-                                                </a>
-                                                <a class="dropdown-item d-flex" href="#">
-                                                    <div class="checkbox">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck11" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                                            <label class="custom-control-label" for="customCheck11"></label>
-                                                        </div>
-                                                    </div>
-                                                    Countrywide
-                                                </a>
-                                                <a class="dropdown-item d-flex" href="#">
-                                                    <div class="checkbox">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <input type="checkbox" class="custom-control-input" id="customCheck12" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                                            <label class="custom-control-label" for="customCheck12"></label>
-                                                        </div>
-                                                    </div>
-                                                    SoCal
-                                                </a>
+                                                @if (Model.ZoneList != null)
+                                                {
+                                                    foreach (var item in Model.ZoneList)
+                                                    {
+                                                        <a class="dropdown-item d-flex" href="#">
+                                                            <div class="checkbox">
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" class="custom-control-input" value="@item.ZoneId" name="chkZoneList" id="customCheck_@item.ZoneId" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                                    <label class="custom-control-label" for="customCheck_@item.ZoneId"></label>
+                                                                </div>
+                                                            </div>
+                                                            @item.ZoneName
+                                                        </a>
+                                                    }
+                                                }
+                                                @*<a class="dropdown-item d-flex" href="#">
+            <div class="checkbox">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck8" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                    <label class="custom-control-label" for="customCheck8"></label>
+                </div>
+            </div>
+            ME Van
+        </a>
+        <a class="dropdown-item d-flex" href="#">
+            <div class="checkbox">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck9" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                    <label class="custom-control-label" for="customCheck9"></label>
+                </div>
+            </div>
+            Local
+        </a>
+        <a class="dropdown-item d-flex" href="#">
+            <div class="checkbox">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck11" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                    <label class="custom-control-label" for="customCheck11"></label>
+                </div>
+            </div>
+            Countrywide
+        </a>
+        <a class="dropdown-item d-flex" href="#">
+            <div class="checkbox">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="customCheck12" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                    <label class="custom-control-label" for="customCheck12"></label>
+                </div>
+            </div>
+            SoCal
+        </a>*@
                                             </div>
                                         </div>
                                         <div class="btn-group">
@@ -188,11 +203,19 @@
             onFilterClick();
         }
 
+        $('input[name="chkZoneList"]').change(function () {
+            var zoneidList = [];
+            $('input[name="chkZoneList"]:checked').each(function () {
+                zoneidList.push($(this).val());
+            });
+        });
+
     });
 
 
     function onFilterClick() {
-        var data = {
+
+        var data = {            
             DeliverDate: $("#txtDeliverDate").val(),
             StoreId: '@Model.StoreId',
         }

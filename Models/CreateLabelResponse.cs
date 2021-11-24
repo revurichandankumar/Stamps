@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -98,5 +98,4 @@ namespace OneposStamps.Models.CreateLabelResponse
         public List<Package> packages { get; set; }
         public string charge_event { get; set; }
     }
-   
 }
