@@ -39,7 +39,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="btn-group">
+                                        <div class="btn-group" id="divZones">
                                             <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
                                             <div class="dropdown-menu" x-placement="bottom-start">
@@ -58,45 +58,9 @@
                                                         </a>
                                                     }
                                                 }
-                                                @*<a class="dropdown-item d-flex" href="#">
-            <div class="checkbox">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck8" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                    <label class="custom-control-label" for="customCheck8"></label>
-                </div>
-            </div>
-            ME Van
-        </a>
-        <a class="dropdown-item d-flex" href="#">
-            <div class="checkbox">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck9" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                    <label class="custom-control-label" for="customCheck9"></label>
-                </div>
-            </div>
-            Local
-        </a>
-        <a class="dropdown-item d-flex" href="#">
-            <div class="checkbox">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck11" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                    <label class="custom-control-label" for="customCheck11"></label>
-                </div>
-            </div>
-            Countrywide
-        </a>
-        <a class="dropdown-item d-flex" href="#">
-            <div class="checkbox">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" id="customCheck12" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                    <label class="custom-control-label" for="customCheck12"></label>
-                </div>
-            </div>
-            SoCal
-        </a>*@
                                             </div>
                                         </div>
-                                        <div class="btn-group">
+                                        <div class="btn-group" style="visibility:hidden">
                                             <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-map-marker text-info"></i> Select City <i class="mdi mdi-chevron-down"></i></button>
 
                                             <div class="dropdown-menu" x-placement="bottom-start">
@@ -208,6 +172,30 @@
             $('input[name="chkZoneList"]:checked').each(function () {
                 zoneidList.push($(this).val());
             });
+
+            var tr = $("#datatable4 tbody tr") // select all the rows
+
+            for (i = 0; i < tr.length; i++) {
+                td = tr[i].getElementsByTagName('td')[8]; // query the Alias column
+                if (td) {
+                    var tdValue = td.innerHTML;
+                    var isMatched = zoneidList.filter(function (val) {
+                        return tdValue.indexOf(val) > -1
+                    }); //check if any val in filterParam array is matching the tdValue
+                    if (isMatched.length) //check length of filtered resultset
+                        tr[i].style.display = "";
+                    else
+                        tr[i].style.display = "none";
+                    if (zoneidList.length == 0) {
+                        tr[i].style.display = "";
+                    }
+                }
+            }
+
+            //$("#datatable4 tbody tr").filter(function () {
+            //    $(this).toggle($(this).text().toLowerCase().indexOf(zoneidList) > -1);
+            //});
+
         });
 
     });

@@ -502,6 +502,7 @@
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 2.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 3.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo.png" />
+    <Content Include="Images\Mylapore_Logo___3.png" />
     <Content Include="Content\StoreLogo\svg\Mylapore Logo – 1.svg" />
     <Content Include="Content\StoreLogo\svg\Mylapore Logo – 2.svg" />
     <Content Include="Content\StoreLogo\svg\Mylapore Logo – 3.svg" />
@@ -582,7 +583,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\" />
     <Folder Include="Pdf\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
