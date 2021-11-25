@@ -27,6 +27,7 @@ using Font = System.Drawing.Font;
 using RestSharp;
 using Newtonsoft.Json;
 using PdfDocument = SelectPdf.PdfDocument;
+using iTextSharp.text.pdf.draw;
 
 namespace OneposStamps.Controllers
 {
@@ -145,9 +146,9 @@ namespace OneposStamps.Controllers
                 string pdfname = OrderId + "_" + DateTime.Now.ToFileTime();
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/" + pdfname + ".pdf", FileMode.Create));
                 string FromAddress1 = getlabel.shipment.ship_from.address_line1;
-                string FromAddress2 = getlabel.shipment.ship_from.address_line2;
+                // string FromAddress2 = getlabel.shipment.ship_from.address_line2;
                 string Fromaddress3 = getlabel.shipment.ship_from.city_locality + " " + getlabel.shipment.ship_from.state_province + " " + getlabel.shipment.ship_from.postal_code;
-                // "Roseville CA 95661";
+
 
                 doc.Open();
                 int i = 1;
@@ -156,14 +157,15 @@ namespace OneposStamps.Controllers
                 //{
                 string Drivername = "C";
                 var No = i.ToString();
-                //string barCode = "94055";
+
                 string Dname = Drivername + No;
                 string path = AppDomain.CurrentDomain.BaseDirectory;
-                string name = "Mylapore Logo – 1";
+                string name = "Mylapore_Logo___3";
                 string filename = path + @"Images/" + name + ".png";
 
                 Paragraph ph = new Paragraph();
                 PdfPCell cell = new PdfPCell(ph);
+                //cell.Border = Rectangle.ALIGN_BASELINE;
                 cell.Border = Rectangle.ALIGN_BASELINE;
 
                 cell.BorderWidth = 5f;
@@ -177,6 +179,7 @@ namespace OneposStamps.Controllers
                 table.AddCell(cell);
                 table.HorizontalAlignment = Element.ALIGN_LEFT;
                 table.WidthPercentage = 100f;
+
                 PdfPTable table2 = new PdfPTable(1);
                 table2.AddCell(cell2);
                 table2.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -220,23 +223,42 @@ namespace OneposStamps.Controllers
                 iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance(getJPGFromImageControl(bmp));
                 png.ScaleAbsolute(125f, 5f);
                 png.Border = 0;
+                Paragraph l1 = new Paragraph();
+                l1.Font = FontFactory.GetFont("Arial", 8, iTextSharp.text.Font.ITALIC);
 
+                l1.IndentationLeft = 12f;
+                l1.Add(FromAddress1);
+                //l1.Add("\n");
+                //l1.Add(FromAddress2);
+                l1.Add("\n");
+                l1.Add(Fromaddress3);
+                l1.Add("\n");
                 PdfPTable maintable = new PdfPTable(2);
                 maintable.SpacingBefore = 5f;
+                maintable.WidthPercentage = 100f;
                 maintable.DefaultCell.Border = Rectangle.NO_BORDER;
                 PdfPCell cell1 = new PdfPCell();
 
                 iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(filename);
-                image.ScalePercent(13f);
+                image.ScalePercent(20f);
                 cell1 = new PdfPCell();
                 cell1.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell1.BorderWidth = 0;
                 cell1.AddElement(image);
                 maintable.AddCell(cell1);
                 cell1 = new PdfPCell();
+                cell1.PaddingTop = 30f;
                 cell1.AddElement(p1);
+                cell1.Rowspan = 2;
                 cell1.BorderWidth = 0;
                 maintable.AddCell(cell1);
+                cell1 = new PdfPCell();
+                cell1.AddElement(l1);
+                cell1.BorderWidth = 0;
+                maintable.SpacingAfter = 10f;
+                maintable.AddCell(cell1);
+                LineSeparator line = new LineSeparator(0.1f, 100f, iTextSharp.text.BaseColor.GRAY, Element.ALIGN_LEFT, 1);
+
 
 
                 PdfPTable maintable2 = new PdfPTable(1);
@@ -274,15 +296,7 @@ namespace OneposStamps.Controllers
                 c3.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
                 c3.Add("Toll Free:9169256200");
 
-                Paragraph l1 = new Paragraph();
-                l1.Font = FontFactory.GetFont("Arial", 7);
-                l1.IndentationLeft = 12f;
-                l1.Add(FromAddress1);
-                l1.Add("\n");
-                l1.Add(FromAddress2);
-                l1.Add("\n");
-                l1.Add(Fromaddress3);
-                l1.Add("\n");
+
 
                 Paragraph l2 = new Paragraph();
                 l2.IndentationLeft = 12f;
@@ -306,32 +320,38 @@ namespace OneposStamps.Controllers
                 maintable4.DefaultCell.Border = Rectangle.NO_BORDER;
                 PdfPCell cell7 = new PdfPCell();
 
-                cell7.BorderWidth = 0;
-                cell7.AddElement(l1);
-                maintable4.SpacingAfter = 5f;
-                maintable4.AddCell(cell7);
-                cell7 = new PdfPCell();
-                cell7.BorderWidth = 0;
-                cell7.AddElement(p2);
-                cell7.PaddingTop = 20f;
-                cell7.Rowspan = 3;
-                maintable4.AddCell(cell7);
-                cell7 = new PdfPCell();
+                //cell7.BorderWidth = 0;
+                //cell7.AddElement(l1);
+                //maintable4.SpacingAfter = 5f;
+                //maintable4.AddCell(cell7);
                 cell7.BorderWidth = 0;
                 cell7.AddElement(c1);
                 cell7.AddElement(l2);
                 maintable4.AddCell(cell7);
+
+                cell7 = new PdfPCell();
+                cell7.BorderWidth = 0;
+                cell7.AddElement(p2);
+                cell7.PaddingTop = 20f;
+                cell7.Rowspan = 2;
+                maintable4.AddCell(cell7);
+                // cell7 = new PdfPCell();
+                //cell7.BorderWidth = 0;
+                //cell7.AddElement(c1);
+                //cell7.AddElement(l2);
+                //maintable4.AddCell(cell7);
                 cell7 = new PdfPCell();
                 cell7.BorderWidth = 0;
                 cell7.AddElement(l3);
                 maintable4.AddCell(cell7);
 
                 doc.Add(maintable);
-                doc.Add(maintable2);
+                // doc.Add(maintable2);
+                doc.Add(line);
                 doc.Add(maintable4);
-                doc.Add(table);
+                doc.Add(line);
                 doc.Add(maintable3);
-                doc.Add(table);
+                //doc.Add(line);
                 doc.Add(c2);
                 doc.Add(c3);
                 //doc.NewPage();
@@ -352,12 +372,13 @@ namespace OneposStamps.Controllers
             return Json(new { success = true });
         }
 
-        public ActionResult OrderShipmentDetails(string StoreId, string OrderId = "", string DeliverDate = null)
+        public ActionResult OrderShipmentDetails(string StoreId, string OrderId = "", string ZoneId = "", string DeliverDate = null)
         {
             OrderDetails od = new OrderDetails();
             DbDetails dbdetails = db.GetDbDetails(StoreId);
             od.StoreId = StoreId;
             od.OrderId = OrderId;
+            od.SelectedZoneId = ZoneId;
             od.DeliverDate = DeliverDate;
             DataSet ds = db.GetOrderShippingDetails("USP_GetOrderShippingDetails", StoreId, OrderId, dbdetails.Address, dbdetails.Password, dbdetails.DatabaseName, dbdetails.Username);
             OrderDetail orderdetais = new OrderDetail();
@@ -507,38 +528,54 @@ namespace OneposStamps.Controllers
         AddressVerifyResponse Addressresponse = new AddressVerifyResponse();
         public ActionResult CheckAddress(string StoreId, AddressVerifyRequest Addressrequest = null)
         {
-            DbDetails dbdetails = db.GetDbDetails(StoreId);
+            try
+            {
+                DbDetails dbdetails = db.GetDbDetails(StoreId);
 
 
-            //AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
-            Addressrequest.AuthenticationId = dbdetails.IntegrationId;
-            Addressresponse = CleanseAddress(Addressrequest, "CleanseAddress");
-            return Json(Addressresponse.AddressMatched);
+                //AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
+                Addressrequest.AuthenticationId = dbdetails.IntegrationId;
+                Addressresponse = CleanseAddress(Addressrequest, "CleanseAddress");
+                return Json(Addressresponse.AddressMatched);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public ActionResult GetShipRates(string StoreId, GetRates getrates = null)
         {
-            DbDetails dbdetails = db.GetDbDetails(StoreId);
-            //getrates.fromZipcode = getrates.fromZipcode;
-            //getrates.toZipcode = getrates.toZipcode;
-            //getrates.PackageType = getrates.PackageType;
-            ////DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
-            //DateTime shipDate = DateTime.Now.AddDays(1);
-            //getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
-            //getrates.WeightLb = getrates.WeightLb;
-            //getrates.WeightOz = getrates.WeightOz;
-            //getrates.servicetype = "US-PM";
-            // AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
-            //getrates.AuthenticationId = response.Authenticator;
-            GetRatesResponse val = GetRates(getrates, dbdetails.IntegrationId);
-
-            decimal RateAmount = 0;
-            if (val.Amount != 0)
+            try
             {
-                RateAmount = Math.Round(Convert.ToDecimal(val.Amount), 2);
-            }
 
-            return Json(val);
+                DbDetails dbdetails = db.GetDbDetails(StoreId);
+                //getrates.fromZipcode = getrates.fromZipcode;
+                //getrates.toZipcode = getrates.toZipcode;
+                //getrates.PackageType = getrates.PackageType;
+                ////DateTime shipDate = DateTime.ParseExact(getrates.shipdate, "MM/dd/yyyy", null).AddDays(1);
+                //DateTime shipDate = DateTime.Now.AddDays(1);
+                //getrates.shipdate = shipDate.ToString("yyyy/MM/dd");
+                //getrates.WeightLb = getrates.WeightLb;
+                //getrates.WeightOz = getrates.WeightOz;
+                //getrates.servicetype = "US-PM";
+                // AuthenticateUserResponse response = GetAuthentication(dbdetails, "AuthenticateUser");
+                //getrates.AuthenticationId = response.Authenticator;
+                GetRatesResponse val = GetRates(getrates, dbdetails.IntegrationId);
+
+                decimal RateAmount = 0;
+                if (val.Amount != 0)
+                {
+                    RateAmount = Math.Round(Convert.ToDecimal(val.Amount), 2);
+                }
+
+                return Json(val);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(400, "Sorry, This service is not available for this route."); // Bad Request
+                //return Json("Sorry, This service is not availabl for this route.");
+            }
         }
 
         public GetRatesResponse GetRates(GetRates getrates, string AuthenticationId)
@@ -607,104 +644,112 @@ namespace OneposStamps.Controllers
 
         public ActionResult GetLabels(string StoreId, OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null)
         {
-            DbDetails dbdetails = db.GetDbDetails(StoreId);
-            //getlabel.IntegratorTxID = ;
-            //getlabel.FromFullName = "SWSIM API";
-            //getlabel.Fromaddress = "1990 E GRAND AVE";
-            //getlabel.FromCity = "EL SEGUNDO";
-            //getlabel.FromState = "CA";
-            //getlabel.FromZIPCode = "90245";
-            if (getlabel.shipment.ship_from.country_code.ToLower() == "united states" || getlabel.shipment.ship_from.country_code.ToLower() == "usa" || getlabel.shipment.ship_from.country_code.ToLower() == "unitedstates" || getlabel.shipment.ship_from.country_code.ToLower() == "us")
+            try
             {
-                getlabel.shipment.ship_from.country_code = "US";
-            }
-            //getlabel.ToFullName = "SWSIM API";
-            //getlabel.Toaddress = "1990 E GRAND AVE";
-            //getlabel.ToCity = "EL SEGUNDO";
-            //getlabel.ToState = "CA";
-            //getlabel.ToZIPCode = "90245";
-            if (getlabel.shipment.ship_to.country_code.ToLower() == "united states" || getlabel.shipment.ship_to.country_code.ToLower() == "usa" || getlabel.shipment.ship_to.country_code.ToLower() == "unitedstates" || getlabel.shipment.ship_to.country_code.ToLower() == "us")
-            {
-                getlabel.shipment.ship_to.country_code = "US";
-            }
-            //getlabel.WeightLb = 0;
-            //getlabel.WeightOz = 1;
-            //getlabel.PackageType = "Package";
-            //getlabel.shipdate = "2021-10-11";
-            //DateTime shipDate = DateTime.Now.AddDays(1);
-            //getlabel.shipdate = shipDate.ToString("yyyy/MM/dd");
-            OneposStamps.Models.CreateLabelRequest.CreateLabelResponse res = GetLabel(getlabel, dbdetails.IntegrationId);
-            //DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
-            //res.DeliveryDate = del.ToString("MM/dd/yyyy");
-            //res.ShipDate = shipDate.ToString("MM/dd/yyyy");
-            //res.ZoneName = getlabel.ZoneName;
-            //return Json(res);
 
-            Session["pdfData"] = null;
-            if (res.Url != null)
-            {
-                string url = res.Url;
-
-                string pdf_page_size = PdfPageSize.A4.ToString();
-                PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
-                    pdf_page_size, true);
-
-                string pdf_orientation = PdfPageOrientation.Portrait.ToString();
-                PdfPageOrientation pdfOrientation =
-                    (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
-                    pdf_orientation, true);
-
-                int webPageWidth = 1024;
-                try
+                DbDetails dbdetails = db.GetDbDetails(StoreId);
+                //getlabel.IntegratorTxID = ;
+                //getlabel.FromFullName = "SWSIM API";
+                //getlabel.Fromaddress = "1990 E GRAND AVE";
+                //getlabel.FromCity = "EL SEGUNDO";
+                //getlabel.FromState = "CA";
+                //getlabel.FromZIPCode = "90245";
+                if (getlabel.shipment.ship_from.country_code.ToLower() == "united states" || getlabel.shipment.ship_from.country_code.ToLower() == "usa" || getlabel.shipment.ship_from.country_code.ToLower() == "unitedstates" || getlabel.shipment.ship_from.country_code.ToLower() == "us")
                 {
-                    //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                    getlabel.shipment.ship_from.country_code = "US";
                 }
-                catch { }
-
-                int webPageHeight = 0;
-                try
+                //getlabel.ToFullName = "SWSIM API";
+                //getlabel.Toaddress = "1990 E GRAND AVE";
+                //getlabel.ToCity = "EL SEGUNDO";
+                //getlabel.ToState = "CA";
+                //getlabel.ToZIPCode = "90245";
+                if (getlabel.shipment.ship_to.country_code.ToLower() == "united states" || getlabel.shipment.ship_to.country_code.ToLower() == "usa" || getlabel.shipment.ship_to.country_code.ToLower() == "unitedstates" || getlabel.shipment.ship_to.country_code.ToLower() == "us")
                 {
-                    //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                    getlabel.shipment.ship_to.country_code = "US";
                 }
-                catch { }
+                //getlabel.WeightLb = 0;
+                //getlabel.WeightOz = 1;
+                //getlabel.PackageType = "Package";
+                //getlabel.shipdate = "2021-10-11";
+                //DateTime shipDate = DateTime.Now.AddDays(1);
+                //getlabel.shipdate = shipDate.ToString("yyyy/MM/dd");
+                OneposStamps.Models.CreateLabelRequest.CreateLabelResponse res = GetLabel(getlabel, dbdetails.IntegrationId);
+                //DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
+                //res.DeliveryDate = del.ToString("MM/dd/yyyy");
+                //res.ShipDate = shipDate.ToString("MM/dd/yyyy");
+                //res.ZoneName = getlabel.ZoneName;
+                //return Json(res);
 
-                // instantiate a html to pdf converter object
-                HtmlToPdf converter = new HtmlToPdf();
+                Session["pdfData"] = null;
+                if (res.Url != null)
+                {
+                    string url = res.Url;
 
-                // set converter options
-                converter.Options.PdfPageSize = pageSize;
-                converter.Options.PdfPageOrientation = pdfOrientation;
-                converter.Options.WebPageWidth = webPageWidth;
-                converter.Options.WebPageHeight = webPageHeight;
-                converter.Options.MarginLeft = 150;
-                //converter.Options.MarginRight = 10;
-                converter.Options.MarginTop = 50;
-                //converter.Options.MarginBottom = 20;
+                    string pdf_page_size = PdfPageSize.A4.ToString();
+                    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                        pdf_page_size, true);
 
-                // create a new pdf document converting an url
-                //PdfDocument doc = converter.ConvertUrl(url);
-                string pdfFilePath = url;
-                WebClient myClient = new WebClient();
-                byte[] bytes = myClient.DownloadData(url);
-                //byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
-                // save pdf document
-                // byte[] pdf = doc.Save();
+                    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                    PdfPageOrientation pdfOrientation =
+                        (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                        pdf_orientation, true);
 
-                // close pdf document
-                //doc.Close();
-                Session["pdfData"] = bytes;
-                //// return resulted pdf document
-                //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-                //fileResult.FileDownloadName = "Document.pdf";
+                    int webPageWidth = 1024;
+                    try
+                    {
+                        //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                    }
+                    catch { }
+
+                    int webPageHeight = 0;
+                    try
+                    {
+                        //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                    }
+                    catch { }
+
+                    // instantiate a html to pdf converter object
+                    HtmlToPdf converter = new HtmlToPdf();
+
+                    // set converter options
+                    converter.Options.PdfPageSize = pageSize;
+                    converter.Options.PdfPageOrientation = pdfOrientation;
+                    converter.Options.WebPageWidth = webPageWidth;
+                    converter.Options.WebPageHeight = webPageHeight;
+                    converter.Options.MarginLeft = 150;
+                    //converter.Options.MarginRight = 10;
+                    converter.Options.MarginTop = 50;
+                    //converter.Options.MarginBottom = 20;
+
+                    // create a new pdf document converting an url
+                    //PdfDocument doc = converter.ConvertUrl(url);
+                    string pdfFilePath = url;
+                    WebClient myClient = new WebClient();
+                    byte[] bytes = myClient.DownloadData(url);
+                    //byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
+                    // save pdf document
+                    // byte[] pdf = doc.Save();
+
+                    // close pdf document
+                    //doc.Close();
+                    Session["pdfData"] = bytes;
+                    //// return resulted pdf document
+                    //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                    //fileResult.FileDownloadName = "Document.pdf";
 
 
-                //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
-                //return Json(pdf);
-                //return File(pdf, "application/pdf");
-                //return fileResult;
-                //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+                    //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                    //return Json(pdf);
+                    //return File(pdf, "application/pdf");
+                    //return fileResult;
+                    //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+                }
+                return Json(res);
             }
-            return Json(res);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public virtual ActionResult DownloadPDF(string fileName)

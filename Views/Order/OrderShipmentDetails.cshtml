@@ -270,7 +270,7 @@
                                     </div>
 
                                     <div class="col-md-4 text-right">
-                                        <label for="drlShipFrom" class="text-right">Ship From</label>
+                                        <label for="drlShipFrom" class="text-right">Ship From <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group d-flex align-items-center">
@@ -285,19 +285,19 @@
                                     </div>
 
                                     <div class="col-md-4 text-right">
-                                        <label for="divWeight" class="text-right mb-4">Weight</label>
+                                        <label for="divWeight" class="text-right mb-4">Weight <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group d-flex align-items-center" id="divWeight">
-                                            <input type="number" id="txtWeightLB" name="txtWeightLB" class="form-control form-control-sm" placeholder="0" />
+                                            <input type="number" id="txtWeightLB" name="txtWeightLB" class="form-control form-control-sm" value="20" placeholder="0" />
                                             <span class="mx-3">(lb)</span>
-                                            <input type="number" id="txtWeightOZ" name="txtWeightOZ" class="form-control form-control-sm mr-3" placeholder="0" />
+                                            <input type="number" id="txtWeightOZ" name="txtWeightOZ" class="form-control form-control-sm mr-3" value="0" placeholder="0" />
                                             <span>(oz)</span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 text-right">
-                                        <label for="drlService" class="text-right mb-4">Service</label>
+                                        <label for="drlService" class="text-right mb-4">Service <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group">
@@ -314,7 +314,7 @@
                                     </div>
 
                                     <div class="col-md-4 text-right align-self-start">
-                                        <label for="" class="text-right mt-2">Package</label>
+                                        <label for="" class="text-right mt-2">Package <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group d-flex align-items-center">
@@ -332,15 +332,15 @@
                                     </div>
 
                                     <div class="col-md-4 text-right">
-                                        <label for="txtSize" class="text-right mb-4">Size</label>
+                                        <label for="txtSize" class="text-right mb-4">Size <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group d-flex align-items-center">
                                             <input type="number" name="txtSize" id="txtsize1" class="form-control form-control-sm" placeholder="0" value="12" />
                                             <span class="mx-2">(X)</span>
-                                            <input type="number" name="txtSize" id="txtsize2" class="form-control form-control-sm" placeholder="0" />
+                                            <input type="number" name="txtSize" id="txtsize2" class="form-control form-control-sm" placeholder="0" value="12" />
                                             <span class="mx-2">(X)</span>
-                                            <input type="number" name="txtSize" id="txtsize3" class="form-control form-control-sm mr-1" placeholder="0" />
+                                            <input type="number" name="txtSize" id="txtsize3" class="form-control form-control-sm mr-1" placeholder="0" value="12" />
                                             <span>(in)</span>
                                         </div>
                                     </div>
@@ -496,6 +496,16 @@
 </body>
 
 <script>
+    $(document).ready(function () {
+        var selectedZoneId = '@Model.SelectedZoneId';
+
+        if (selectedZoneId != null && selectedZoneId != '' && selectedZoneId != undefined ) {
+            //$('#drlShipFrom select').val(selectedZoneId); //.change()
+            $('#drlShipFrom option:selected').attr("selected", null);
+            $('#drlShipFrom option[value='+selectedZoneId+']').attr("selected", "selected");
+        }
+    });
+
     $('#btncreatepdf').click(function () {
         $("#tbl_PackingSlip").printThis({
 
@@ -568,15 +578,47 @@
     }
 
     function onBtnRateRefreshClick() {
+
+        if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
+            alert("Please enter weight (lb)");
+            return;
+        }
+        if ($("#txtWeightOZ").val() == null || $("#txtWeightOZ").val() == "" || $("#txtWeightOZ").val() == undefined) {
+            alert("Please enter weight (oz)");
+            return;
+        }
+
+        if ($("#txtsize1").val() == null || $("#txtsize1").val() == "" || $("#txtsize1").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
+        if ($("#txtsize2").val() == null || $("#txtsize2").val() == "" || $("#txtsize2").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
+        if ($("#txtsize3").val() == null || $("#txtsize3").val() == "" || $("#txtsize3").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
+
         var shipdate = null;
         if ($('#drlService option:selected').attr('data-inhouse').toLowerCase() == "true" || $('#drlService option:selected').attr('data-inhouse').toLowerCase() == true) {
             var shippaid = $('#liShippingPaid')[0].innerText;
             if ($("#liOrderDate")[0].innerText != null && $("#liOrderDate")[0].innerText != "" && $("#liOrderDate")[0].innerText != undefined) {
                 shipdate = $("#liOrderDate")[0].innerText;
             }
+            var date = shipdate.split("/");
+            var getdate = new Date(date[2], date[0] - 1, date[1]);
+            var numberOfDaysToAdd = 4;
+            getdate.setDate(getdate.getDate() + numberOfDaysToAdd);
+            var dd = getdate.getDate();
+            var mm = getdate.getMonth() + 1;
+            var y = getdate.getFullYear();
+
+            var someFormattedDate = mm + '-' + dd + '-' + y;
             $("#span_Rate")[0].innerText = shippaid;
-            $("#spn_deliveryTime").val(shipdate);
-            $("#spn_deliveryTime")[0].innerText = shipdate;
+            $("#spn_deliveryTime").val(someFormattedDate);
+            $("#spn_deliveryTime")[0].innerText = someFormattedDate;
             return;
         }
         // from address data
@@ -775,13 +817,35 @@
                 }
             },
             error: function (response) {
-                alert(response.responseText);
+                alert(response.statusText);
             }
         });
 
     }
 
     function onCreateLabelClick() {
+
+        if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
+            alert("Please enter weight (lb)");
+            return;
+        }
+        if ($("#txtWeightOZ").val() == null || $("#txtWeightOZ").val() == "" || $("#txtWeightOZ").val() == undefined) {
+            alert("Please enter weight (oz)");
+            return;
+        }
+
+        if ($("#txtsize1").val() == null || $("#txtsize1").val() == "" || $("#txtsize1").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
+        if ($("#txtsize2").val() == null || $("#txtsize2").val() == "" || $("#txtsize2").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
+        if ($("#txtsize3").val() == null || $("#txtsize3").val() == "" || $("#txtsize3").val() == undefined) {
+            alert("Please enter size");
+            return;
+        }
 
         // from address data
         var fromcompanyname = null;
@@ -974,12 +1038,24 @@
                         var res = response; //spn_deliveryTime
                         //$("#spn_deliveryTime").val(res.DeliveryDate);
                         //$("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
+                        //var date = $("#spn_deliveryTime").val().split("/");
+                        //var getdate = new Date(date[2], date[0] - 1, date[1]);
+                        //var numberOfDaysToAdd = 4;
+                        //getdate.setDate(getdate.getDate() + numberOfDaysToAdd); 
+                        //var dd = getdate.getDate();
+                        //var mm = getdate.getMonth() + 1;
+                        //var y = getdate.getFullYear();
+
+                        //var someFormattedDate = mm + '-' + dd + '-' + y;
+
                         $("#p_ShipDate").val($("#spn_deliveryTime").val());
                         $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
-                        //$("#p_ShipZone").val(res.ZoneName);
-                        //$("#p_ShipZone")[0].innerText = res.ZoneName;
+                        $("#p_ShipZone").val("");
+                        $("#p_ShipZone")[0].innerText = "";
+                        var orderid = '@Model.OrderId';
                         $("#p_TrackingId").val(orderid);
                         $("#p_TrackingId")[0].innerText = orderid;
+                        //var service = $('#drlService option:selected').text();
                         $("#p_Insurance").val(service);
                         $("#p_Insurance")[0].innerText = service;
                         $("#ship_status").attr("style", "display:inline");
