@@ -283,7 +283,6 @@ D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.dll
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.pdb
 D:\Repos\Stamps\OneposStamps\bin\RestSharp.dll
 D:\Repos\Stamps\OneposStamps\bin\RestSharp.xml
-D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Aspose.BarCode.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Aspose.Cells.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Aspose.PDF.dll
@@ -337,3 +336,13 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\RestSharp.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Diagnostics.DiagnosticSource.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Html.dep
+D:\Repos\Stamps\OneposStamps\bin\Aspose.Words.Pdf2Word.dll
+D:\Repos\Stamps\OneposStamps\bin\Select.Pdf.dll
+D:\Repos\Stamps\OneposStamps\bin\Aspose.Cells.xml
+D:\Repos\Stamps\OneposStamps\bin\Aspose.PDF.xml
+D:\Repos\Stamps\OneposStamps\bin\Aspose.Slides.xml
+D:\Repos\Stamps\OneposStamps\bin\Aspose.Words.xml
+D:\Repos\Stamps\OneposStamps\bin\Select.Pdf.xml
+D:\Repos\Stamps\OneposStamps\bin\Select.Html.dep
+D:\Repos\Stamps\OneposStamps\bin\Select.Tools.dep
+D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache

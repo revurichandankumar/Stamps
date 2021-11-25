@@ -27,6 +27,7 @@ using Font = System.Drawing.Font;
 using RestSharp;
 using Newtonsoft.Json;
 using PdfDocument = SelectPdf.PdfDocument;
+using iTextSharp.text.pdf.draw;
 
 namespace OneposStamps.Controllers
 {
@@ -145,9 +146,9 @@ namespace OneposStamps.Controllers
                 string pdfname = OrderId + "_" + DateTime.Now.ToFileTime();
                 PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/" + pdfname + ".pdf", FileMode.Create));
                 string FromAddress1 = getlabel.shipment.ship_from.address_line1;
-                string FromAddress2 = getlabel.shipment.ship_from.address_line2;
+               // string FromAddress2 = getlabel.shipment.ship_from.address_line2;
                 string Fromaddress3 = getlabel.shipment.ship_from.city_locality + " " + getlabel.shipment.ship_from.state_province + " " + getlabel.shipment.ship_from.postal_code;
-                // "Roseville CA 95661";
+                
 
                 doc.Open();
                 int i = 1;
@@ -156,14 +157,15 @@ namespace OneposStamps.Controllers
                 //{
                 string Drivername = "C";
                 var No = i.ToString();
-                //string barCode = "94055";
+             
                 string Dname = Drivername + No;
                 string path = AppDomain.CurrentDomain.BaseDirectory;
-                string name = "Mylapore Logo – 1";
+                string name = "Mylapore_Logo___3";
                 string filename = path + @"Images/" + name + ".png";
 
                 Paragraph ph = new Paragraph();
                 PdfPCell cell = new PdfPCell(ph);
+                //cell.Border = Rectangle.ALIGN_BASELINE;
                 cell.Border = Rectangle.ALIGN_BASELINE;
 
                 cell.BorderWidth = 5f;
@@ -177,6 +179,7 @@ namespace OneposStamps.Controllers
                 table.AddCell(cell);
                 table.HorizontalAlignment = Element.ALIGN_LEFT;
                 table.WidthPercentage = 100f;
+
                 PdfPTable table2 = new PdfPTable(1);
                 table2.AddCell(cell2);
                 table2.HorizontalAlignment = Element.ALIGN_RIGHT;
@@ -220,23 +223,42 @@ namespace OneposStamps.Controllers
                 iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance(getJPGFromImageControl(bmp));
                 png.ScaleAbsolute(125f, 5f);
                 png.Border = 0;
-
+                Paragraph l1 = new Paragraph();
+                l1.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.ITALIC);
+                
+                l1.IndentationLeft = 12f;
+                l1.Add(FromAddress1);
+                //l1.Add("\n");
+                //l1.Add(FromAddress2);
+                l1.Add("\n");
+                l1.Add(Fromaddress3);
+                l1.Add("\n");
                 PdfPTable maintable = new PdfPTable(2);
                 maintable.SpacingBefore = 5f;
+                maintable.WidthPercentage = 100f;
                 maintable.DefaultCell.Border = Rectangle.NO_BORDER;
                 PdfPCell cell1 = new PdfPCell();
 
                 iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(filename);
-                image.ScalePercent(13f);
+                image.ScalePercent(20f);
                 cell1 = new PdfPCell();
                 cell1.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell1.BorderWidth = 0;
                 cell1.AddElement(image);
                 maintable.AddCell(cell1);
                 cell1 = new PdfPCell();
+                cell1.PaddingTop = 30f;
                 cell1.AddElement(p1);
+                cell1.Rowspan = 2;
                 cell1.BorderWidth = 0;
                 maintable.AddCell(cell1);
+                cell1 = new PdfPCell();
+                cell1.AddElement(l1);
+                cell1.BorderWidth = 0;
+                maintable.SpacingAfter = 10f;
+                maintable.AddCell(cell1);
+                LineSeparator line = new LineSeparator(0.1f, 100f, iTextSharp.text.BaseColor.GRAY, Element.ALIGN_LEFT, 1);
+                
 
 
                 PdfPTable maintable2 = new PdfPTable(1);
@@ -274,15 +296,7 @@ namespace OneposStamps.Controllers
                 c3.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
                 c3.Add("Toll Free:9169256200");
 
-                Paragraph l1 = new Paragraph();
-                l1.Font = FontFactory.GetFont("Arial", 7);
-                l1.IndentationLeft = 12f;
-                l1.Add(FromAddress1);
-                l1.Add("\n");
-                l1.Add(FromAddress2);
-                l1.Add("\n");
-                l1.Add(Fromaddress3);
-                l1.Add("\n");
+                
 
                 Paragraph l2 = new Paragraph();
                 l2.IndentationLeft = 12f;
@@ -306,32 +320,38 @@ namespace OneposStamps.Controllers
                 maintable4.DefaultCell.Border = Rectangle.NO_BORDER;
                 PdfPCell cell7 = new PdfPCell();
 
-                cell7.BorderWidth = 0;
-                cell7.AddElement(l1);
-                maintable4.SpacingAfter = 5f;
-                maintable4.AddCell(cell7);
-                cell7 = new PdfPCell();
-                cell7.BorderWidth = 0;
-                cell7.AddElement(p2);
-                cell7.PaddingTop = 20f;
-                cell7.Rowspan = 3;
-                maintable4.AddCell(cell7);
-                cell7 = new PdfPCell();
+                //cell7.BorderWidth = 0;
+                //cell7.AddElement(l1);
+                //maintable4.SpacingAfter = 5f;
+                //maintable4.AddCell(cell7);
                 cell7.BorderWidth = 0;
                 cell7.AddElement(c1);
                 cell7.AddElement(l2);
                 maintable4.AddCell(cell7);
+                
+                cell7 = new PdfPCell();
+                cell7.BorderWidth = 0;
+                cell7.AddElement(p2);
+                cell7.PaddingTop = 20f;
+                cell7.Rowspan = 2;
+                maintable4.AddCell(cell7);
+                // cell7 = new PdfPCell();
+                //cell7.BorderWidth = 0;
+                //cell7.AddElement(c1);
+                //cell7.AddElement(l2);
+                //maintable4.AddCell(cell7);
                 cell7 = new PdfPCell();
                 cell7.BorderWidth = 0;
                 cell7.AddElement(l3);
                 maintable4.AddCell(cell7);
 
                 doc.Add(maintable);
-                doc.Add(maintable2);
+                // doc.Add(maintable2);
+                doc.Add(line);
                 doc.Add(maintable4);
-                doc.Add(table);
+                doc.Add(line);
                 doc.Add(maintable3);
-                doc.Add(table);
+                //doc.Add(line);
                 doc.Add(c2);
                 doc.Add(c3);
                 //doc.NewPage();
