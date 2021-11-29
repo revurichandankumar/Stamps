@@ -337,3 +337,6 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\RestSharp.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Diagnostics.DiagnosticSource.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Html.dep
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csprojAssemblyReference.cache
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\NReco.PdfGenerator.dll
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\NReco.PdfGenerator.xml

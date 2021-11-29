@@ -28,6 +28,7 @@ using RestSharp;
 using Newtonsoft.Json;
 using PdfDocument = SelectPdf.PdfDocument;
 using iTextSharp.text.pdf.draw;
+using NReco.PdfGenerator;
 
 namespace OneposStamps.Controllers
 {
@@ -131,245 +132,346 @@ namespace OneposStamps.Controllers
             return PartialView("_OrderDetails", od);
         }
 
-        public ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null)
+        //public ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null)
+        //{
+        //    Session["pdfData"] = null;
+        //    OneposStamps.Models.CreateLabelRequest.CreateLabelResponse response = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
+        //    try
+        //    {
+        //        // var a= AddAddresDetails();
+        //        var pgSize = new iTextSharp.text.Rectangle(288, 432);
+
+        //        Document doc = new Document(pgSize, 0, 0, 0, 0);
+        //        string path_pdf = AppDomain.CurrentDomain.BaseDirectory;
+        //        string date = (DateTime.Today).ToString("MM-dd-yyyy");
+        //        string pdfname = OrderId + "_" + DateTime.Now.ToFileTime();
+        //        PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/" + pdfname + ".pdf", FileMode.Create));
+        //        string FromAddress1 = getlabel.shipment.ship_from.address_line1;
+        //        // string FromAddress2 = getlabel.shipment.ship_from.address_line2;
+        //        string Fromaddress3 = getlabel.shipment.ship_from.city_locality + " " + getlabel.shipment.ship_from.state_province + " " + getlabel.shipment.ship_from.postal_code;
+
+
+        //        doc.Open();
+        //        int i = 1;
+
+        //        //foreach (var b in a)
+        //        //{
+        //        string Drivername = "C";
+        //        var No = i.ToString();
+
+        //        string Dname = Drivername + No;
+        //        string path = AppDomain.CurrentDomain.BaseDirectory;
+        //        string name = "Mylapore_Logo___3";
+        //        string filename = path + @"Images/" + name + ".png";
+
+        //        Paragraph ph = new Paragraph();
+        //        PdfPCell cell = new PdfPCell(ph);
+        //        //cell.Border = Rectangle.ALIGN_BASELINE;
+        //        cell.Border = Rectangle.ALIGN_BASELINE;
+
+        //        cell.BorderWidth = 5f;
+        //        Paragraph ph2 = new Paragraph();
+        //        PdfPCell cell2 = new PdfPCell(ph);
+        //        cell2.Border = Rectangle.BOTTOM_BORDER;
+
+        //        cell2.BorderWidth = 1f;
+
+        //        PdfPTable table = new PdfPTable(1);
+        //        table.AddCell(cell);
+        //        table.HorizontalAlignment = Element.ALIGN_LEFT;
+        //        table.WidthPercentage = 100f;
+
+        //        PdfPTable table2 = new PdfPTable(1);
+        //        table2.AddCell(cell2);
+        //        table2.HorizontalAlignment = Element.ALIGN_RIGHT;
+        //        table2.WidthPercentage = 100f;
+
+        //        Paragraph p1 = new Paragraph();
+        //        p1.Font = FontFactory.GetFont("Arial", 9);
+        //        p1.Add("Shipment Date:");
+        //        p1.Add("\n");
+        //        p1.Add(date);
+        //        p1.IndentationLeft = 40f;
+
+        //        Paragraph p2 = new Paragraph();
+        //        //if (a.Count <= 9)
+        //        //{
+        //        p2.Font = FontFactory.GetFont("Corbel Light", 85);
+        //        //}
+        //        //else if (a.Count >= 10 & a.Count < 99)
+        //        //{
+        //        //    p2.Font = FontFactory.GetFont("Corbel Light", 75);
+        //        //}
+        //        //else if (a.Count >= 100 & a.Count < 999)
+        //        //{
+        //        //    p2.Font = FontFactory.GetFont("Corbel Light", 58);
+        //        //}
+
+        //        p2.Add("\n");
+        //        p2.Add("\n");
+        //        p2.Add("\n");
+        //        p2.Add(Dname);
+
+        //        Paragraph p3 = new Paragraph();
+        //        p3.IndentationLeft = 20f;
+        //        p3.Font = FontFactory.GetFont("Arial", 22);
+        //        p3.Add(getlabel.shipment.ship_from.company_name);
+
+        //        BarCodeBuilder builder = new BarCodeBuilder(OrderId, Symbology.Code128);
+        //        builder.CodeTextFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Regular);
+        //        BitmapImage bmp = new BitmapImage();
+        //        bmp = GetBitmapImage(new System.Drawing.Bitmap(builder.BarCodeImage));
+        //        iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance(getJPGFromImageControl(bmp));
+        //        png.ScaleAbsolute(125f, 5f);
+        //        png.Border = 0;
+        //        Paragraph l1 = new Paragraph();
+        //        l1.Font = FontFactory.GetFont("Arial", 8, iTextSharp.text.Font.ITALIC);
+
+        //        l1.IndentationLeft = 12f;
+        //        l1.Add(FromAddress1);
+        //        //l1.Add("\n");
+        //        //l1.Add(FromAddress2);
+        //        l1.Add("\n");
+        //        l1.Add(Fromaddress3);
+        //        l1.Add("\n");
+        //        PdfPTable maintable = new PdfPTable(2);
+        //        maintable.SpacingBefore = 5f;
+        //        maintable.WidthPercentage = 100f;
+        //        maintable.DefaultCell.Border = Rectangle.NO_BORDER;
+        //        PdfPCell cell1 = new PdfPCell();
+
+        //        iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(filename);
+        //        image.ScalePercent(20f);
+        //        cell1 = new PdfPCell();
+        //        cell1.HorizontalAlignment = Element.ALIGN_LEFT;
+        //        cell1.BorderWidth = 0;
+        //        cell1.AddElement(image);
+        //        maintable.AddCell(cell1);
+        //        cell1 = new PdfPCell();
+        //        cell1.PaddingTop = 30f;
+        //        cell1.AddElement(p1);
+        //        cell1.Rowspan = 2;
+        //        cell1.BorderWidth = 0;
+        //        maintable.AddCell(cell1);
+        //        cell1 = new PdfPCell();
+        //        cell1.AddElement(l1);
+        //        cell1.BorderWidth = 0;
+        //        maintable.SpacingAfter = 10f;
+        //        maintable.AddCell(cell1);
+        //        LineSeparator line = new LineSeparator(0.1f, 100f, iTextSharp.text.BaseColor.GRAY, Element.ALIGN_LEFT, 1);
+
+
+
+        //        PdfPTable maintable2 = new PdfPTable(1);
+        //        maintable2.SpacingBefore = 5f;
+        //        maintable2.DefaultCell.Border = Rectangle.NO_BORDER;
+        //        PdfPCell cell5 = new PdfPCell();
+        //        cell5.HorizontalAlignment = Element.ALIGN_CENTER;
+        //        cell5.BorderWidth = 0;
+        //        cell5.AddElement(p3);
+        //        maintable2.SpacingAfter = 5f;
+        //        maintable2.AddCell(cell5);
+
+        //        PdfPTable maintable3 = new PdfPTable(1);
+        //        maintable3.SpacingBefore = 5f;
+        //        maintable3.DefaultCell.Border = Rectangle.NO_BORDER;
+        //        PdfPCell cell6 = new PdfPCell();
+        //        cell6.PaddingLeft = 30f;
+
+        //        cell6.BorderWidth = 0;
+        //        cell6.AddElement(png);
+        //        maintable3.SpacingAfter = 5f;
+        //        maintable3.AddCell(cell6);
+
+        //        Paragraph c1 = new Paragraph();
+        //        c1.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+        //        c1.IndentationLeft = 10f;
+        //        c1.Add("Ship To: ");
+        //        Paragraph c2 = new Paragraph();
+        //        c2.IndentationLeft = 70;
+        //        c2.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+        //        c2.Add("www.mylaporeexpress.com");
+        //        c2.Add("\n");
+        //        Paragraph c3 = new Paragraph();
+        //        c3.IndentationLeft = 80;
+        //        c3.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
+        //        c3.Add("Toll Free:9169256200");
+
+
+
+        //        Paragraph l2 = new Paragraph();
+        //        l2.IndentationLeft = 12f;
+        //        l2.SpacingBefore = 5f;
+        //        l2.Font = FontFactory.GetFont("Arial", 12);
+        //        l2.Add(getlabel.shipment.ship_to.name);
+        //        l2.Add("\n");
+        //        l2.Add(getlabel.shipment.ship_to.address_line1);
+        //        l2.Add("\n");
+        //        var address = getlabel.shipment.ship_to.city_locality + " " + getlabel.shipment.ship_to.state_province + " " + getlabel.shipment.ship_to.postal_code;
+        //        Paragraph l3 = new Paragraph();
+        //        l3.IndentationLeft = 12f;
+        //        l3.SpacingBefore = 5f;
+        //        l3.Font = FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD);
+        //        l3.Add(address);
+        //        l3.SpacingAfter = 14f;
+
+        //        PdfPTable maintable4 = new PdfPTable(2);
+        //        maintable4.WidthPercentage = 100f;
+        //        maintable4.SpacingBefore = 5f;
+        //        maintable4.DefaultCell.Border = Rectangle.NO_BORDER;
+        //        PdfPCell cell7 = new PdfPCell();
+
+        //        //cell7.BorderWidth = 0;
+        //        //cell7.AddElement(l1);
+        //        //maintable4.SpacingAfter = 5f;
+        //        //maintable4.AddCell(cell7);
+        //        cell7.BorderWidth = 0;
+        //        cell7.AddElement(c1);
+        //        cell7.AddElement(l2);
+        //        maintable4.AddCell(cell7);
+
+        //        cell7 = new PdfPCell();
+        //        cell7.BorderWidth = 0;
+        //        cell7.AddElement(p2);
+        //        cell7.PaddingTop = 20f;
+        //        cell7.Rowspan = 2;
+        //        maintable4.AddCell(cell7);
+        //        // cell7 = new PdfPCell();
+        //        //cell7.BorderWidth = 0;
+        //        //cell7.AddElement(c1);
+        //        //cell7.AddElement(l2);
+        //        //maintable4.AddCell(cell7);
+        //        cell7 = new PdfPCell();
+        //        cell7.BorderWidth = 0;
+        //        cell7.AddElement(l3);
+        //        maintable4.AddCell(cell7);
+
+        //        doc.Add(maintable);
+        //        // doc.Add(maintable2);
+        //        doc.Add(line);
+        //        doc.Add(maintable4);
+        //        doc.Add(line);
+        //        doc.Add(maintable3);
+        //        //doc.Add(line);
+        //        doc.Add(c2);
+        //        doc.Add(c3);
+        //        //doc.NewPage();
+        //        //i++;
+        //        // }
+
+        //        doc.Close();
+        //        byte[] bytes = System.IO.File.ReadAllBytes(path_pdf + @"Pdf/" + pdfname + ".pdf");
+        //        //var pdfPath = Path.Combine(Server.MapPath(path_name));
+        //        Session["pdfData"] = bytes;
+        //        //response.DeliveryDate = null;
+        //        //response.ServiceType = ""
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return Json(new { success = false });
+        //    }
+        //    return Json(new { success = true });
+        //}
+
+        public ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null, bool _download = false)
         {
             Session["pdfData"] = null;
             OneposStamps.Models.CreateLabelRequest.CreateLabelResponse response = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
             try
             {
-                // var a= AddAddresDetails();
-                var pgSize = new iTextSharp.text.Rectangle(288, 432);
+                string path = null;
+                string base64String = null;
+                getlabel.TodayDate = DateTime.Now.ToString("MM-dd-yyyy");
+                getlabel.OrderId = OrderId;
+                if (StoreId == "d73add35-876a-4c82-82f9-9591baf2c20d")
+                {
+                    path = Server.MapPath("~/Content/assets/images/logo.png");
+                }
+                else if (StoreId == "f575a340-44a8-4f68-b5fc-efba3350a264")
+                {
+                    path = Server.MapPath("~/Content/StoreLogo/png/Mylapore Logo – 2.png");
+                }
+                else if (StoreId == "2cfb7b87-3e7d-486f-b14a-356730689fbd")
+                {
+                    path = Server.MapPath("~/Images/logo-pdf.png");
+                }
+                try
+                {
+                    using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
+                    {
+                        //Bitmap b = new Bitmap(image);
 
-                Document doc = new Document(pgSize, 0, 0, 0, 0);
-                string path_pdf = AppDomain.CurrentDomain.BaseDirectory;
-                string date = (DateTime.Today).ToString("MM-dd-yyyy");
-                string pdfname = OrderId + "_" + DateTime.Now.ToFileTime();
-                PdfWriter writer = PdfWriter.GetInstance(doc, new FileStream(path_pdf + @"Pdf/" + pdfname + ".pdf", FileMode.Create));
-                string FromAddress1 = getlabel.shipment.ship_from.address_line1;
-                // string FromAddress2 = getlabel.shipment.ship_from.address_line2;
-                string Fromaddress3 = getlabel.shipment.ship_from.city_locality + " " + getlabel.shipment.ship_from.state_province + " " + getlabel.shipment.ship_from.postal_code;
+                        //Image i = resizeImage(b, new Size(134, 30));
 
+                        using (MemoryStream m = new MemoryStream())
+                        {
+                            image.Save(m, image.RawFormat);
+                            byte[] imageBytes = m.ToArray();
 
-                doc.Open();
-                int i = 1;
+                            // Convert byte[] to Base64 String
+                            getlabel.logoBase64String = Convert.ToBase64String(imageBytes);
+                            //return base64String;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                try
+                {
+                    getlabel.barcodeBase64String = LoadImageForBarode(OrderId);
+                }
+                catch (Exception ex)
+                {
 
-                //foreach (var b in a)
-                //{
-                string Drivername = "C";
-                var No = i.ToString();
+                    throw ex;
+                }
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false });
+            }
+            if (_download)
+            {
+                return Json(getlabel, JsonRequestBehavior.AllowGet);
+            }
+            return PartialView("_InHouseLabel", getlabel);
+        }
 
-                string Dname = Drivername + No;
-                string path = AppDomain.CurrentDomain.BaseDirectory;
-                string name = "Mylapore_Logo___3";
-                string filename = path + @"Images/" + name + ".png";
-
-                Paragraph ph = new Paragraph();
-                PdfPCell cell = new PdfPCell(ph);
-                //cell.Border = Rectangle.ALIGN_BASELINE;
-                cell.Border = Rectangle.ALIGN_BASELINE;
-
-                cell.BorderWidth = 5f;
-                Paragraph ph2 = new Paragraph();
-                PdfPCell cell2 = new PdfPCell(ph);
-                cell2.Border = Rectangle.BOTTOM_BORDER;
-
-                cell2.BorderWidth = 1f;
-
-                PdfPTable table = new PdfPTable(1);
-                table.AddCell(cell);
-                table.HorizontalAlignment = Element.ALIGN_LEFT;
-                table.WidthPercentage = 100f;
-
-                PdfPTable table2 = new PdfPTable(1);
-                table2.AddCell(cell2);
-                table2.HorizontalAlignment = Element.ALIGN_RIGHT;
-                table2.WidthPercentage = 100f;
-
-                Paragraph p1 = new Paragraph();
-                p1.Font = FontFactory.GetFont("Arial", 9);
-                p1.Add("Shipment Date:");
-                p1.Add("\n");
-                p1.Add(date);
-                p1.IndentationLeft = 40f;
-
-                Paragraph p2 = new Paragraph();
-                //if (a.Count <= 9)
-                //{
-                p2.Font = FontFactory.GetFont("Corbel Light", 85);
-                //}
-                //else if (a.Count >= 10 & a.Count < 99)
-                //{
-                //    p2.Font = FontFactory.GetFont("Corbel Light", 75);
-                //}
-                //else if (a.Count >= 100 & a.Count < 999)
-                //{
-                //    p2.Font = FontFactory.GetFont("Corbel Light", 58);
-                //}
-
-                p2.Add("\n");
-                p2.Add("\n");
-                p2.Add("\n");
-                p2.Add(Dname);
-
-                Paragraph p3 = new Paragraph();
-                p3.IndentationLeft = 20f;
-                p3.Font = FontFactory.GetFont("Arial", 22);
-                p3.Add(getlabel.shipment.ship_from.company_name);
-
-                BarCodeBuilder builder = new BarCodeBuilder(OrderId, Symbology.Code128);
-                builder.CodeTextFont = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Regular);
-                BitmapImage bmp = new BitmapImage();
-                bmp = GetBitmapImage(new System.Drawing.Bitmap(builder.BarCodeImage));
-                iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance(getJPGFromImageControl(bmp));
-                png.ScaleAbsolute(125f, 5f);
-                png.Border = 0;
-                Paragraph l1 = new Paragraph();
-                l1.Font = FontFactory.GetFont("Arial", 8, iTextSharp.text.Font.ITALIC);
-
-                l1.IndentationLeft = 12f;
-                l1.Add(FromAddress1);
-                //l1.Add("\n");
-                //l1.Add(FromAddress2);
-                l1.Add("\n");
-                l1.Add(Fromaddress3);
-                l1.Add("\n");
-                PdfPTable maintable = new PdfPTable(2);
-                maintable.SpacingBefore = 5f;
-                maintable.WidthPercentage = 100f;
-                maintable.DefaultCell.Border = Rectangle.NO_BORDER;
-                PdfPCell cell1 = new PdfPCell();
-
-                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(filename);
-                image.ScalePercent(20f);
-                cell1 = new PdfPCell();
-                cell1.HorizontalAlignment = Element.ALIGN_LEFT;
-                cell1.BorderWidth = 0;
-                cell1.AddElement(image);
-                maintable.AddCell(cell1);
-                cell1 = new PdfPCell();
-                cell1.PaddingTop = 30f;
-                cell1.AddElement(p1);
-                cell1.Rowspan = 2;
-                cell1.BorderWidth = 0;
-                maintable.AddCell(cell1);
-                cell1 = new PdfPCell();
-                cell1.AddElement(l1);
-                cell1.BorderWidth = 0;
-                maintable.SpacingAfter = 10f;
-                maintable.AddCell(cell1);
-                LineSeparator line = new LineSeparator(0.1f, 100f, iTextSharp.text.BaseColor.GRAY, Element.ALIGN_LEFT, 1);
-
-
-
-                PdfPTable maintable2 = new PdfPTable(1);
-                maintable2.SpacingBefore = 5f;
-                maintable2.DefaultCell.Border = Rectangle.NO_BORDER;
-                PdfPCell cell5 = new PdfPCell();
-                cell5.HorizontalAlignment = Element.ALIGN_CENTER;
-                cell5.BorderWidth = 0;
-                cell5.AddElement(p3);
-                maintable2.SpacingAfter = 5f;
-                maintable2.AddCell(cell5);
-
-                PdfPTable maintable3 = new PdfPTable(1);
-                maintable3.SpacingBefore = 5f;
-                maintable3.DefaultCell.Border = Rectangle.NO_BORDER;
-                PdfPCell cell6 = new PdfPCell();
-                cell6.PaddingLeft = 30f;
-
-                cell6.BorderWidth = 0;
-                cell6.AddElement(png);
-                maintable3.SpacingAfter = 5f;
-                maintable3.AddCell(cell6);
-
-                Paragraph c1 = new Paragraph();
-                c1.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
-                c1.IndentationLeft = 10f;
-                c1.Add("Ship To: ");
-                Paragraph c2 = new Paragraph();
-                c2.IndentationLeft = 70;
-                c2.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
-                c2.Add("www.mylaporeexpress.com");
-                c2.Add("\n");
-                Paragraph c3 = new Paragraph();
-                c3.IndentationLeft = 80;
-                c3.Font = FontFactory.GetFont("Arial", 10, iTextSharp.text.Font.BOLD);
-                c3.Add("Toll Free:9169256200");
-
-
-
-                Paragraph l2 = new Paragraph();
-                l2.IndentationLeft = 12f;
-                l2.SpacingBefore = 5f;
-                l2.Font = FontFactory.GetFont("Arial", 12);
-                l2.Add(getlabel.shipment.ship_to.name);
-                l2.Add("\n");
-                l2.Add(getlabel.shipment.ship_to.address_line1);
-                l2.Add("\n");
-                var address = getlabel.shipment.ship_to.city_locality + " " + getlabel.shipment.ship_to.state_province + " " + getlabel.shipment.ship_to.postal_code;
-                Paragraph l3 = new Paragraph();
-                l3.IndentationLeft = 12f;
-                l3.SpacingBefore = 5f;
-                l3.Font = FontFactory.GetFont("Arial", 12, iTextSharp.text.Font.BOLD);
-                l3.Add(address);
-                l3.SpacingAfter = 14f;
-
-                PdfPTable maintable4 = new PdfPTable(2);
-                maintable4.WidthPercentage = 100f;
-                maintable4.SpacingBefore = 5f;
-                maintable4.DefaultCell.Border = Rectangle.NO_BORDER;
-                PdfPCell cell7 = new PdfPCell();
-
-                //cell7.BorderWidth = 0;
-                //cell7.AddElement(l1);
-                //maintable4.SpacingAfter = 5f;
-                //maintable4.AddCell(cell7);
-                cell7.BorderWidth = 0;
-                cell7.AddElement(c1);
-                cell7.AddElement(l2);
-                maintable4.AddCell(cell7);
-
-                cell7 = new PdfPCell();
-                cell7.BorderWidth = 0;
-                cell7.AddElement(p2);
-                cell7.PaddingTop = 20f;
-                cell7.Rowspan = 2;
-                maintable4.AddCell(cell7);
-                // cell7 = new PdfPCell();
-                //cell7.BorderWidth = 0;
-                //cell7.AddElement(c1);
-                //cell7.AddElement(l2);
-                //maintable4.AddCell(cell7);
-                cell7 = new PdfPCell();
-                cell7.BorderWidth = 0;
-                cell7.AddElement(l3);
-                maintable4.AddCell(cell7);
-
-                doc.Add(maintable);
-                // doc.Add(maintable2);
-                doc.Add(line);
-                doc.Add(maintable4);
-                doc.Add(line);
-                doc.Add(maintable3);
-                //doc.Add(line);
-                doc.Add(c2);
-                doc.Add(c3);
-                //doc.NewPage();
-                //i++;
-                // }
-
-                doc.Close();
-                byte[] bytes = System.IO.File.ReadAllBytes(path_pdf + @"Pdf/" + pdfname + ".pdf");
-                //var pdfPath = Path.Combine(Server.MapPath(path_name));
-                Session["pdfData"] = bytes;
-                //response.DeliveryDate = null;
-                //response.ServiceType = ""
+        [HttpPost]
+        public ActionResult getpdfHtmlStringData(string Html)
+        {
+            try
+            {
+                Session["pdfData"] = null;
+                byte[] stream = null;
+                iTextSharp.text.Font blackFont = FontFactory.GetFont("Arial", 7, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+                var htmlToPdfConverter = new HtmlToPdfConverter();
+                htmlToPdfConverter.Margins = new PageMargins { Left = 5, Right = 5 };
+                var str = htmlToPdfConverter.GeneratePdf(Html);
+                using (var mstr = new MemoryStream())
+                {
+                    PdfReader reader = new PdfReader(str);
+                    int totalPages = reader.NumberOfPages;
+                    using (PdfStamper stamper = new PdfStamper(reader, mstr))
+                    {
+                        for (int i = 1; i <= totalPages; i++)
+                        {
+                            ColumnText.ShowTextAligned(stamper.GetUnderContent(i),
+                                @Element.ALIGN_BOTTOM, new Phrase("Page " + i.ToString() + " of " + totalPages, blackFont), 300f, 4f, 0);
+                        }
+                    }
+                    stream = mstr.ToArray();
+                    Session["pdfData"] = stream;
+                }
             }
             catch (Exception)
             {
                 return Json(new { success = false });
             }
             return Json(new { success = true });
+
         }
 
         public ActionResult OrderShipmentDetails(string StoreId, string OrderId = "", string ZoneId = "", string DeliverDate = null)
@@ -501,6 +603,28 @@ namespace OneposStamps.Controllers
 
                 }
                 od.ZoneList = zl;
+            }
+
+            var Zonename = string.Empty;
+            if (!string.IsNullOrWhiteSpace(od.SelectedZoneId))
+            {
+                Zonename = od.ZoneList.Where(x => x.ZoneId == od.SelectedZoneId).Select(y => y.ZoneName).FirstOrDefault();
+                if (Zonename.ToLower() == "Countrywide".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_next_day_air_saver").Select(y => y.Id).FirstOrDefault();
+                }
+                else if (Zonename.ToLower() == "SoCal".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
+                }
+                else if (Zonename.ToLower() == "ME Van".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "mylapore_express").Select(y => y.Id).FirstOrDefault();
+                }
+            }
+            else
+            {
+                od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
             }
 
             string logoimagestring = null;
@@ -1414,7 +1538,7 @@ namespace OneposStamps.Controllers
                         byte[] imageBytes = m.ToArray();
 
                         // Convert byte[] to Base64 String
-                        base64String = "data: image / png; base64, " + Convert.ToBase64String(imageBytes);
+                        base64String = "data:image/png;base64," + Convert.ToBase64String(imageBytes);
                     }
 
                 }
@@ -1590,7 +1714,53 @@ namespace OneposStamps.Controllers
         //    }
         //    return null;
         //}
+        
+        public ActionResult getPdf(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null, string viewPath = null)
+        {
+            byte[] stream = null;
+            string fileName = string.Empty;
+            var filePath = string.Empty;
+            try
+            {
+                dynamic model = null;
+                string view;
+                model = (OneposStamps.Models.CreateLabelRequest.CreateLabelRequest)((JsonResult)new OrderController().InhouseLabel(getlabel, StoreId, OrderId, true)).Data;
+                fileName = $"MasterReport_{fileName}";
+                model.type = "pdf";
+                iTextSharp.text.Font blackFont = FontFactory.GetFont("Arial", 7, iTextSharp.text.Font.BOLD, BaseColor.BLACK);
+                ViewData.Model = model;
+                using (var writer = new StringWriter())
+                {
+                    var vResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewPath);
+                    var vContext = new ViewContext(ControllerContext, vResult.View, ViewData,
+                        new TempDataDictionary(), writer);
+                    vResult.View.Render(vContext, writer);
+                    view = writer.ToString();
+                }
+                var htmlToPdfConverter = new HtmlToPdfConverter();
+                htmlToPdfConverter.Margins = new PageMargins { Left = 5, Right = 5 };
+                var str = htmlToPdfConverter.GeneratePdf(view);
+                using (var mstr = new MemoryStream())
+                {
+                    PdfReader reader = new PdfReader(str);
+                    int totalPages = reader.NumberOfPages;
+                    using (PdfStamper stamper = new PdfStamper(reader, mstr))
+                    {
+                        for (int i = 1; i <= totalPages; i++)
+                        {
+                            ColumnText.ShowTextAligned(stamper.GetUnderContent(i),
+                                @Element.ALIGN_BOTTOM, new Phrase("Page " + i.ToString() + " of " + totalPages, blackFont), 300f, 4f, 0);
+                        }
+                    }
+                    stream = mstr.ToArray();
+                }
+                Session["ReportList"] = stream;
+            }
+            catch (Exception ex)
+            {
 
-
+            }
+            return Json(new { file = $"{fileName}.pdf" }, JsonRequestBehavior.AllowGet);
+        }
     }
 }
