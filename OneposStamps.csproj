@@ -151,6 +151,10 @@
     <Reference Include="RestSharp, Version=106.13.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>packages\RestSharp.106.13.0\lib\net452\RestSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=21.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Select.HtmlToPdf.dll</HintPath>
+    </Reference>
     <Reference Include="Select.Pdf, Version=21.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
       <HintPath>packages\Select.Pdf.21.1.0\lib\net40\Select.Pdf.dll</HintPath>
     </Reference>

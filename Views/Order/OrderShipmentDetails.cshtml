@@ -498,14 +498,23 @@
 </body>
 
 <script>
-    $(document).ready(function () {
+   $(document).ready(function () {
         var selectedZoneId = '@Model.SelectedZoneId';
+        var SelectedServiceId = '@Model.SelectedServiceId';
 
         if (selectedZoneId != null && selectedZoneId != '' && selectedZoneId != undefined ) {
             //$('#drlShipFrom select').val(selectedZoneId); //.change()
             $('#drlShipFrom option:selected').attr("selected", null);
             $('#drlShipFrom option[value='+selectedZoneId+']').attr("selected", "selected");
         }
+
+        if (SelectedServiceId != null && SelectedServiceId != '' && SelectedServiceId != undefined) {
+            //$('#drlShipFrom select').val(selectedZoneId); //.change()
+            $('#drlService option:selected').attr("selected", null);
+            $('#drlService option[value=' + SelectedServiceId + ']').attr("selected", "selected");
+        }
+
+
     });
 
     $('#btncreatepdf').click(function () {
@@ -580,7 +589,6 @@
     }
 
     function onBtnRateRefreshClick() {
-
 
         if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
             alert("Please enter weight (lb)");
@@ -823,13 +831,9 @@
                 alert(response.statusText);
             }
         });
-
-
     }
 
     function onCreateLabelClick() {
-
-
 
         if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
             alert("Please enter weight (lb)");
@@ -1040,40 +1044,31 @@
                 //dataType: "json",
                 data: { getlabel: jsonObjLabel, StoreId: storeid, OrderId: orderid },
                 success: function (response) {
-                    if (response != null) {
-                        var res = response; //spn_deliveryTime
-                        //$("#spn_deliveryTime").val(res.DeliveryDate);
-                        //$("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
-                        //var date = $("#spn_deliveryTime").val().split("/");
-                        //var getdate = new Date(date[2], date[0] - 1, date[1]);
-                        //var numberOfDaysToAdd = 4;
-                        //getdate.setDate(getdate.getDate() + numberOfDaysToAdd); 
-                        //var dd = getdate.getDate();
-                        //var mm = getdate.getMonth() + 1;
-                        //var y = getdate.getFullYear();
+                    $("#divInhouseLabel").html(response);
+                    //var b = $("#divInhouseLabel").html();
+                    newWindow_method_1();
+                    @*var dataToSend = JSON.stringify({ 'Html': b });
+                    $.ajax({
+                        type: "POST",
+                        url: "/Order/getpdfHtmlStringData",
+                        contentType: "application/json; charset=utf-8",
+                        //dataType: "json",
+                        data: dataToSend ,
+                        success: function (response) {
+                            var res = response;
+                            if (res != null && res != '' && res != undefined) {
+                                if (res.success) {
+                                    var orderid = '@Model.OrderId';
+                                    //window.location = '/Order/DownloadPDF?fileName=' + orderid;
+                                    $("#divInhouseLabel").attr('style', 'display:block');
+                                    $("#divInhouseLabel").printThis({
 
-                        //var someFormattedDate = mm + '-' + dd + '-' + y;
-
-                        $("#p_ShipDate").val($("#spn_deliveryTime").val());
-                        $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
-                        $("#p_ShipZone").val("");
-                        $("#p_ShipZone")[0].innerText = "";
-                        var orderid = '@Model.OrderId';
-                        $("#p_TrackingId").val(orderid);
-                        $("#p_TrackingId")[0].innerText = orderid;
-                        //var service = $('#drlService option:selected').text();
-                        $("#p_Insurance").val(service);
-                        $("#p_Insurance")[0].innerText = service;
-                        $("#ship_status").attr("style", "display:inline");
-
-                        if (res != null && res != '' && res != undefined) {
-                            if (res.success) {
-                                var orderid = '@Model.OrderId';
-                                window.location = '/Order/DownloadPDF?fileName=' + orderid;
-                            }
-                            else {
-                                alert("Unable to download Label");
-                            }
+                                    });
+                                    $("#divInhouseLabel").attr('style', 'display:none');
+                                }
+                                else {
+                                    alert("Unable to download Label");
+                                }
 
                             }
                             else {

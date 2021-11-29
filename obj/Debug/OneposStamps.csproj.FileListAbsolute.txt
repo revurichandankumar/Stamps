@@ -309,7 +309,6 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.Options.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.Primitives.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\RestSharp.dll
-C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Diagnostics.DiagnosticSource.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Aspose.Cells.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Aspose.PDF.xml
@@ -334,9 +333,10 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.Options.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Microsoft.Extensions.Primitives.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\RestSharp.xml
-C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.HtmlToPdf.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\System.Diagnostics.DiagnosticSource.xml
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Html.dep
-C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csprojAssemblyReference.cache
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\NReco.PdfGenerator.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\NReco.PdfGenerator.xml
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Pdf.dll
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Pdf.xml
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\bin\Select.Tools.dep
