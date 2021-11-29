@@ -262,15 +262,15 @@
                             <h5 class="order-card-title bg-gray">Shipping Info</h5>
                             <div class="card-body">
                                 <div class="row align-items-center">
-                                    <div class="col-md-4 text-right">
+                                    @*<div class="col-md-4 text-right">
                                         <label for="spn_Requested" class="text-right">Requested</label>
                                     </div>
                                     <div class="col-md-8 mb-2">
                                         <strong><span id="spn_Requested">Local Delivery</span></strong>
-                                    </div>
+                                    </div>*@
 
                                     <div class="col-md-4 text-right">
-                                        <label for="drlShipFrom" class="text-right">Ship From <span class="text-danger">*</span></label>
+                                        <label for="drlShipFrom" class="text-right">Zone<span class="text-danger">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group d-flex align-items-center">
@@ -498,12 +498,20 @@
 <script>
     $(document).ready(function () {
         var selectedZoneId = '@Model.SelectedZoneId';
+        var SelectedServiceId = '@Model.SelectedServiceId';
+
 
         if (selectedZoneId != null && selectedZoneId != '' && selectedZoneId != undefined ) {
             //$('#drlShipFrom select').val(selectedZoneId); //.change()
             $('#drlShipFrom option:selected').attr("selected", null);
             $('#drlShipFrom option[value='+selectedZoneId+']').attr("selected", "selected");
         }
+        if (SelectedServiceId != null && SelectedServiceId != '' && SelectedServiceId != undefined) {
+            //$('#drlShipFrom select').val(selectedZoneId); //.change()
+            $('#drlService option:selected').attr("selected", null);
+            $('#drlService option[value=' + SelectedServiceId + ']').attr("selected", "selected");
+        }
+
     });
 
     $('#btncreatepdf').click(function () {
@@ -578,6 +586,7 @@
     }
 
     function onBtnRateRefreshClick() {
+
 
         if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
             alert("Please enter weight (lb)");
@@ -821,9 +830,12 @@
             }
         });
 
+
     }
 
     function onCreateLabelClick() {
+
+
 
         if ($("#txtWeightLB").val() == null || $("#txtWeightLB").val() == "" || $("#txtWeightLB").val() == undefined) {
             alert("Please enter weight (lb)");
@@ -1041,7 +1053,7 @@
                         //var date = $("#spn_deliveryTime").val().split("/");
                         //var getdate = new Date(date[2], date[0] - 1, date[1]);
                         //var numberOfDaysToAdd = 4;
-                        //getdate.setDate(getdate.getDate() + numberOfDaysToAdd); 
+                        //getdate.setDate(getdate.getDate() + numberOfDaysToAdd);
                         //var dd = getdate.getDate();
                         //var mm = getdate.getMonth() + 1;
                         //var y = getdate.getFullYear();

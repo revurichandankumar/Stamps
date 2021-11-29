@@ -18,6 +18,7 @@ namespace OneposStamps.Models
         public string StoreId { get; set; }
         public string OrderId { get; set; }
         public string SelectedZoneId { get; set; }
+        public string SelectedServiceId { get; set; }
         public string DeliverDate { get; set; }
         public string LogoBase64String { get; set; }
         public string BarcodeBase64String { get; set; }

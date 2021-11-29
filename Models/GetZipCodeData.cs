@@ -15,6 +15,8 @@ namespace OneposStamps.Models
 
         public string StoreId { get; set; }
         public string ZoneId { get; set; }
+        public string ZoneName { get; set; }
+        public string CarrierName { get; set; }
     }
     public class ZipCodes
     {

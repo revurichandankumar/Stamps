@@ -380,6 +380,7 @@ namespace OneposStamps.Controllers
             od.OrderId = OrderId;
             od.SelectedZoneId = ZoneId;
             od.DeliverDate = DeliverDate;
+            od.SelectedServiceId = string.Empty;
             DataSet ds = db.GetOrderShippingDetails("USP_GetOrderShippingDetails", StoreId, OrderId, dbdetails.Address, dbdetails.Password, dbdetails.DatabaseName, dbdetails.Username);
             OrderDetail orderdetais = new OrderDetail();
             foreach (DataRow row in ds.Tables[0].Rows)
@@ -502,7 +503,29 @@ namespace OneposStamps.Controllers
                 }
                 od.ZoneList = zl;
             }
-
+            var Zonename = string.Empty;
+            if (!string.IsNullOrWhiteSpace(od.SelectedZoneId))
+            {
+                Zonename = od.ZoneList.Where(x => x.ZoneId == od.SelectedZoneId).Select(y => y.ZoneName).FirstOrDefault();
+                if (Zonename.ToLower() == "Countrywide".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_next_day_air_saver").Select(y => y.Id).FirstOrDefault();
+                }
+                else if (Zonename.ToLower() == "SoCal".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
+                }
+                else if (Zonename.ToLower() == "ME Van".ToLower())
+                {
+                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "mylapore_express").Select(y => y.Id).FirstOrDefault();
+                }
+            }
+            else
+            {
+                od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
+            }
+            
+            
             string logoimagestring = null;
             string barcodeimagestring = null;
 
