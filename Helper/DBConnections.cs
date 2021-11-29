@@ -554,7 +554,7 @@ namespace OneposStamps.Helper
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@Myjason", data);
                 cmd.Parameters.AddWithValue("@StoreId", StoreId);
-                cmd.Parameters.AddWithValue("@ZoneId", ZoneId);
+                cmd.Parameters.AddWithValue("@Zone_Id", ZoneId);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
                 if (dataSet != null)

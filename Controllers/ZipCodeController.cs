@@ -18,6 +18,26 @@ namespace OneposStamps.Controllers
             //GetZipCodeData ZipData2 = new GetZipCodeData();
             ZipData.StoreId = zf.StoreId;
             ZipData.ZoneId = zf.ZoneId;
+            DataSet dsZoneList = db.GetMysqlDataSet("USP_GetZones", ZipData.StoreId);
+            List<Zonelist> zl = new List<Zonelist>();
+            if (dsZoneList.Tables.Count > 0)
+            {
+
+                foreach (DataRow row in dsZoneList.Tables[0].Rows)
+                {
+
+                    Zonelist a = new Zonelist();
+                    a.ZoneId = (row["Id"]).ToString();
+                    a.Carrier = (row["Carrier"]).ToString();
+                    a.ZoneName = (row["ZoneName"]).ToString();
+
+                    zl.Add(a);
+
+                }
+
+            }
+            ZipData.ZoneName = zl.Where(x => x.ZoneId == ZipData.ZoneId).Select(y => y.ZoneName).FirstOrDefault();
+            ZipData.CarrierName = zl.Where(x => x.ZoneId == ZipData.ZoneId).Select(y => y.Carrier).FirstOrDefault();
 
             if (string.IsNullOrEmpty(zf.StateName) && string.IsNullOrEmpty(zf.CityName) && string.IsNullOrEmpty(zf.ZipCode))
             {
@@ -80,7 +100,7 @@ namespace OneposStamps.Controllers
                 {
                     ZipData.GroupbyAddedZipCodeList= new List<List<ZipCodes>>();
                 }
-             
+               
             }
             else
             {
