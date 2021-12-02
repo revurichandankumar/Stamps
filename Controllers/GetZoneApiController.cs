@@ -117,15 +117,24 @@ namespace OneposStamps.Controllers
                 }
                 else
                 {
+                    Response.ZoneId = "";
+                    Response.Shipmentfee = 0;
+                    Response.Zonename = "";
+                    Response.City = "";
+                    Response.State = "";
+                    Response.Dates = dates;
                     httpResponseMessage = new HttpResponseMessage()
                     {
-                        Content = new ObjectContent<object>(new { message = "Please Enter valid Zipcode" }, new JsonMediaTypeFormatter()),
+                      
+                        Content = new ObjectContent<object>(new { message = new { Response } }, new JsonMediaTypeFormatter()),
+
+
                         StatusCode = HttpStatusCode.NotFound
                     };
                     return httpResponseMessage;
 
                 }
-                
+
 
                 httpResponseMessage = new HttpResponseMessage()
                 {
@@ -136,6 +145,7 @@ namespace OneposStamps.Controllers
             }
             else
             {
+
                 httpResponseMessage = new HttpResponseMessage()
                 {
                     Content = new ObjectContent<object>(new { message = "Please Enter valid Zipcode" }, new JsonMediaTypeFormatter()),

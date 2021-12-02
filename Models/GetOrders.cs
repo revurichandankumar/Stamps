@@ -17,5 +17,6 @@ namespace OneposStamps.Models
         public decimal OrderTotal { get; set; }
         public string CustomerName { get; set; }
         public decimal Qty { get; set; }
+
     }
 }

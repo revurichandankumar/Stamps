@@ -123,6 +123,7 @@ namespace OneposStamps.Controllers
                 value.OrderTotal = (row["OrderTotal"]) != null ? Convert.ToDecimal(row["OrderTotal"]) : 0;
                 value.CustomerName = (row["CustomerName"]).ToString();
                 value.Qty = Convert.ToDecimal(row["Qty"]);
+           
                 getorderslist.Add(value);
 
             }

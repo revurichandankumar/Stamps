@@ -345,3 +345,4 @@ D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.CoreCompileInputs.cac
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.CopyComplete
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.dll
 D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.pdb
+D:\Repos\Stamps\OneposStamps\obj\Debug\OneposStamps.csproj.AssemblyReference.cache

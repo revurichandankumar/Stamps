@@ -342,6 +342,7 @@
     <Compile Include="Models\GetZonesResponse.cs" />
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrdersDetail.cs" />
+    <Compile Include="Models\ShipmentRequest.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreImage.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
