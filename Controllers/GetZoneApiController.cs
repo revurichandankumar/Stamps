@@ -95,13 +95,12 @@ namespace OneposStamps.Controllers
 
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
-
-
                         Response.ZoneId = (row["ZoneId"]).ToString();
                         Response.Shipmentfee = Convert.ToDecimal((row["ShipmentFee"]));
                         Response.Zonename = (row["Zonename"]).ToString();
                         Response.City = (row["City"]).ToString();
                         Response.State= (row["State"]).ToString();
+                        Response.Country= (row["Country"]).ToString();
                     }
                     foreach (DataRow row in ds.Tables[1].Rows)
                     {
@@ -122,14 +121,15 @@ namespace OneposStamps.Controllers
                     Response.Zonename = "";
                     Response.City = "";
                     Response.State = "";
+                    Response.Country = "";
                     Response.Dates = dates;
                     httpResponseMessage = new HttpResponseMessage()
                     {
-                      
+
                         Content = new ObjectContent<object>(new { message = new { Response } }, new JsonMediaTypeFormatter()),
 
 
-                        StatusCode = HttpStatusCode.NotFound
+                        StatusCode = HttpStatusCode.OK
                     };
                     return httpResponseMessage;
 
@@ -145,7 +145,6 @@ namespace OneposStamps.Controllers
             }
             else
             {
-
                 httpResponseMessage = new HttpResponseMessage()
                 {
                     Content = new ObjectContent<object>(new { message = "Please Enter valid Zipcode" }, new JsonMediaTypeFormatter()),

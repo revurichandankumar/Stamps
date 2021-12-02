@@ -144,9 +144,16 @@
     <Reference Include="MySql.Data, Version=8.0.26.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <HintPath>packages\MySql.Data.8.0.26\lib\net452\MySql.Data.dll</HintPath>
     </Reference>
+    <Reference Include="NReco.PdfGenerator, Version=1.2.0.0, Culture=neutral, PublicKeyToken=231663d50a41b451, processorArchitecture=MSIL">
+      <HintPath>packages\NReco.PdfGenerator.1.2.0\lib\net45\NReco.PdfGenerator.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=106.13.0.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
       <HintPath>packages\RestSharp.106.13.0\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Select.HtmlToPdf, Version=21.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\Select.HtmlToPdf.dll</HintPath>
     </Reference>
     <Reference Include="Select.Pdf, Version=21.1.0.0, Culture=neutral, PublicKeyToken=e0ae9f6e27a97018, processorArchitecture=MSIL">
       <HintPath>packages\Select.Pdf.21.1.0\lib\net40\Select.Pdf.dll</HintPath>
@@ -342,7 +349,7 @@
     <Compile Include="Models\GetZonesResponse.cs" />
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrdersDetail.cs" />
-    <Compile Include="Models\ShipmentRequest.cs" />
+    <Compile Include="Models\SearchedZipCodes.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreImage.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
@@ -481,6 +488,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\html2canvas.js" />
     <Content Include="Content\jquery-printthis\.gitignore" />
     <Content Include="Content\jquery-printthis\assets\css\normalize.css" />
     <Content Include="Content\jquery-printthis\assets\css\skeleton.css" />
@@ -503,6 +511,7 @@
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 2.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo – 3.png" />
     <Content Include="Content\StoreLogo\png\Mylapore Logo.png" />
+    <Content Include="Images\logo-pdf.png" />
     <Content Include="Images\Mylapore_Logo___3.png" />
     <Content Include="Content\StoreLogo\svg\Mylapore Logo – 1.svg" />
     <Content Include="Content\StoreLogo\svg\Mylapore Logo – 2.svg" />
@@ -581,6 +590,8 @@
     <Content Include="Views\Order\OrderDetails.cshtml" />
     <Content Include="Views\Order\_OrderDetails.cshtml" />
     <Content Include="Views\Order\OrderShipmentDetails.cshtml" />
+    <Content Include="Views\Order\_InHouseLabel.cshtml" />
+    <Content Include="Views\ZipCode\_SearchedZipCodes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -15,13 +15,14 @@
                         <div class="page-title-box d-flex align-items-center">
                             <a onclick="openhomeview()" class="btn btn-outline-primary btn-round waves-effect waves-light mr-3"><i class="mdi mdi-keyboard-backspace mr-2"></i>Back</a>
                             <h4 class="page-title font-weight-bold">@Model.ZoneName <span class="btn table-btn btn-dark">@Model.Carriername</span> <span class="btn table-btn btn-info">@("$ ")@(Model.Shipmentfee)</span></h4>
-                            <button class="btn btn-primary ml-auto btn-sm mr-2">Edit Zone</button>
-                            <button class="btn btn-danger btn-sm mr-2">Delete Zone</button>
+                            <a href="@Url.Action("EditZone", "Zone")?Store_Id=@Model.StoreId&ZoneId=@Model.ZoneId" class="btn btn-primary ml-auto btn-sm mr-2">Edit Zone</a>
+                            @*<button class="btn btn-primary ml-auto btn-sm mr-2">Edit Zone</button>*@
+                            <button class="btn btn-danger btn-sm mr-2" id="btnDelete" name="btnDelete" onclick="ondeletezone()">Delete Zone</button>
                             <a onclick="openaddzipview()" style="color:white" class="btn btn-dark btn-sm">Add Zipcodes</a>
 
                             <div class="btn-group ml-3" aria-label="Basic example" role="group">
-                                <button type="button" class="btn btn-outline-primary"><i class="mdi mdi-arrow-left-bold"></i></button>
-                                <button type="button" class="btn btn-outline-primary"><i class="mdi mdi-arrow-right-bold"></i></button>
+                                <a href="@Url.Action("GetZonesData", "Zone")?StoreId=@Model.StoreId&ZoneId=@Model.PreviousZoneId" class="btn btn-outline-primary"><i class="mdi mdi-arrow-left-bold"></i></a>
+                                <a href="@Url.Action("GetZonesData", "Zone")?StoreId=@Model.StoreId&ZoneId=@Model.NextZoneId" class="btn btn-outline-primary"><i class="mdi mdi-arrow-right-bold"></i></a>
                             </div>
                         </div><!--end page-title-box-->
                     </div><!--end col-->
@@ -84,11 +85,11 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="font-weight-bold text-dark">@d.ZipCode</td>
+                                                <td class="font-weight-bold text-dark" name="zonezipcode"><span>@d.ZipCode</span></td>
                                                 <td>@d.State</td>
                                                 <td>@d.City</td>
                                                 <td>
-                                                    <button class="btn btn-sm table-btn btn-danger btn-round mr-2" name="btnDelete" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                                                    <button class="btn btn-sm table-btn btn-danger btn-round mr-2" name="btnDeleteZipcode" id="btnDeleteZipcode" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
 
                                                 </td>
                                             </tr>
@@ -125,4 +126,67 @@
         var zoneid = '@Model.ZoneId';
         window.location.href = '@Url.Action("AddZipCodes", "ZipCode")?StoreId=' + storeid + '&ZoneId=' + zoneid; //+ '&StateName=CA'
     }
+
+    function ondeletezone() {
+        var storeid = '@Model.StoreId';
+        var zoneid = '@Model.ZoneId';
+        var result = confirm('Are you sure want to delete Zone?');
+            if (result) {
+                var data = {
+                    Store_Id: storeid,
+                    ZoneId: zoneid,
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Zone/DeleteZone",
+                    data: data,
+                    //contentType: "application/json; charset=utf-8",
+                    //dataType: "json",
+                    success: function (response) {
+                        debugger
+                        if (response.result == 'Redirect')
+                            window.location.href = response.url;
+                        //$("#divSuccess").attr("style='display:visible'");
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            } 
+    }
+
+    $("body").on("click", "#datatable4 #btnDeleteZipcode", function () {
+        var storeid = '@Model.StoreId';
+        var zoneid = '@Model.ZoneId';
+        var result = confirm('Are you sure want to delete Zipcode?');
+            if (result) {
+                var row = $(this).closest("tr");
+                var zipcode = row.find("span").html();
+
+                var data = {
+                    StoreId: storeid,
+                    ZoneId: zoneid,
+                    Zipcode: zipcode,
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Zone/DeleteZoneZipcode",
+                    data: data,
+                    success: function (response) {
+                        if (response == 'Zipcode Deleted Sucessfully') {
+                            if ($("#datatable4 tr").length > 2) {
+                                row.remove();
+                            }
+                            alert(response);
+                        }
+                        else {
+                            alert("Something went wrong.");
+                        }
+                         
+                    }
+                });
+            } 
+    });
+
 </script>

@@ -1,3 +1,13 @@
 #tbl_PackingSlip {
-    width: 50em;
+    width: 35em;
+}
+
+@media print {
+    @page tbl_PackingSlip {
+        size: 4.5in 7in;
+    }
+}
+
+#tbl_PackingSlip {
+    page: tbl_PackingSlip;
 }

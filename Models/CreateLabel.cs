@@ -31,6 +31,10 @@ namespace OneposStamps.Models.CreateLabelRequest
         //public string ServiceType { get; set; }
         //public string Amount { get; set; }
         //public string ZoneName { get; set; }
+        public string OrderId { get; set; }        
+        public string logoBase64String { get; set; }        
+        public string barcodeBase64String { get; set; }        
+        public string TodayDate { get; set; }        
         public Shipment shipment { get; set; }
     }
     public class Shipment

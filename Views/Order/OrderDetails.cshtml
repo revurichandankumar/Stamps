@@ -242,10 +242,21 @@
                 DeliverDate: $("#txtDeliverDate").val()
             }
     
-            var url = '@Url.Action("CreateMultiLabel", "Order")?StoreId=' + data.StoreId + '&DeliverDate=' + data.DeliverDate + '&OrderIds=' + JSON.stringify(orderidList);
-            //var url = '@Url.Action("CreateMultiLabel", "Order")?OrderIdList=' + data;
-            window.location.href = url;
-
+             $.ajax({
+                type: "POST",
+                 url: "/Order/CreateMultiLabel",
+                //contentType: "application/json; charset=utf-8",
+                //dataType: "json",
+                 data: data,
+                success: function (response) {
+                    $("#divInhouseLabel").html(response);
+                    //var b = $("#divInhouseLabel").html();
+                    newWindow_method_1();
+                 },
+                 error: function (response) {
+                     alert(response.responseText);
+                 }
+             });
             //$.ajax({
             //    type: "POST",
             //    url: "/Order/CreateMultiLabel",
@@ -265,5 +276,14 @@
         }
     }
 
+    function newWindow_method_1() {
+        var wi = window.open();
+        var html = $("#divInhouseLabel").html();
+
+        $(wi.document.body).html(html);
+        setTimeout(function () {
+            wi.print();
+        }, 200);
+    }
 
 </script>

@@ -1,0 +1,62 @@
+﻿@model OneposStamps.Models.GetZipCodeData
+
+@{
+    int i = 0;
+}
+
+@foreach (var item in Model.GroupbyZipCodeList)
+{
+    string headerid = "Aheading" + i;
+    string collapseid = "Acollapse" + i;
+    if (i == 0)
+    {
+        <div class="card border mb-1 shadow-none">
+            <div class="card-header" id="@headerid">
+                <a href="" data-name="aCityNameAdd" class="text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="true" aria-controls="@collapseid">
+                    @item.Select(x => x.Name).FirstOrDefault()
+                </a>
+                <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
+            </div>
+
+            <div id="@collapseid" class="collapse show" aria-labelledby="@headerid" data-parent="#divSearchResult">
+                <div class="card-body">
+                    <ul class="list-unstyled ziplist">
+                        @foreach (var zip in item)
+                        {
+                            <li class="d-flex" data-name="liZipcodeAdd">@zip.Zipcode <span name="span_ZipcodeAdd" class="ml-auto fa fa-plus text-primary"></span></li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        i++;
+    }
+    else
+    {
+        <div class="card mb-1 border shadow-none">
+            <div class="card-header" id="@headerid">
+                <a href="" data-name="aCityNameAdd" class="collapsed text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="false" aria-controls="@collapseid">
+                    @item.Select(x => x.Name).FirstOrDefault()
+                </a>
+                <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
+            </div>
+            <div id="@collapseid" class="collapse" aria-labelledby="@headerid" data-parent="#divSearchResult">
+                <div class="card-body">
+                    <ul class="list-unstyled ziplist">
+                        @foreach (var zip in item)
+                        {
+                            <li class="d-flex" data-name="liZipcodeAdd">@zip.Zipcode <span name="span_ZipcodeAdd" class="ml-auto fa fa-plus text-primary"></span></li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        i++;
+    }
+
+}
+
+<span style="display:none">@i = 0</span>
