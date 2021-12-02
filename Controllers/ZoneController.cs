@@ -212,6 +212,43 @@ namespace OneposStamps.Controllers
                 }
                 ZoneData.GetZoneList = Gz;
             }
+
+            var id = StoreId;
+            DataSet ds2 = db.GetMysqlDataSet("USP_GetZones", id);
+            Zones ZoneData2 = new Zones();
+            if (ds2.Tables.Count > 0)
+            {
+                List<Zonelist> zl = new List<Zonelist>();
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+
+                    Zonelist a = new Zonelist();
+                    a.ZoneId = (row["Id"]).ToString();
+                    a.Carrier = (row["Carrier"]).ToString();
+                    a.Citycount = (row["City"]).ToString();
+                    a.Shipmentfee = Convert.ToDecimal(row["ShipmentFee"]);
+                    a.Statecount = (row["State"]).ToString();
+                    a.Zipcount = (row["Zipcodes"]).ToString();
+                    a.ZoneName = (row["ZoneName"]).ToString();
+
+                    zl.Add(a);
+
+                }
+                ZoneData2.StoreId = id;
+                ZoneData2.ZoneList = zl;
+            }
+
+            List<string> zoneIdList = ZoneData2.ZoneList.Select(c => c.ZoneId).ToList();
+
+            string NextZoneid = null;
+            NextZoneid = zoneIdList.SkipWhile(x => x != ZoneId).Skip(1).DefaultIfEmpty(zoneIdList[0]).FirstOrDefault();
+
+            string PreviousZoneid = null;
+            PreviousZoneid = zoneIdList.TakeWhile(x => x != ZoneId).DefaultIfEmpty(zoneIdList[zoneIdList.Count - 1]).LastOrDefault();
+
+            ZoneData.NextZoneId = NextZoneid;
+            ZoneData.PreviousZoneId = PreviousZoneid;
+
             return View("ZoneDetails", ZoneData);
         }
 
@@ -220,6 +257,22 @@ namespace OneposStamps.Controllers
 
             return View();
         }
-       
+
+        public ActionResult DeleteZoneZipcode(string StoreId, string ZoneId, string Zipcode)
+        {
+            DataSet ds = db.DeleteZoneZipcode("USP_DeleteZoneZipcode", StoreId, ZoneId, Zipcode); //StoreId, ZoneId
+            string status = null;
+            if (ds.Tables.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    status = (row["Status"]).ToString();
+                }
+            }
+
+            //return status;
+            return Json(status);
+        }
+
     }
 }

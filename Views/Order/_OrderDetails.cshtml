@@ -51,11 +51,18 @@
                             <td><strong>@("$")@string.Format("{0:#,##0.##}", d.OrderTotal) </strong></td>
                             <td>@d.Qty</td>
                             <td>@d.CustomerName</td>
-                            <td style="display:none">@d.ZoneId</td>
-                            @*<td>
-                                    <i class="fa fa-user"></i>
-                                </td>
-                                <td>10256</td>*@
+                            <td style="display:none" name="zoneid">@d.ZoneId</td>
+                            @*<td style="display:none" name="buyname">@d.name</td>
+                            <td style="display:none" name="buyaddress">@d.address</td>
+                            <td style="display:none" name="buyphoneno">@d.phoneNo</td>
+                            <td style="display:none" name="buycity">@d.city</td>
+                            <td style="display:none" name="buystate">@d.state</td>
+                            <td style="display:none" name="buyzipcode">@d.zipcode</td>
+                            <td style="display:none" name="buycountry">@d.country</td>
+                            <td style="display:none" name="buyemail">@d.email</td>
+                            <td style="display:none" name="buylandmark">@d.landMark</td>
+                            <td style="display:none" name="buystreet">@d.street</td>*@
+                           
                         </tr>
                                 i++;
                             }

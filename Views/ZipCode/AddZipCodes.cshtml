@@ -91,10 +91,10 @@
     }
 
     $(document).ready(function () {
-        onFilerClick();
+        onPageLoad();
     });
 
-    function onFilerClick() {
+    function onPageLoad() {
           var data = {
               StateName: $("#txtState").val(),
               CityName: $("#txtCity").val(),
@@ -118,11 +118,64 @@
         });
     }
 
+    function onFilerClick() {
+        var divAddedZipCode = $('#addedZipcodes').find('.card-header');
+        
+        var ziplist = [];
+
+        for (var i = 0; i < divAddedZipCode.length; i++) {
+
+            var headerid = "Rheading" + i;
+            var collapseid = "Rcollapse" + i;
+
+            var cityid = $('#' + headerid + ' a');
+            var zipcodeid = $('#' + collapseid + ' li');
+
+            if (cityid.length == 0) {
+                alert("Something went wrong.Please try again.")
+                return false;
+            }
+            var cityNameValue = cityid[0].innerText;
+            var zipcodeValue = $('#' + collapseid + ' li');  //[0].innerText;
+
+            for (var j = 0; j < zipcodeValue.length; j++) {
+                ziplist.push({ Name: cityNameValue, Zipcode: zipcodeValue[j].innerText });
+            }           
+
+        }
+
+        var objzipcodeFilters = {
+            StateName: $("#txtState").val(),
+            CityName: $("#txtCity").val(),
+            ZipCode: $("#txtZipcode").val(),
+            StoreId: '@Model.StoreId',
+            ZoneId: '@Model.ZoneId',
+        }
+
+        var objSearchedZipCodes = {
+            zipcodeFilters : objzipcodeFilters,
+            ZipCodeList: ziplist
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/ZipCode/SearchByFilerZipcodes",
+            //contentType: "application/json; charset=utf-8",
+            //dataType: "json",
+            data: { sz: objSearchedZipCodes },
+            success: function (response) {
+                $('#divSearchResult').html(response);
+            },
+            error: function (response) {
+                alert(response.statusText);
+            }
+        });
+    }
+
     function onSaveZipcodes() {
 
         var divAddedZipCode = $('#addedZipcodes').find('.card-header');
-        debugger
-
+        
         var ziplist = [];
 
         for (var i = 0; i < divAddedZipCode.length; i++) {

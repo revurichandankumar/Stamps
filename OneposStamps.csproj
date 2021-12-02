@@ -349,6 +349,7 @@
     <Compile Include="Models\GetZonesResponse.cs" />
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrdersDetail.cs" />
+    <Compile Include="Models\SearchedZipCodes.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreImage.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
@@ -590,6 +591,7 @@
     <Content Include="Views\Order\_OrderDetails.cshtml" />
     <Content Include="Views\Order\OrderShipmentDetails.cshtml" />
     <Content Include="Views\Order\_InHouseLabel.cshtml" />
+    <Content Include="Views\ZipCode\_SearchedZipCodes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

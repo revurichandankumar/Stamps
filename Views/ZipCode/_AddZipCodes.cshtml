@@ -1,7 +1,6 @@
 ﻿@model OneposStamps.Models.GetZipCodeData
 
 @{
-    int i = 0;
     int j = 0;
     ViewBag.Title = "AddZipCodes";
 }
@@ -16,64 +15,7 @@
         <div class="card" style="height: 575px;overflow-y: scroll;">
             <div class="card-body">
                 <div class="accordion" id="divSearchResult">
-
-                    @foreach (var item in Model.GroupbyZipCodeList)
-                    {
-                        string headerid = "Aheading" + i;
-                        string collapseid = "Acollapse" + i;
-                        if (i == 0)
-                        {
-                            <div class="card border mb-1 shadow-none">
-                                <div class="card-header" id="@headerid">
-                                    <a href="" data-name="aCityNameAdd" class="text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="true" aria-controls="@collapseid">
-                                        @item.Select(x => x.Name).FirstOrDefault()
-                                    </a>
-                                    <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
-                                </div>
-
-                                <div id="@collapseid" class="collapse show" aria-labelledby="@headerid" data-parent="#divSearchResult">
-                                    <div class="card-body">
-                                        <ul class="list-unstyled ziplist">
-                                            @foreach (var zip in item)
-                                            {
-                                                <li class="d-flex" data-name="liZipcodeAdd">@zip.Zipcode <span name="span_ZipcodeAdd" class="ml-auto fa fa-plus text-primary"></span></li>
-                                            }
-
-                                        </ul>
-                                    </div>
-                                </div>
-
-                            </div>
-                            i++;
-                        }
-                        else
-                        {
-                            <div class="card mb-1 border shadow-none">
-                                <div class="card-header" id="@headerid">
-                                    <a href="" data-name="aCityNameAdd" class="collapsed text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="false" aria-controls="@collapseid">
-                                        @item.Select(x => x.Name).FirstOrDefault()
-                                    </a>
-                                    <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
-                                </div>
-                                <div id="@collapseid" class="collapse" aria-labelledby="@headerid" data-parent="#divSearchResult">
-                                    <div class="card-body">
-                                        <ul class="list-unstyled ziplist">
-                                            @foreach (var zip in item)
-                                            {
-                                                <li class="d-flex" data-name="liZipcodeAdd">@zip.Zipcode <span name="span_ZipcodeAdd" class="ml-auto fa fa-plus text-primary"></span></li>
-                                            }
-
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            i++;
-                        }
-
-                    }
-
-                    <span style="display:none">@i = 0</span>
-
+                    @{ Html.RenderPartial("_SearchedZipCodes", Model); }
                 </div>
             </div>
         </div>
@@ -166,7 +108,7 @@
             if (divAddedZipCode.length > 0) {
                 var checkExists = 0;
                 for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].innerText == cityname) {
+                    if ($.trim(divAddedZipCode[i].children[0].innerText) == $.trim(cityname)) {
 
 
                         for (var j = 0; j < divAddedZipCode.length; j++) {
@@ -182,8 +124,13 @@
                         appendStringLi.html(zipcode + '<span name="span_ZipcodeRemove" class="ml-auto fa fa-minus text-danger"></span>');
 
                         divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
+                        //$(this).closest('li').remove();
+                        if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                            $(this).closest('li').parent().parent().parent().parent().hide();
+                        }
                         $(this).closest('li').remove();
 
+                        divAddedZipCode[i].parentNode.removeAttribute('style');
                         divAddedZipCode[i].children[0].ariaExpanded = true;
                         divAddedZipCode[i].children[0].className = 'text-dark';
                         divAddedZipCode[i].nextElementSibling.className = 'collapse show';
@@ -220,8 +167,9 @@
 
                     $("#addedZipcodes").append(appendStringMainDiv);
 
-                    if ($(this).closest('li').length == 1) {
-                        $(this).closest('li').parent().parent().parent().parent().remove();
+                    //if ($(this).closest('li').length == 1) {
+                    if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                        $(this).closest('li').parent().parent().parent().parent().hide();
                     }
                     $(this).closest('li').remove();
                 }
@@ -254,6 +202,10 @@
 
                 $("#addedZipcodes").append(appendStringMainDiv);
 
+                //$(this).closest('li').remove();
+                if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                    $(this).closest('li').parent().parent().parent().parent().hide();
+                }
                 $(this).closest('li').remove();
 
             }
@@ -272,7 +224,7 @@
             if (divAddedZipCode.length > 0) {
                 var checkExists = 0;
                 for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].innerText == cityname) {
+                    if ($.trim(divAddedZipCode[i].children[0].innerText) == $.trim(cityname)) {
 
 
                         for (var j = 0; j < divAddedZipCode.length; j++) {
@@ -288,8 +240,13 @@
                         appendStringLi.html(zipcode + '<span  name="span_ZipcodeAdd" class="ml-auto fa fa-plus text-primary""></span>');
 
                         divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
+                        //$(this).closest('li').remove();
+                        if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                            $(this).closest('li').parent().parent().parent().parent().hide();
+                        }
                         $(this).closest('li').remove();
 
+                        divAddedZipCode[i].parentNode.removeAttribute('style');
                         divAddedZipCode[i].children[0].ariaExpanded = true;
                         divAddedZipCode[i].children[0].className = 'text-dark';
                         divAddedZipCode[i].nextElementSibling.className = 'collapse show';
@@ -326,6 +283,10 @@
 
                     $("#divSearchResult").append(appendStringMainDiv);
 
+                    //$(this).closest('li').remove();
+                    if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                        $(this).closest('li').parent().parent().parent().parent().hide();
+                    }
                     $(this).closest('li').remove();
                 }
             }
@@ -357,6 +318,10 @@
 
                 $("#divSearchResult").append(appendStringMainDiv);
 
+                //$(this).closest('li').remove();
+                if ($(this).closest('li').parent().children().length == 1 || $(this).closest('li').parent().children().length == 0) {
+                    $(this).closest('li').parent().parent().parent().parent().hide();
+                }
                 $(this).closest('li').remove();
 
             }
@@ -383,10 +348,15 @@
 
             var divAddedZipCode = $('#addedZipcodes').find('.card-header');
 
+            var style = $('#addedZipcodes').find('.card-header');
+            if (style.css("display") == "none") {
+                alert("display not available");
+            }
+
             if (divAddedZipCode.length > 0) {
                 var checkExists = 0;
                 for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].innerText == cityname) {
+                    if ($.trim(divAddedZipCode[i].children[0].innerText) == $.trim(cityname)) {
 
 
                         for (var j = 0; j < divAddedZipCode.length; j++) {
@@ -408,16 +378,21 @@
 
                         var appendStringLi = $(liString);
 
-                        divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
+                        for (var x = 0; x < zipcodeList.length; x++) {
+                            divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[x]);
+                        }
 
                         var nodeRemoveLength = zipListNode.length;
                         for (var l = 0; l < nodeRemoveLength; l++) {
                             zipListNode[0].remove();
                         }
 
+                        divAddedZipCode[i].parentNode.removeAttribute('style');
                         divAddedZipCode[i].children[0].ariaExpanded = true;
                         divAddedZipCode[i].children[0].className = 'text-dark';
                         divAddedZipCode[i].nextElementSibling.className = 'collapse show';
+
+                        $(this).parent().parent().hide();
 
                         checkExists = 1;
                         break;
@@ -460,6 +435,8 @@
                     for (var k = 0; k < nodeRemoveLength; k++) {
                         zipListNode[0].remove();
                     }
+
+                    $(this).parent().parent().hide();
                 }
             }
             else {
@@ -499,6 +476,8 @@
                 for (var k = 0; k < nodeRemoveLength; k++) {
                     zipListNode[0].remove();
                 }
+
+                $(this).parent().parent().hide();
             }
 
 
@@ -522,11 +501,11 @@
             }
 
             var divAddedZipCode = $('#divSearchResult').find('.card-header');
-
+            
             if (divAddedZipCode.length > 0) {
                 var checkExists = 0;
                 for (var i = 0; i < divAddedZipCode.length; i++) {
-                    if (divAddedZipCode[i].children[0].innerText == cityname) {
+                    if ($.trim(divAddedZipCode[i].children[0].innerText) == $.trim(cityname)) {
 
 
                         for (var j = 0; j < divAddedZipCode.length; j++) {
@@ -548,16 +527,21 @@
 
                         var appendStringLi = $(liString);
 
-                        divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[0]);
+                        for (var x = 0; x < zipcodeList.length; x++) {
+                            divAddedZipCode[i].nextElementSibling.children[0].children[0].append(appendStringLi[x]);
+                        }
 
                         var nodeRemoveLength = zipListNode.length;
                         for (var l = 0; l < nodeRemoveLength; l++) {
                             zipListNode[0].remove();
                         }
 
+                        divAddedZipCode[i].parentNode.removeAttribute('style');
                         divAddedZipCode[i].children[0].ariaExpanded = true;
                         divAddedZipCode[i].children[0].className = 'text-dark';
                         divAddedZipCode[i].nextElementSibling.className = 'collapse show';
+
+                        $(this).parent().parent().hide();
 
                         checkExists = 1;
                         break;
@@ -600,6 +584,8 @@
                     for (var k = 0; k < nodeRemoveLength; k++) {
                         zipListNode[0].remove();
                     }
+
+                    $(this).parent().parent().hide();
                 }
             }
             else {
@@ -639,6 +625,8 @@
                 for (var k = 0; k < nodeRemoveLength; k++) {
                     zipListNode[0].remove();
                 }
+
+                $(this).parent().parent().hide();
             }
 
 

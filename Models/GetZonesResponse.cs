@@ -17,6 +17,7 @@ namespace OneposStamps.Models
         public decimal Shipmentfee { get; set; }
         public string Zonename { get; set; }
         public string State { get; set; }
+        public string Country { get; set; }
         public string City { get; set; }
         public List<DeliveryDate> Dates { get; set; }
     }

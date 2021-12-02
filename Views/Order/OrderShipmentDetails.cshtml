@@ -263,11 +263,11 @@
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     @*<div class="col-md-4 text-right">
-                                        <label for="spn_Requested" class="text-right">Requested</label>
-                                    </div>
-                                    <div class="col-md-8 mb-2">
-                                        <strong><span id="spn_Requested">Local Delivery</span></strong>
-                                    </div>*@
+                                            <label for="spn_Requested" class="text-right">Requested</label>
+                                        </div>
+                                        <div class="col-md-8 mb-2">
+                                            <strong><span id="spn_Requested">Local Delivery</span></strong>
+                                        </div>*@
 
                                     <div class="col-md-4 text-right">
                                         <label for="drlShipFrom" class="text-right">Zone<span class="text-danger">*</span></label>
@@ -1047,6 +1047,7 @@
                     $("#divInhouseLabel").html(response);
                     //var b = $("#divInhouseLabel").html();
                     newWindow_method_1();
+
                     @*var dataToSend = JSON.stringify({ 'Html': b });
                     $.ajax({
                         type: "POST",
@@ -1131,9 +1132,22 @@
     function newWindow_method_1() {
         var wi = window.open();
         var html = $("#divInhouseLabel").html();
+
+        //var w = window.open('', 'divInhouseLabel', 'width=288,height=432');
+        //var html = $("#divInhouseLabel").html();
+        //$(w.document.body).html(html);
+        //w.print();
+
+        //printJS({
+        //    maxWidth: 228, // the width of your paper
+        //    printable: 'tblInhouse', // the id
+        //    type: 'html',
+        //    css: 'PrintOrderTable.css' // your css
+        //});
+
         $(wi.document.body).html(html);
         setTimeout(function () {
-            wi.print();                
+            wi.print();
         }, 200);
     }
 

@@ -109,6 +109,66 @@ namespace OneposStamps.Controllers
             return PartialView("_AddZipCodes", ZipData);
         }
 
+        public ActionResult SearchByFilerZipcodes(SearchedZipCodes sz)
+        {
+            GetZipCodeData ZipData = new GetZipCodeData();
+            //GetZipCodeData ZipData2 = new GetZipCodeData();
+            ZipData.StoreId = sz.zipcodeFilters.StoreId;
+            ZipData.ZoneId = sz.zipcodeFilters.ZoneId;
+            
+            if (string.IsNullOrEmpty(sz.zipcodeFilters.StateName) && string.IsNullOrEmpty(sz.zipcodeFilters.CityName) && string.IsNullOrEmpty(sz.zipcodeFilters.ZipCode))
+            {
+                return View(ZipData);
+            }
+
+            string statename = string.Empty;
+            string cityname = string.Empty;
+            string zipcode = string.Empty;
+
+            if (!string.IsNullOrEmpty(sz.zipcodeFilters.StateName))
+            {
+                statename = sz.zipcodeFilters.StateName;
+            }
+            if (!string.IsNullOrEmpty(sz.zipcodeFilters.CityName))
+            {
+                cityname = sz.zipcodeFilters.CityName;
+            }
+            if (!string.IsNullOrEmpty(sz.zipcodeFilters.ZipCode))
+            {
+                zipcode = sz.zipcodeFilters.ZipCode;
+            }
+
+            DataSet ds = db.GetZipcodeData("USP_GetZipcodesFilterData", statename, cityname, zipcode, ZipData.StoreId, ZipData.ZoneId);
+
+            if (ds.Tables.Count > 0)
+            {
+                if (ds.Tables[0].Rows.Count > 0)
+                {
+
+                    List<ZipCodes> Gz = new List<ZipCodes>();
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        ZipCodes a = new ZipCodes();
+                        a.Name = (row["primary_city"]).ToString();
+                        a.Zipcode = (row["zip"]).ToString();
+                        Gz.Add(a);
+                    }
+                    ZipData.ZipCodeList = Gz.Where(x => !sz.ZipCodeList.Select(a=> a.Zipcode).Contains(x.Zipcode)).ToList();
+
+                    ZipData.GroupbyZipCodeList = ZipData.ZipCodeList.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
+                }
+                else
+                {
+                    ZipData.GroupbyZipCodeList = new List<List<ZipCodes>>();
+                }
+
+            }
+            else
+            {
+                return new HttpStatusCodeResult(400, "No data found");
+            }
+            return PartialView("_SearchedZipCodes", ZipData);
+        }
 
         public ActionResult InsertZipCodestoZone(GetZipCodeData zd)
         {

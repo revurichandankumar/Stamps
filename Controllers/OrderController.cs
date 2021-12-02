@@ -124,6 +124,24 @@ namespace OneposStamps.Controllers
                 value.OrderTotal = (row["OrderTotal"]) != null ? Convert.ToDecimal(row["OrderTotal"]) : 0;
                 value.CustomerName = (row["CustomerName"]).ToString();
                 value.Qty = Convert.ToDecimal(row["Qty"]);
+                value.storeName = (row["StoreName"]).ToString();
+                value.StoreAddress = (row["StoreAddress"]).ToString();
+                value.StoreCity = (row["StoreCity"]).ToString();
+                value.StoreState = (row["StoreState"]).ToString();
+                value.StoreCountry = (row["StoreCountry"]).ToString();
+                value.StorePhoneNo = (row["StorePhoneNo"]).ToString();
+                value.StoreZipcode = (row["StoreZipCode"]).ToString();
+                value.name = (row["DeliveryName"]).ToString();
+                value.address = (row["Adress"]).ToString();
+                value.phoneNo = (row["Phone"]).ToString();
+                value.city = (row["City"]).ToString();
+                value.state = (row["State"]).ToString().Trim();
+                value.zipcode = (row["ZipCode"]).ToString();
+                value.country = (row["Country"]).ToString();
+                value.email = (row["EmailAddress"]).ToString();
+                value.landMark = (row["LandMark"]).ToString();
+                value.street = (row["Street"]).ToString();
+
                 getorderslist.Add(value);
 
             }
@@ -1546,6 +1564,14 @@ namespace OneposStamps.Controllers
             return base64String;
         }
 
+        public ActionResult CreateMultiLabel(OrderIdList OrderIdList)
+        {
+
+            return null;
+        }
+
+
+
         //public ActionResult CreateMultiLabel(OrderIdList OrderIdList)
         //{
         //    List<string> uncreatedLabel = new List<string>();
@@ -1714,7 +1740,7 @@ namespace OneposStamps.Controllers
         //    }
         //    return null;
         //}
-        
+
         public ActionResult getPdf(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null, string viewPath = null)
         {
             byte[] stream = null;

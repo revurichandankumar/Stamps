@@ -447,6 +447,44 @@ namespace OneposStamps.Helper
             return dataSet;
         }
 
+        public DataSet DeleteZoneZipcode(string sqlStmt = "", string StoreId = "", string ZoneId = "", string Zipcode = "")
+        {
+
+            try
+            {
+                var connectionString = string.Empty;
+
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;
+
+                con.ConnectionString = connectionString;
+                con.Open();
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StoreId", StoreId);
+                cmd.Parameters.AddWithValue("@Zone_Id", ZoneId);
+                cmd.Parameters.AddWithValue("@Zipcode", Zipcode);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
+
         public DataSet GetDataSet(string sqlStmt, bool IsStoredProcedure, params object[] parameters)
         {
             OpenConnection();

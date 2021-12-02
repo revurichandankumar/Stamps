@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8" />
     <title>ShipHub Home Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    @*, shrink-to-fit=no*@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="" name="author" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -38,6 +38,8 @@
     <link href="~/Content/assets/css/metisMenu.min.css" rel="stylesheet" type="text/css" />
     <link href="~/Content/assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
+    <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css" />
+    
     @Scripts.Render("~/bundles/jquery")
     @*@Scripts.Render("~/bundles/bootstrap")
 
@@ -161,6 +163,9 @@
     <!-- html to pdf js -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+    <script type="text/javascript" src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+
 
     @RenderSection("scripts", false)
 </body>
