@@ -391,7 +391,7 @@ namespace OneposStamps.Controllers
         //    return Json(new { success = true });
         //}
 
-        public ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null, bool _download = false)
+        public ActionResult InhouseLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel = null, string StoreId = null, string OrderId = null, bool _download = false, string DeliveryDate= null)
         {
             Session["pdfData"] = null;
             OneposStamps.Models.CreateLabelRequest.CreateLabelResponse response = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
@@ -400,6 +400,7 @@ namespace OneposStamps.Controllers
                 string path = null;
                 string base64String = null;
                 getlabel.TodayDate = DateTime.Now.ToString("MM-dd-yyyy");
+                getlabel.ShipmentDate = DeliveryDate;
                 getlabel.OrderId = OrderId;
                 if (StoreId == "d73add35-876a-4c82-82f9-9591baf2c20d")
                 {
