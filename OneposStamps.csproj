@@ -328,7 +328,10 @@
     <Compile Include="Controllers\GetZoneApiController.cs" />
     <Compile Include="Models\AddressVerify.cs" />
     <Compile Include="Models\AuthenticateUser.cs" />
+    <Compile Include="Models\BatchRequest.cs" />
     <Compile Include="Models\ClientAddress.cs" />
+    <Compile Include="Models\CreateBatchRequest.cs" />
+    <Compile Include="Models\CreateBatchResponse.cs" />
     <Compile Include="Models\CreateLabel.cs" />
     <Compile Include="Models\CreateLabelResponse.cs" />
     <Compile Include="Models\DbDetails.cs" />
@@ -340,6 +343,7 @@
     </Compile>
     <Compile Include="Helper\DBConnections.cs" />
     <Compile Include="Models\AddZones.cs" />
+    <Compile Include="Models\GetBatchResponse.cs" />
     <Compile Include="Models\GetOrders.cs" />
     <Compile Include="Models\GetRates.cs" />
     <Compile Include="Models\GetRatesResponse.cs" />
@@ -347,9 +351,12 @@
     <Compile Include="Models\GetZones.cs" />
     <Compile Include="Models\GetZoneSingleData.cs" />
     <Compile Include="Models\GetZonesResponse.cs" />
+    <Compile Include="Models\LabelProcessRequest.cs" />
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrdersDetail.cs" />
     <Compile Include="Models\SearchedZipCodes.cs" />
+    <Compile Include="Models\ShipmentResponse.cs" />
+    <Compile Include="Models\ShipmentResquest.cs" />
     <Compile Include="Models\Store.cs" />
     <Compile Include="Models\StoreImage.cs" />
     <Compile Include="Models\ZipcodeFilters.cs" />
