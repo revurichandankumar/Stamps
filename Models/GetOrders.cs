@@ -40,6 +40,7 @@ namespace OneposStamps.Models
     {
         public List<OrderIds> OrderIds { get; set; }
         public string StoreId { get; set; }
+        public string SingleZoneId { get; set; }
         public string DeliverDate { get; set; }
     }
 

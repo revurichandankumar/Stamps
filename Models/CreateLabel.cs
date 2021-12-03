@@ -99,4 +99,11 @@ namespace OneposStamps.Models.CreateLabelRequest
         public string ZoneName { get; set; }
 
     }
+
+    public  class CreateMultipleLabelRequest
+    {
+        public List<CreateLabelRequest> createLabelRequest { get; set; }
+        public string logoBase64String { get; set; }
+        public string ShipmentDate { get; set; }
+    }
 }

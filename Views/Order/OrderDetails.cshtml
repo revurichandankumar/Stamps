@@ -137,7 +137,7 @@
 
                 </div>
 
-                <div id="divmultiplelabel">
+                <div id="divmultiplelabel" style="display:none">
 
                 </div>
             </div><!-- container -->
@@ -227,6 +227,11 @@
 
 
     function onMultiLabelCreateClick() {
+        var singlezoneid = null;
+        $('input[name="chkZoneList"]:checked').each(function () {
+            singlezoneid = $(this).val();
+        });
+
         var orderidList = [];
         $('input[name="chkSelect"]:checked').each(function () {
             var orderid = $(this).val();
@@ -239,11 +244,13 @@
         //    onlyorderidList.push($(this).val());
         //});
 
+        var deliverydate = $("#txtDeliverDate").val();
         if (orderidList.length > 0) {
             var data = {
                 OrderIds: orderidList,
                 StoreId: '@Model.StoreId',
-                DeliverDate: $("#txtDeliverDate").val()
+                DeliverDate: deliverydate,
+                SingleZoneId: singlezoneid
             }
     
              $.ajax({
@@ -252,10 +259,23 @@
                 //contentType: "application/json; charset=utf-8",
                 //dataType: "json",
                  data: data,
-                success: function (response) {
-                    $("#divInhouseLabel").html(response);
-                    //var b = $("#divInhouseLabel").html();
-                    newWindow_method_1();
+                 success: function (response) {
+                     if (response.match("\\.pdf$")) {
+                         var win = window.open(response, '_blank');
+                        if (win) {
+                            //Browser has allowed it to be opened
+                            win.focus();
+                        } else {
+                            //Browser has blocked it
+                            alert('Please allow popups for this website');
+                         }
+                     }
+                     else {
+                         $("#divmultiplelabel").html(response);
+                         //var b = $("#divInhouseLabel").html();
+                         newWindow_method_11();
+                     }
+                   
                  },
                  error: function (response) {
                      alert(response.responseText);
@@ -280,9 +300,9 @@
         }
     }
 
-    function newWindow_method_1() {
+    function newWindow_method_11() {
         var wi = window.open();
-        var html = $("#divInhouseLabel").html();
+        var html = $("#divmultiplelabel").html();
 
         $(wi.document.body).html(html);
         setTimeout(function () {
