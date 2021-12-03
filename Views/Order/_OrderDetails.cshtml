@@ -52,7 +52,14 @@
                             <td>@d.Qty</td>
                             <td>@d.CustomerName</td>
                             <td style="display:none" name="zoneid">@d.ZoneId</td>
-                            @*<td style="display:none" name="buyname">@d.name</td>
+                            @*<td style="display:none" name="storename">@d.storeName</td>
+                            <td style="display:none" name="storeaddress">@d.StoreAddress</td>
+                            <td style="display:none" name="storecity">@d.StoreCity</td>
+                            <td style="display:none" name="storestate">@d.StoreState</td>
+                            <td style="display:none" name="storecountry">@d.StoreCountry</td>
+                            <td style="display:none" name="storephoneno">@d.StorePhoneNo</td>
+                            <td style="display:none" name="storezipcode">@d.StoreZipcode</td>
+                            <td style="display:none" name="buyname">@d.name</td>
                             <td style="display:none" name="buyaddress">@d.address</td>
                             <td style="display:none" name="buyphoneno">@d.phoneNo</td>
                             <td style="display:none" name="buycity">@d.city</td>
@@ -89,7 +96,6 @@
 
     $(document).ready(function () {
         $('input[name="chkSelectMaster"]').change(function () {
-            debugger
             if (this.checked) {
                 $('input[name="chkSelect"]').prop("checked", true);
             }
