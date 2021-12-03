@@ -103,15 +103,15 @@
                                             </div>
                                         </div>
                                         @*<div class="btn-group">
-                                                <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
+                                    <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
-                                                <div class="dropdown-menu" x-placement="bottom-start">
-                                                    <a class="dropdown-item" href="#">USPA</a>
-                                                    <a class="dropdown-item" href="#">FedEx</a>
-                                                    <a class="dropdown-item" href="#">USA</a>
-                                                    <a class="dropdown-item" href="#">Zone 2</a>
-                                                </div>
-                                            </div>*@
+                                    <div class="dropdown-menu" x-placement="bottom-start">
+                                        <a class="dropdown-item" href="#">USPA</a>
+                                        <a class="dropdown-item" href="#">FedEx</a>
+                                        <a class="dropdown-item" href="#">USA</a>
+                                        <a class="dropdown-item" href="#">Zone 2</a>
+                                    </div>
+                                </div>*@
 
                                         <!-- <a href="#" class="btn btn-link btn-sm text-primary">Clear Selection</a> -->
 
@@ -137,7 +137,9 @@
 
                 </div>
 
+                <div id="divmultiplelabel">
 
+                </div>
             </div><!-- container -->
 
         </div>
@@ -227,13 +229,15 @@
     function onMultiLabelCreateClick() {
         var orderidList = [];
         $('input[name="chkSelect"]:checked').each(function () {
-            orderidList.push({ OrderId: $(this).val() });
+            var orderid = $(this).val();
+            var zoneid = $(this).closest('tr').find('td[name="zoneid"]').text();
+            orderidList.push({ OrderId: orderid, ZoneId: zoneid });
         });
 
-        var onlyorderidList = [];
-        $('input[name="chkSelect"]:checked').each(function () {
-            onlyorderidList.push($(this).val());
-        });
+        //var onlyorderidList = [];
+        //$('input[name="chkSelect"]:checked').each(function () {
+        //    onlyorderidList.push($(this).val());
+        //});
 
         if (orderidList.length > 0) {
             var data = {

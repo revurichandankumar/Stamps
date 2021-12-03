@@ -35,6 +35,7 @@ namespace OneposStamps.Models.CreateLabelRequest
         public string logoBase64String { get; set; }        
         public string barcodeBase64String { get; set; }        
         public string TodayDate { get; set; }        
+        public string ShipmentDate { get; set; }        
         public Shipment shipment { get; set; }
     }
     public class Shipment

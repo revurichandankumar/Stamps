@@ -46,6 +46,7 @@ namespace OneposStamps.Models
     public class OrderIds
     {
         public string OrderId { get; set; }
+        public string ZoneId { get; set; }
     }
 
 

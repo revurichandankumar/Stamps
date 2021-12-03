@@ -627,9 +627,10 @@
             var y = getdate.getFullYear();
 
             var someFormattedDate = mm + '-' + dd + '-' + y;
+            var DeliverDate = '@Model.DeliverDate';
             $("#span_Rate")[0].innerText = shippaid;
-            $("#spn_deliveryTime").val(someFormattedDate);
-            $("#spn_deliveryTime")[0].innerText = someFormattedDate;
+            $("#spn_deliveryTime").val(DeliverDate);
+            $("#spn_deliveryTime")[0].innerText = DeliverDate;
             return;
         }
         // from address data
@@ -1037,12 +1038,13 @@
 
         if ($('#drlService option:selected').attr('data-inhouse').toLowerCase() == "true" || $('#drlService option:selected').attr('data-inhouse').toLowerCase() == true) {
             var orderid = '@Model.OrderId';
+            var DeliverDate = '@Model.DeliverDate';
             $.ajax({
                 type: "POST",
                 url: "/Order/InhouseLabel",
                 //contentType: "application/json; charset=utf-8",
                 //dataType: "json",
-                data: { getlabel: jsonObjLabel, StoreId: storeid, OrderId: orderid },
+                data: { getlabel: jsonObjLabel, StoreId: storeid, OrderId: orderid, DeliveryDate: DeliverDate },
                 success: function (response) {
                     $("#divInhouseLabel").html(response);
                     //var b = $("#divInhouseLabel").html();
