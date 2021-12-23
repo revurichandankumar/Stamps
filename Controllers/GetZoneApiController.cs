@@ -101,6 +101,31 @@ namespace OneposStamps.Controllers
                         Response.City = (row["City"]).ToString();
                         Response.State= (row["State"]).ToString();
                         Response.Country= (row["Country"]).ToString();
+                        Response.City = (row["City"]).ToString();
+                        Response.State = (row["State"]).ToString();
+                        Response.Country = (row["Country"]).ToString();
+                        var Type = (row["Type"]).ToString();
+                        if (!string.IsNullOrWhiteSpace(Type))
+                        {
+                            if (Type.ToLower() == "box")
+                            {
+                                Response.Box = true;
+                                Response.Count = Convert.ToDecimal((row["Value"]));
+                                Response.Amount = 0;
+                            }
+                            else
+                            {
+                                Response.Box = false;
+                                Response.Count = 0;
+                                Response.Amount = Convert.ToDecimal((row["Value"]));
+                            }
+                        }
+                        else
+                        {
+                            Response.Box = false;
+                            Response.Count = 0;
+                            Response.Amount = 0;
+                        }
                     }
                     foreach (DataRow row in ds.Tables[1].Rows)
                     {

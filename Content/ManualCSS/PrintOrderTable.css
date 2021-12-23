@@ -1,13 +1,10 @@
-#tbl_PackingSlip {
-    width: 35em;
-}
-
 @media print {
-    @page tbl_PackingSlip {
-        size: 4.5in 7in;
+    @page clsInhouseMultiple {
+        size: 4.2in 5.8in;
+        margin: 0in 0.1in 0in 0.1in;
     }
 }
 
-#tbl_PackingSlip {
-    page: tbl_PackingSlip;
+.clsInhouseMultiple {
+    page: clsInhouseMultiple;
 }

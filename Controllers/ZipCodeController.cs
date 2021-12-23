@@ -153,7 +153,14 @@ namespace OneposStamps.Controllers
                         a.Zipcode = (row["zip"]).ToString();
                         Gz.Add(a);
                     }
-                    ZipData.ZipCodeList = Gz.Where(x => !sz.ZipCodeList.Select(a=> a.Zipcode).Contains(x.Zipcode)).ToList();
+                    if (sz.ZipCodeList != null)
+                    {
+                        ZipData.ZipCodeList = Gz.Where(x => !sz.ZipCodeList.Select(a=> a.Zipcode).Contains(x.Zipcode)).ToList();
+                    }
+                    else
+                    {
+                        ZipData.ZipCodeList = Gz.ToList();
+                    }
 
                     ZipData.GroupbyZipCodeList = ZipData.ZipCodeList.GroupBy(u => u.Name).Select(grp => grp.ToList()).ToList();
                 }

@@ -1,0 +1,87 @@
+﻿@model OneposStamps.Models.OrderDetails
+<head>
+    <link href="~/Content/ManualCSS/PrintOrderTable.css" rel="stylesheet" type="text/css" media="print" />
+    <style>
+        @@media print {
+            @@page clsInhouseMultiple {
+                size: 4.2in 5.8in;
+                margin: 0in 0.1in 0in 0.0in;
+            }
+        }
+
+        .clsInhouseMultiple {
+            page: clsInhouseMultiple;
+        }
+    </style>
+</head>
+
+<table name="tblInhouseMultiple" class="clsInhouseMultiple" id="tbl_PackingSlip" style="width: 500px; max-height:750px; border: 1px solid rgba(0,0,0,0.1);margin-top:5px;">
+    @*style=" display:flex;justify-content:center;align-items:center;height:100%;"*@
+    <tr>
+        <td style="vertical-align: top;" border-space="0" border-width="0" border-height="0">
+            <table style="border: 1px solid #e0e0e0; width: 100%; margin-bottom: 1rem; color: #7286a2; border-collapse: collapse; font-size: 14px; font-family:Arial, Helvetica, sans-serif;">
+
+                <tr>
+                    <td style="text-align: center; border: 1px solid #eaf0f7; padding: 0.75rem;" colspan="5">
+                        <img src="data:image/png;base64,@Model.LogoBase64String" alt="" style="margin-bottom: 5px;" width="100px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center;vertical-align: middle;padding-bottom: 5px;" colspan="5" id="td_picklist">
+                        <h3 style="margin: 0px;padding:10px 0px;">PICK LIST</h3>
+                        <strong style="font-size: 16px;">Order ID : @Model.OrderId</strong>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.75rem;"><strong>Ship To</strong></td>
+                    <td style="font-size: 14px; border: 1px solid #eaf0f7; padding: 0.75rem;" colspan="4" id="td_shiptodetails">
+                        <p>
+                            <span style="line-height:1.5em;">@Model.BuyersDetails.name</span>
+                            <br />
+                            <span style="line-height:1.5em;">@Model.BuyersDetails.address</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : " ")<span>@Model.BuyersDetails.city</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : " ")
+
+                            <span style="line-height:1.5em;">@Model.BuyersDetails.landMark</span>
+                            <br />
+                            <span style="line-height:1.5em;">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : " ")<span>@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : " ")<span>@Model.BuyersDetails.country</span>
+                            <br />
+                            <span style="line-height:1.5em;">@Model.BuyersDetails.phoneNo</span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="1">SKU</td>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="2">Item</td>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem; text-align:right; font-size: 14px;" colspan="1">QTY</td>
+                </tr>
+                @if (Model.OrderItemDetails != null && Model.OrderItemDetails.Count > 0)
+                {
+                    int m = 1;
+                    foreach (var od in Model.OrderItemDetails)
+                    {
+                <tr>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="1">@od.sku</td>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="2">@od.name</td>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem; text-align:right; font-size: 14px;" colspan="1">@od.OrderQty</td>
+                </tr>
+                        m++;
+                    }
+                }
+
+                <tr>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.75rem; text-align: center;" colspan="4" id="td_barcodeimg">
+                        @*<strong class="text-dark">Order ID #</strong>*@
+                        <br />
+                        <img src="@Model.BarcodeBase64String" alt="" id="img_barcodeimg" style="max-width: 100%;">
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #eaf0f7; padding: 0.75rem; text-align: center;" colspan="4" id="td_note">
+                        <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae natus, rem provident quis ut dolore ipsa voluptas et numquam reprehenderit.</small>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+

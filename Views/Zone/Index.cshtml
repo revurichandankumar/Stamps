@@ -102,6 +102,22 @@
 
 
 <script>
+
+    $(document).ready(function () {
+
+        $(document)
+            .ajaxStart(function () {
+                //$('body').append($loading.show());
+                $.loading.start('<img src = "/Content/Loader_Files/mylapore-loader.gif" />');
+
+            });
+        $(document)
+            .ajaxStop(function () {
+                $.loading.end();
+                //$loading.hide();
+            });
+    });
+
     function openaddzoneview() {
         var storeids = "@Model.StoreId";
         window.location.href = '@Url.Action("AddZone", "Zone")?StoreId=' + storeids;

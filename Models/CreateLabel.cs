@@ -30,13 +30,16 @@ namespace OneposStamps.Models.CreateLabelRequest
         //public string Height { get; set; }
         //public string ServiceType { get; set; }
         //public string Amount { get; set; }
-        //public string ZoneName { get; set; }
+        public string ZoneName { get; set; }
         public string OrderId { get; set; }        
+        public string ZoneId { get; set; }        
+        public string LabelCode { get; set; }        
         public string logoBase64String { get; set; }        
         public string barcodeBase64String { get; set; }        
         public string TodayDate { get; set; }        
         public string ShipmentDate { get; set; }        
         public Shipment shipment { get; set; }
+        public List<OrderItemDetail> orderItemDetail { get; set; }
     }
     public class Shipment
     {
@@ -97,7 +100,14 @@ namespace OneposStamps.Models.CreateLabelRequest
         public string TrackingNumber { get; set; }
         public string ServiceType { get; set; }
         public string ZoneName { get; set; }
+        public List<ShippingDetailsByOrder> shippingDetailsByOrdersList { get; set; } 
+    }
 
+    public class ShippingDetailsByOrder
+    {
+        public string ShipDate { get; set; }
+        public string TrackingNumber { get; set; }
+        public string ServiceType { get; set; }
     }
 
     public  class CreateMultipleLabelRequest

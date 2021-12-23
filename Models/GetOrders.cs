@@ -13,6 +13,7 @@ namespace OneposStamps.Models
     {
         public string OrderId { get; set; }
         public string ZoneId { get; set; }
+        public string ZoneName { get; set; }
         public DateTime? OrderDate { get; set; }
         public decimal OrderTotal { get; set; }
         public string CustomerName { get; set; }

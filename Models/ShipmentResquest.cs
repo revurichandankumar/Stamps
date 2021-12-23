@@ -51,4 +51,10 @@ namespace OneposStamps.Models.ShipmentRequest
         public List<Shipment> shipments { get; set; }
     }
 
+    public class ShipmentDetails
+    {
+        public string OrderId { get; set; }
+        public string ShipmentId { get; set; }
+    }
+
 }

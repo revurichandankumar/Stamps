@@ -1,8 +1,10 @@
 ﻿@model OneposStamps.Models.OrderDetails
 @{
+    /**/
+    int qtyCount = 0;
     ViewBag.Title = "OrderShipmentDetails";
 }
-<link href="~/Content/ManualCSS/PrintOrderTable.css" rel="stylesheet" type="text/css" media="print" />
+@*<link href="~/Content/ManualCSS/PrintOrderTable.css" rel="stylesheet" type="text/css" media="print" />*@
 
 <body data-layout="horizontal" class="dark-topbar">
 
@@ -30,7 +32,7 @@
                             <div class="col-sm-6">
                                 <div class="card border">
                                     <div class="bg-dark d-flex align-items-center">
-                                        <h5 class="order-card-title bg-gray">Order Summery</h5>
+                                        <h5 class="order-card-title bg-gray">Order Summary</h5>
                                         <div class="col text-right">
                                             <button class="btn btn-outline-light order-btn font-11">Edit</button>
                                         </div>
@@ -105,6 +107,7 @@
                                                         <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
                                                         <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
                                                         <li><a style="display:none" id="addverifyStatus" class="text-success font-12"><i class="fa fa-check-circle"></i> Address Verified</a></li>
+                                                        <li><a style="display:none" id="addverifyStatus2" class="text-danger font-12"><i class="fa fa-times-circle" style="color:red"></i><strong>Address Not Verified</strong></a></li>
                                                     </ul>
                                                     <a onclick="onverifyAdrress()" style="cursor:pointer" class="ml-auto text-primary">Verify Address</a>
                                                 </li>
@@ -145,6 +148,7 @@
                                                             <td>In Stock</td>
                                                             <td class="font-weight-bold mb-0">@("$")@od.TotalPrice</td>
                                                         </tr>
+                                                        <tr style="display:none"><td>@(qtyCount += Convert.ToInt16(od.OrderQty))</td></tr>
                                                     }
                                                 }
 
@@ -228,33 +232,10 @@
 
                                 </div>
                             </div>
-                            <div class="card-body p-0">
+                            <div class="card-body p-0" id="divShipDetail">
                                 <!-- <p class="text-muted text-center my-3">No Prior Shipments</p> -->
 
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Shipped</th>
-                                            <th>Tracking</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <p class="mb-0" id="p_ShipDate"></p>
-                                                <p class="mb-0" id="p_ShipZone"><i class="fa fa-arrow-right"></i></p>
-                                            </td>
-                                            <td>
-                                                <p class="mb-0 text-primary" id="p_TrackingId"></p>
-                                                <p class="mb-0 text-dark" id="p_Insurance"></p>
-                                            </td>
-                                            <td>
-                                                <i class="fa fa-check-circle text-success" id="ship_status" style="display:none"></i>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                @{ Html.RenderPartial("_ShipmentDetails", Model); }
                             </div>
                         </div>
 
@@ -417,74 +398,16 @@
 
     <div class="modal" tabindex="-1" role="dialog" id="packingslip">
         <div class="modal-dialog" role="document">
-            <div class="modal-content">
+            <div class="modal-content" style="width: 535px !important;">
                 <div class="modal-header">
                     <h5 class="modal-title">Packing Slip</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <table class="table table-bordered border" id="tbl_PackingSlip">
-                        @*style=" display:flex;justify-content:center;align-items:center;height:100%;"*@
-                        <tbody>
-                            <tr>
-                                <td colspan="5" class="text-center" id="td_logo">
-                                    <img src="@Model.LogoBase64String" alt="" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center" colspan="5" id="td_picklist">
-                                    <h3>PICK LIST</h3>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>Ship To</strong></td>
-                                <td colspan="4" id="td_shiptodetails">
-                                    <ul class="list-unstyled p-0">
-                                        <li><span id="liBuyName">@Model.BuyersDetails.name</span></li>
-                                        <li><span id="liBuyAddress">@Model.BuyersDetails.address</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")<span id="liBuyCity">@Model.BuyersDetails.city</span>@(string.IsNullOrEmpty(Model.BuyersDetails.city) ? null : ", ")</li>
-                                        <li><span id="liBuyLandmark">@Model.BuyersDetails.landMark</span></li>
-                                        <li><span id="liBuyState">@Model.BuyersDetails.state</span>@(string.IsNullOrEmpty(Model.BuyersDetails.zipcode) ? null : ", ")<span id="liBuyZipcode">@Model.BuyersDetails.zipcode</span>@(string.IsNullOrEmpty(Model.BuyersDetails.country) ? null : ", ")<span id="liBuyCountry">@Model.BuyersDetails.country</span></li>
-                                        <li><span id="liBuyPhone">@Model.BuyersDetails.phoneNo</span></li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><strong>S.No</strong></td>
-                                <td><strong>Item</strong> </td>
-                                <td><strong>SKU</strong> </td>
-                                <td><strong>QTY</strong> </td>
-                            </tr>
-                            @if (Model.OrderItemDetails != null && Model.OrderItemDetails.Count > 0)
-                            {
-                                int m = 1;
-                                foreach (var od in Model.OrderItemDetails)
-                                {
-                                    <tr>
-                                        <td>@m</td>
-                                        <td>@od.name</td>
-                                        <td>@od.sku</td>
-                                        <td>@od.OrderQty</td>
-                                    </tr>
-                                    m++;
-                                }
-                            }
-
-                            <tr>
-                                <td class="text-center" colspan="4" id="td_barcodeimg">
-                                    <strong class="text-dark">Order ID #</strong>
-                                    <br />
-                                    <img src="@Model.BarcodeBase64String" alt="" id="img_barcodeimg" style="max-width: 100%;">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center" colspan="4" id="td_note">
-                                    <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae natus, rem provident quis ut dolore ipsa voluptas et numquam reprehenderit.</small>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-body" id="divtbl_PackingSlip">
+                    @{ Html.RenderPartial("_PackingSlipDetails", Model); }
+                   
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default border" data-dismiss="modal">Cancel</button>
@@ -514,13 +437,33 @@
             $('#drlService option[value=' + SelectedServiceId + ']').attr("selected", "selected");
         }
 
+       $(document)
+           .ajaxStart(function () {
+               //$('body').append($loading.show());
+               $.loading.start('<img src = "/Content/Loader_Files/mylapore-loader.gif" />');
 
+           });
+       $(document)
+           .ajaxStop(function () {
+               $.loading.end();
+               //$loading.hide();
+           });
     });
 
     $('#btncreatepdf').click(function () {
-        $("#tbl_PackingSlip").printThis({
-
-        });
+        var wi = window.open();
+        var html2 = $("#divtbl_PackingSlip").html();
+      
+        $(wi.document.body).append(html2);
+        setTimeout(function () {
+            wi.document.title = "Packing Slip";
+            wi.print();
+        }, 200);
+        //$("#tbl_PackingSlip").printThis({
+        //    importCSS: true,
+        //    importStyle: true,//thrown in for extra measure
+        //    loadCSS: "~/Content/ManualCSS/PrintOrderTable.css"
+        //});
     });
 
     function openorderdetailsview() {
@@ -994,7 +937,33 @@
             storeid = $("#hfStoreId").val();
         }
 
+        var shipmentdate = null;
+        if ($("#spn_deliveryTime").val() != null && $("#spn_deliveryTime").val() != "" && $("#spn_deliveryTime").val() != undefined) {
+            shipmentdate = $("#spn_deliveryTime").val();
+        }
+
+        var orderid = null;
+
+        if ('@Model.OrderId' != null && '@Model.OrderId' != "" && '@Model.OrderId' != undefined) {
+            orderid = '@Model.OrderId';
+        }
+
+        var selectedZoneId = null;
+
+        if ('@Model.SelectedZoneId' != null && '@Model.SelectedZoneId' != "" && '@Model.SelectedZoneId' != undefined) {
+            selectedZoneId = '@Model.SelectedZoneId';
+        }
+
+         var selectedZoneName = null;
+
+        if ('@Model.SelectedZoneName' != null && '@Model.SelectedZoneName' != "" && '@Model.SelectedZoneName' != undefined) {
+            selectedZoneName = '@Model.SelectedZoneName';
+        }
+
         var jsonObjLabel = {
+            "ShipmentDate": shipmentdate,
+            "OrderId": orderid,
+            "ZoneId": selectedZoneId,
             "shipment": {
                 "service_code": service,
                 "ship_to": {
@@ -1047,6 +1016,43 @@
                 data: { getlabel: jsonObjLabel, StoreId: storeid, OrderId: orderid, DeliveryDate: DeliverDate },
                 success: function (response) {
                     $("#divInhouseLabel").html(response);
+                    //var zonename = null;
+                    //if ($("#drlService").val() != null && $("#drlService").val() != "" && $("#drlService").val() != undefined) {
+                    //    zonename  = $("#drlService").val();
+                    //}
+                    var sertype = null;
+                    if ($('#drlService option:selected').text() != null && $('#drlService option:selected').text() != "" && $('#drlService option:selected').text() != undefined) {
+                        sertype = $('#drlService option:selected').text();
+                    }
+
+                    var t = "";
+                    t += '<tr>' +
+                        '<td>' +
+                        '<p class="mb-0" name="p_ShipDate">' + $("#spn_deliveryTime").val() + '</p>' +
+                        '<p class="mb-0" name="p_ShipZone"><i class="fa fa-arrow-right">' + selectedZoneName + '</i></p>' +
+                        '</td>' +
+                        '<td>' +
+                        '<p class="mb-0 text-primary" name="p_TrackingId">' + orderid + '</p>' +
+                        '<p class="mb-0 text-dark" name="p_Insurance">' + sertype + '</p>' +
+                        '</td>' +
+                        '<td>' +
+                        '<i class="fa fa-check-circle text-success" name="ship_status"></i>' +
+                        '</td>' +
+                        '</tr>';
+            $('#tbl_shipDetail tbody').empty();
+            $('#tbl_shipDetail tbody').append(t);
+
+                    @*$("#p_ShipDate").val($("#spn_deliveryTime").val());
+                    $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
+                    $("#p_ShipZone").val("");
+                    $("#p_ShipZone")[0].innerText = "";
+                    var orderid = '@Model.OrderId';
+                    $("#p_TrackingId").val(orderid);
+                    $("#p_TrackingId")[0].innerText = orderid;
+                    //var service = $('#drlService option:selected').text();
+                    $("#p_Insurance").val(service);
+                    $("#p_Insurance")[0].innerText = service;
+                    $("#ship_status").attr("style", "display:inline");*@
                     //var b = $("#divInhouseLabel").html();
                     newWindow_method_1();
 
@@ -1097,31 +1103,68 @@
                         var res = response; //spn_deliveryTime
                         //$("#spn_deliveryTime").val(res.DeliveryDate);
                         //$("#spn_deliveryTime")[0].innerText = res.DeliveryDate;
-                        $("#p_ShipDate").val($("#spn_deliveryTime").val());
-                        $("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
-                        $("#p_ShipZone").val(res.ZoneName);
-                        $("#p_ShipZone")[0].innerText = res.ZoneName;
-                        $("#p_TrackingId").val(res.TrackingNumber);
-                        $("#p_TrackingId")[0].innerText = res.TrackingNumber;
-                        $("#p_Insurance").val(res.ServiceType);
-                        $("#p_Insurance")[0].innerText = res.ServiceType;
-                        $("#ship_status").attr("style", "display:inline");
+                        var t = "";
+                        if (res.shippingDetailsByOrdersList.length > 0) {
+                            $.each(res.shippingDetailsByOrdersList, function (i, v) {
+                                var shipdate = '';
+                                var zonename = '';
+                                var tranckingnumber = '';
+                                var servicetype = '';
+                                if (v.ShipDate != null && v.ShipDate != "" && v.ShipDate != undefined) {
+                                    shipdate = v.ShipDate;
+                                }
+                                if (res.ZoneName != null && res.ZoneName != "" && res.ZoneName != undefined) {
+                                    zonename = res.ZoneName;
+                                }
+                                if (v.TrackingNumber != null && v.TrackingNumber != "" && v.TrackingNumber != undefined) {
+                                    tranckingnumber = v.TrackingNumber;
+                                }
+                                if (v.ServiceType != null && v.ServiceType != "" && v.ServiceType != undefined) {
+                                    servicetype = v.ServiceType;
+                                }
+                                t += '<tr>' +
+                                        '<td>' +
+                                            '<p class="mb-0" name="p_ShipDate">' + shipdate + '</p>' +
+                                            '<p class="mb-0" name="p_ShipZone"><i class="fa fa-arrow-right">' + zonename+'</i></p>' +
+                                        '</td>' +
+                                        '<td>' +
+                                            '<p class="mb-0 text-primary" name="p_TrackingId">' + tranckingnumber + '</p>' +
+                                            '<p class="mb-0 text-dark" name="p_Insurance">' + servicetype +'</p>' +
+                                        '</td>' +
+                                        '<td>' +
+                                            '<i class="fa fa-check-circle text-success" name="ship_status"></i>' +
+                                        '</td>' +
+                                    '</tr>';
+                            });
+                            $('#tbl_shipDetail tbody').empty();
+                            $('#tbl_shipDetail tbody').append(t);
+                        }
 
-                        if (res.Url != null && res.Url != '' && res.Url != undefined) {
+                        //$("#p_ShipDate").val($("#spn_deliveryTime").val());
+                        //$("#p_ShipDate")[0].innerText = $("#spn_deliveryTime").val();
+                        //$("#p_ShipZone").val(res.ZoneName);
+                        //$("#p_ShipZone")[0].innerText = res.ZoneName;
+                        //$("#p_TrackingId").val(res.TrackingNumber);
+                        //$("#p_TrackingId")[0].innerText = res.TrackingNumber;
+                        //$("#p_Insurance").val(res.ServiceType);
+                        //$("#p_Insurance")[0].innerText = res.ServiceType;
+                        //$("#ship_status").attr("style", "display:inline");
+
+                        @*if (res.Url != null && res.Url != '' && res.Url != undefined) {
                             var orderid = '@Model.OrderId';
                             window.location = '/Order/DownloadPDF?fileName=' + orderid;
                         }
                         else {
                             alert("Unable to download Label");
-                        }
-                        //var win = window.open(response.Url, '_blank');
-                        //if (win) {
-                        //    //Browser has allowed it to be opened
-                        //    win.focus();
-                        //} else {
-                        //    //Browser has blocked it
-                        //    alert('Please allow popups for this website');
-                        //    }
+                        }*@
+                        var win = window.open(response.Url, '_blank');
+                        if (win) {
+                            //Browser has allowed it to be opened
+                            win.focus();
+                        } else {
+                            //Browser has blocked it
+                            alert('Please allow popups for this website');
+                            }
                     }
                 },
                 error: function (response) {
@@ -1134,7 +1177,8 @@
     function newWindow_method_1() {
         var wi = window.open();
         var html = $("#divInhouseLabel").html();
-
+        var html2 = $("#divtbl_PackingSlip").html();
+        //html.append($("#tbl_PackingSlip").html());
         //var w = window.open('', 'divInhouseLabel', 'width=288,height=432');
         //var html = $("#divInhouseLabel").html();
         //$(w.document.body).html(html);
@@ -1147,8 +1191,18 @@
         //    css: 'PrintOrderTable.css' // your css
         //});
 
+        @*var qtycount = '@qtyCount';*@
+
         $(wi.document.body).html(html);
+        $(wi.document.body).append(html2);
+
+        //for (var i = 8; i <= qtycount && qtycount != 8; i+=8) {
+        //    $(wi.document.body).append(html);
+        //    $(wi.document.body).append(html2);
+        //}    
+        
         setTimeout(function () {
+            wi.document.title = "InHouseLabels";
             wi.print();
         }, 200);
     }

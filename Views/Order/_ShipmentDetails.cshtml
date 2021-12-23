@@ -1,0 +1,48 @@
+﻿@model OneposStamps.Models.OrderDetails
+
+<table class="table" id="tbl_shipDetail">
+    <thead>
+        <tr>
+            <th>Shipped</th>
+            <th>Tracking</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.shippingDetailsByOrdersList != null && Model.shippingDetailsByOrdersList.Count > 0)
+        {
+            foreach (var sdo in Model.shippingDetailsByOrdersList)
+            {
+                <tr>
+                    <td>
+                        <p class="mb-0" name="p_ShipDate">@sdo.ShipDate</p>
+                        <p class="mb-0" name="p_ShipZone"><i class="fa fa-arrow-right"></i>@Model.SelectedZoneName</p>
+                    </td>
+                    <td>
+                        <p class="mb-0 text-primary" name="p_TrackingId">@sdo.TrackingNumber</p>
+                        <p class="mb-0 text-dark" name="p_Insurance">@sdo.ServiceType</p>
+                    </td>
+                    <td>
+                        <i class="fa fa-check-circle text-success" name="ship_status"></i>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>
+                    <p class="mb-0" name="p_ShipDate"></p>
+                    <p class="mb-0" name="p_ShipZone"><i class="fa fa-arrow-right"></i></p>
+                </td>
+                <td>
+                    <p class="mb-0 text-primary" name="p_TrackingId"></p>
+                    <p class="mb-0 text-dark" name="p_Insurance"></p>
+                </td>
+                <td>
+                    <i class="fa fa-check-circle text-success" name="ship_status" style="display:none"></i>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

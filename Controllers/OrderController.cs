@@ -33,7 +33,7 @@ using NReco.PdfGenerator;
 namespace OneposStamps.Controllers
 {
     public class OrderController : BaseController
-    {
+    {        
         // GET: Order
 
         public ActionResult OrderDetails(string StoreId, string DeliverDate = "", string redirectedDeliverDate = "")
@@ -120,8 +120,9 @@ namespace OneposStamps.Controllers
                 GetordersData value = new GetordersData();
                 value.OrderId = (row["OrderId"]).ToString();
                 value.ZoneId = (row["ZoneId"]).ToString();
+                value.ZoneName = (row["ZoneName"]).ToString();
                 value.OrderDate = (row["OrderDate"]) != null ? Convert.ToDateTime(row["OrderDate"]) : (DateTime?)null;
-                value.OrderTotal = (row["OrderTotal"]) != null ? Convert.ToDecimal(row["OrderTotal"]) : 0;
+                value.OrderTotal = (row["OrderTotal"]) != null ? !string.IsNullOrEmpty(row["OrderTotal"].ToString()) ? Convert.ToDecimal(row["OrderTotal"]) : 0 : 0;
                 value.CustomerName = (row["CustomerName"]).ToString();
                 value.Qty = Convert.ToDecimal(row["Qty"]);
                 value.storeName = (row["StoreName"]).ToString();
@@ -402,6 +403,41 @@ namespace OneposStamps.Controllers
                 getlabel.TodayDate = DateTime.Now.ToString("MM-dd-yyyy");
                 getlabel.ShipmentDate = DeliveryDate;
                 getlabel.OrderId = OrderId;
+
+                if (!string.IsNullOrEmpty(OrderId))
+                {
+                    DataSet ds = db.GetOrderLabelCode("USP_GetOrderLabelCode", OrderId);
+                    if (ds != null)
+                    {
+                        if (ds.Tables.Count > 0)
+                        {
+                            if (ds.Tables[0].Rows.Count > 0)
+                            {
+                                foreach (DataRow row in ds.Tables[0].Rows)
+                                {
+                                    getlabel.LabelCode = (row["LabelCode"]).ToString();
+                                }
+                            }
+                            else
+                            {
+                                getlabel.LabelCode = "";
+                            }
+                        }
+                        else
+                        {
+                            getlabel.LabelCode = "";
+                        }
+                    }
+                    else
+                    {
+                        getlabel.LabelCode = "";
+                    }
+                }
+                else
+                {
+                    getlabel.LabelCode = "";
+                }
+
                 if (StoreId == "d73add35-876a-4c82-82f9-9591baf2c20d")
                 {
                     path = Server.MapPath("~/Content/assets/images/logo.png");
@@ -446,6 +482,32 @@ namespace OneposStamps.Controllers
 
                     throw ex;
                 }
+                //List<OneposStamps.Models.BatchLabelResponse.TrackNumberlist> trackNumberlists = new List<Models.BatchLabelResponse.TrackNumberlist>();
+                //OneposStamps.Models.BatchLabelResponse.TrackNumberlist trackNumberlist = new Models.BatchLabelResponse.TrackNumberlist();
+                //trackNumberlist.shipmentid = value1.shipment_id;
+                //trackNumberlist.trackingnumber = value1.tracking_number;
+                ////trackNumberlist.ShipmentDate = DateTime.ParseExact(value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss"), "MM-dd-yyyy HH:mm:ss", null);
+                //trackNumberlist.ShipmentDate = DateTime.ParseExact(getlabel.ShipmentDate, "MM-dd-yyyy HH:mm:ss", null);
+                //trackNumberlist.ServiceType = value1.service_code;
+                //trackNumberlist.LabelId = value1.label_id;
+                //trackNumberlist.LabelUrl = label.pdf;
+                //trackNumberlists.Add(trackNumberlist);
+
+                //var list = (from a in trackNumberlists
+                //            select new
+                //            {
+                //                OrderId = getlabel.OrderId,
+                //                ShipmentId = a.shipmentid,
+                //                ShipmentDate = a.ShipmentDate,
+                //                ServiceType = a.ServiceType,
+                //                Trackingnumber = a.trackingnumber,
+                //                StoreId = StoreId,
+                //                labelId = a.LabelId,
+                //                batch_Id = "",
+                //                LabelUrl = a.LabelUrl
+                //            }).ToList();
+                //var jsondata = JsonConvert.SerializeObject(list);
+                //DataSet ds = db.InsertShipDetails("USP_InsertShipmentDetails", jsondata);
             }
             catch (Exception)
             {
@@ -512,13 +574,13 @@ namespace OneposStamps.Controllers
                 orderdetais.StoreCountry = (row["Country"]).ToString();
                 orderdetais.StorePhoneNo = (row["PhoneNo"]).ToString();
                 orderdetais.StoreZipcode = (row["ZipCode"]).ToString();
-                orderdetais.orderDate = Convert.ToDateTime(row["OrderDate"]);
-                orderdetais.paidDate = Convert.ToDateTime(row["PaidDate"]);
-                orderdetais.shippingPaid = Convert.ToDecimal(row["DeliveryChargeAmt"]);
-                orderdetais.taxPaid = Convert.ToDecimal(row["TaxPaid"]);
-                orderdetais.productTotal = Convert.ToDecimal(row["ProductTotal"]);
-                orderdetais.totalOrder = Convert.ToDecimal(row["TotalOrder"]);
-                orderdetais.totalPaid = Convert.ToDecimal(row["TotalPaid"]);
+                orderdetais.orderDate = row["OrderDate"] != null ? !string.IsNullOrEmpty(row["OrderDate"].ToString()) ? Convert.ToDateTime(row["OrderDate"]) : (DateTime?)null : (DateTime?)null;
+                orderdetais.paidDate = row["PaidDate"] != null ? !string.IsNullOrEmpty(row["PaidDate"].ToString()) ? Convert.ToDateTime(row["PaidDate"]) : (DateTime?)null : (DateTime?)null;
+                orderdetais.shippingPaid = row["DeliveryChargeAmt"] != null ? !string.IsNullOrEmpty(row["DeliveryChargeAmt"].ToString()) ? Convert.ToDecimal(row["DeliveryChargeAmt"]) : 0m : 0m;
+                orderdetais.taxPaid = row["TaxPaid"] != null ? !string.IsNullOrEmpty(row["TaxPaid"].ToString()) ? Convert.ToDecimal(row["TaxPaid"]) : 0m : 0m;
+                orderdetais.productTotal = row["ProductTotal"] != null ? !string.IsNullOrEmpty(row["ProductTotal"].ToString()) ? Convert.ToDecimal(row["ProductTotal"]) : 0m : 0m;
+                orderdetais.totalOrder = row["TotalOrder"] != null ? !string.IsNullOrEmpty(row["TotalOrder"].ToString()) ? Convert.ToDecimal(row["TotalOrder"]) : 0m : 0m;
+                orderdetais.totalPaid = row["TotalPaid"] != null ? !string.IsNullOrEmpty(row["TotalPaid"].ToString()) ? Convert.ToDecimal(row["TotalPaid"]) : 0m : 0m;
                 orderdetais.holdUntil = "N/A";
                 orderdetais.TransactionId = (row["TransactionId"]).ToString();
                 orderdetais.OrderNotes = ds.Tables[0].Columns.Contains("OrderNotes") ? (row["OrderNotes"]).ToString() : null;
@@ -628,31 +690,88 @@ namespace OneposStamps.Controllers
             if (!string.IsNullOrWhiteSpace(od.SelectedZoneId))
             {
                 Zonename = od.ZoneList.Where(x => x.ZoneId == od.SelectedZoneId).Select(y => y.ZoneName).FirstOrDefault();
-                if (Zonename.ToLower() == "Countrywide".ToLower())
+                od.SelectedZoneName = Zonename;
+                if (Zonename != null)
                 {
-                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_next_day_air_saver").Select(y => y.Id).FirstOrDefault();
-                }
-                else if (Zonename.ToLower() == "SoCal".ToLower())
-                {
-                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
-                }
-                else if (Zonename.ToLower() == "ME Van".ToLower())
-                {
-                    od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "mylapore_express").Select(y => y.Id).FirstOrDefault();
-                }
+                    if (Zonename.ToLower() == "Countrywide".ToLower())
+                    {
+                        od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_next_day_air_saver").Select(y => y.Id).FirstOrDefault();
+                    }
+                    else if (Zonename.ToLower() == "SoCal".ToLower())
+                    {
+                        od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
+                    }
+                    else if (Zonename.ToLower() == "ME Van".ToLower())
+                    {
+                        od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "mylapore_express").Select(y => y.Id).FirstOrDefault();
+                    }
+                }               
             }
             else
             {
                 od.SelectedServiceId = od.ServiceList.Where(x => x.Service_Code == "ups_ground").Select(y => y.Id).FirstOrDefault();
             }
 
-            string logoimagestring = null;
+            DataSet dsShipmentDetails = db.GetShipmentDetail("USP_GetShipmentDetail", OrderId, StoreId);
+
+            if (dsShipmentDetails.Tables.Count > 0)
+            {
+                List<Models.CreateLabelRequest.ShippingDetailsByOrder> sdo = new List<Models.CreateLabelRequest.ShippingDetailsByOrder>();
+                foreach (DataRow row in dsShipmentDetails.Tables[0].Rows)
+                {
+                    Models.CreateLabelRequest.ShippingDetailsByOrder a = new Models.CreateLabelRequest.ShippingDetailsByOrder();
+                    a.ShipDate = (row["ShipmentDate"]).ToString();
+                    a.TrackingNumber = (row["TrackingNumber"]).ToString();
+                    a.ServiceType = (row["ServiceType"]).ToString();
+
+                    sdo.Add(a);
+                }
+                od.shippingDetailsByOrdersList = sdo;
+            }
+
+            string path = null;
             string barcodeimagestring = null;
 
-            logoimagestring = LoadImageForStore();
+            if (StoreId == "d73add35-876a-4c82-82f9-9591baf2c20d")
+            {
+                path = Server.MapPath("~/Content/assets/images/logo.png");
+            }
+            else if (StoreId == "f575a340-44a8-4f68-b5fc-efba3350a264")
+            {
+                path = Server.MapPath("~/Content/StoreLogo/png/Mylapore Logo – 2.png");
+            }
+            else if (StoreId == "2cfb7b87-3e7d-486f-b14a-356730689fbd")
+            {
+                path = Server.MapPath("~/Images/logo-pdf.png");
+            }
+            try
+            {
+                using (System.Drawing.Image image = System.Drawing.Image.FromFile(path))
+                {
+                    //Bitmap b = new Bitmap(image);
+
+                    //Image i = resizeImage(b, new Size(134, 30));
+
+                    using (MemoryStream m = new MemoryStream())
+                    {
+                        image.Save(m, image.RawFormat);
+                        byte[] imageBytes = m.ToArray();
+
+                        // Convert byte[] to Base64 String
+                        od.LogoBase64String = Convert.ToBase64String(imageBytes);
+                        //return base64String;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            //logoimagestring = LoadImageForStore();
             barcodeimagestring = LoadImageForBarode(od.OrderId);
 
-            od.LogoBase64String = logoimagestring;
+            //od.LogoBase64String = logoimagestring;
             od.BarcodeBase64String = barcodeimagestring;
             AddressVerifyRequest addressrequest = new AddressVerifyRequest();
             addressrequest.name = ShippingDetails.name;
@@ -666,6 +785,55 @@ namespace OneposStamps.Controllers
 
             return View("OrderShipmentDetails", od);
 
+        }
+
+        public ActionResult GetShipDetail(string StoreId, string OrderId = "", string ZoneId = "")
+        {
+            OrderDetails od = new OrderDetails();
+            DataSet dsShipmentDetails = db.GetShipmentDetail("USP_GetShipmentDetail", OrderId, StoreId);
+
+            if (dsShipmentDetails.Tables.Count > 0)
+            {
+                List<Models.CreateLabelRequest.ShippingDetailsByOrder> sdo = new List<Models.CreateLabelRequest.ShippingDetailsByOrder>();
+                foreach (DataRow row in dsShipmentDetails.Tables[0].Rows)
+                {
+                    Models.CreateLabelRequest.ShippingDetailsByOrder a = new Models.CreateLabelRequest.ShippingDetailsByOrder();
+                    a.ShipDate = (row["ShipmentDate"]).ToString();
+                    a.TrackingNumber = (row["TrackingNumber"]).ToString();
+                    a.ServiceType = (row["ServiceType"]).ToString();
+
+                    sdo.Add(a);
+                }
+                od.shippingDetailsByOrdersList = sdo;
+            }
+
+            if (!string.IsNullOrWhiteSpace(ZoneId))
+            {
+                DataSet dsZoneList = db.GetMysqlDataSet("USP_GetZones", StoreId);
+
+                if (dsZoneList.Tables.Count > 0)
+                {
+                    List<Zonelist> zl = new List<Zonelist>();
+                    foreach (DataRow row in dsZoneList.Tables[0].Rows)
+                    {
+                        Zonelist a = new Zonelist();
+                        a.ZoneId = (row["Id"]).ToString();
+                        a.Carrier = (row["Carrier"]).ToString();
+                        a.ZoneName = (row["ZoneName"]).ToString();
+
+                        zl.Add(a);
+                    }
+
+                    var Zonename = string.Empty;
+                    if (zl.Count > 0)
+                    {
+                        Zonename = zl.Where(x => x.ZoneId == ZoneId).Select(y => y.ZoneName).FirstOrDefault();
+                    }
+                    od.SelectedZoneName = Zonename;
+                }
+            }
+
+            return PartialView("_ShipmentDetails", od);
         }
 
         AddressVerifyResponse Addressresponse = new AddressVerifyResponse();
@@ -816,78 +984,122 @@ namespace OneposStamps.Controllers
                 //getlabel.shipdate = "2021-10-11";
                 //DateTime shipDate = DateTime.Now.AddDays(1);
                 //getlabel.shipdate = shipDate.ToString("yyyy/MM/dd");
-                OneposStamps.Models.CreateLabelRequest.CreateLabelResponse res = GetLabel(getlabel, dbdetails.IntegrationId);
-                //DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
-                //res.DeliveryDate = del.ToString("MM/dd/yyyy");
-                //res.ShipDate = shipDate.ToString("MM/dd/yyyy");
-                //res.ZoneName = getlabel.ZoneName;
-                //return Json(res);
+                OneposStamps.Models.CreateLabelRequest.CreateLabelResponse res = GetLabel(getlabel, dbdetails.IntegrationId, StoreId);
 
-                Session["pdfData"] = null;
-                if (res.Url != null)
+                DataSet dsShipmentDetails = db.GetShipmentDetail("USP_GetShipmentDetail",getlabel.OrderId, StoreId);
+
+                if (dsShipmentDetails.Tables.Count > 0)
                 {
-                    string url = res.Url;
-
-                    string pdf_page_size = PdfPageSize.A4.ToString();
-                    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
-                        pdf_page_size, true);
-
-                    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
-                    PdfPageOrientation pdfOrientation =
-                        (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
-                        pdf_orientation, true);
-
-                    int webPageWidth = 1024;
-                    try
+                    List<Models.CreateLabelRequest.ShippingDetailsByOrder> sdo = new List<Models.CreateLabelRequest.ShippingDetailsByOrder>();
+                    foreach (DataRow row in dsShipmentDetails.Tables[0].Rows)
                     {
-                        //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                        Models.CreateLabelRequest.ShippingDetailsByOrder a = new Models.CreateLabelRequest.ShippingDetailsByOrder();
+                        a.ShipDate = (row["ShipmentDate"]).ToString();
+                        a.TrackingNumber = (row["TrackingNumber"]).ToString();
+                        a.ServiceType = (row["ServiceType"]).ToString();
+
+                        sdo.Add(a);
                     }
-                    catch { }
-
-                    int webPageHeight = 0;
-                    try
-                    {
-                        //webPageHeight = Convert.ToInt32(TxtHeight.Text);
-                    }
-                    catch { }
-
-                    // instantiate a html to pdf converter object
-                    HtmlToPdf converter = new HtmlToPdf();
-
-                    // set converter options
-                    converter.Options.PdfPageSize = pageSize;
-                    converter.Options.PdfPageOrientation = pdfOrientation;
-                    converter.Options.WebPageWidth = webPageWidth;
-                    converter.Options.WebPageHeight = webPageHeight;
-                    converter.Options.MarginLeft = 150;
-                    //converter.Options.MarginRight = 10;
-                    converter.Options.MarginTop = 50;
-                    //converter.Options.MarginBottom = 20;
-
-                    // create a new pdf document converting an url
-                    //PdfDocument doc = converter.ConvertUrl(url);
-                    string pdfFilePath = url;
-                    WebClient myClient = new WebClient();
-                    byte[] bytes = myClient.DownloadData(url);
-                    //byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
-                    // save pdf document
-                    // byte[] pdf = doc.Save();
-
-                    // close pdf document
-                    //doc.Close();
-                    Session["pdfData"] = bytes;
-                    //// return resulted pdf document
-                    //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-                    //fileResult.FileDownloadName = "Document.pdf";
-
-
-                    //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
-                    //return Json(pdf);
-                    //return File(pdf, "application/pdf");
-                    //return fileResult;
-                    //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+                    res.shippingDetailsByOrdersList = sdo;
                 }
-                return Json(res);
+
+                if (!string.IsNullOrWhiteSpace(getlabel.ZoneId))
+                {
+                    DataSet dsZoneList = db.GetMysqlDataSet("USP_GetZones", StoreId);
+
+                    if (dsZoneList.Tables.Count > 0)
+                    {
+                        List<Zonelist> zl = new List<Zonelist>();
+                        foreach (DataRow row in dsZoneList.Tables[0].Rows)
+                        {
+                            Zonelist a = new Zonelist();
+                            a.ZoneId = (row["Id"]).ToString();
+                            a.Carrier = (row["Carrier"]).ToString();
+                            a.ZoneName = (row["ZoneName"]).ToString();
+
+                            zl.Add(a);
+                        }
+
+                        var Zonename = string.Empty;
+                        if (zl.Count > 0)
+                        {
+                            Zonename = zl.Where(x => x.ZoneId == getlabel.ZoneId).Select(y => y.ZoneName).FirstOrDefault();
+                        }
+                        res.ZoneName = Zonename;
+                    }
+                }                               
+
+                    //DateTime del = DateTime.ParseExact(res.DeliveryDate, "yyyy/MM/dd", null);
+                    //res.DeliveryDate = del.ToString("MM/dd/yyyy");
+                    //res.ShipDate = shipDate.ToString("MM/dd/yyyy");
+                    //res.ZoneName = getlabel.ZoneName;
+                    //return Json(res);
+
+                    //Session["pdfData"] = null;
+                    //if (res.Url != null)
+                    //{
+                    //    string url = res.Url;
+
+                    //    string pdf_page_size = PdfPageSize.A4.ToString();
+                    //    PdfPageSize pageSize = (PdfPageSize)Enum.Parse(typeof(PdfPageSize),
+                    //        pdf_page_size, true);
+
+                    //    string pdf_orientation = PdfPageOrientation.Portrait.ToString();
+                    //    PdfPageOrientation pdfOrientation =
+                    //        (PdfPageOrientation)Enum.Parse(typeof(PdfPageOrientation),
+                    //        pdf_orientation, true);
+
+                    //    int webPageWidth = 1024;
+                    //    try
+                    //    {
+                    //        //webPageWidth = Convert.ToInt32(TxtWidth.Text);
+                    //    }
+                    //    catch { }
+
+                    //    int webPageHeight = 0;
+                    //    try
+                    //    {
+                    //        //webPageHeight = Convert.ToInt32(TxtHeight.Text);
+                    //    }
+                    //    catch { }
+
+                    //    // instantiate a html to pdf converter object
+                    //    HtmlToPdf converter = new HtmlToPdf();
+
+                    //    // set converter options
+                    //    converter.Options.PdfPageSize = pageSize;
+                    //    converter.Options.PdfPageOrientation = pdfOrientation;
+                    //    converter.Options.WebPageWidth = webPageWidth;
+                    //    converter.Options.WebPageHeight = webPageHeight;
+                    //    converter.Options.MarginLeft = 150;
+                    //    //converter.Options.MarginRight = 10;
+                    //    converter.Options.MarginTop = 50;
+                    //    //converter.Options.MarginBottom = 20;
+
+                    //    // create a new pdf document converting an url
+                    //    //PdfDocument doc = converter.ConvertUrl(url);
+                    //    string pdfFilePath = url;
+                    //    WebClient myClient = new WebClient();
+                    //    byte[] bytes = myClient.DownloadData(url);
+                    //    //byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
+                    //    // save pdf document
+                    //    // byte[] pdf = doc.Save();
+
+                    //    // close pdf document
+                    //    //doc.Close();
+                    //    Session["pdfData"] = bytes;
+                    //    //// return resulted pdf document
+                    //    //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                    //    //fileResult.FileDownloadName = "Document.pdf";
+
+
+                    //    //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                    //    //return Json(pdf);
+                    //    //return File(pdf, "application/pdf");
+                    //    //return fileResult;
+                    //    //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+                    //}
+                    return Json(res);
             }
             catch (Exception ex)
             {
@@ -899,6 +1111,11 @@ namespace OneposStamps.Controllers
         {
             string fullFileName = fileName + "_" + DateTime.Now.ToFileTime() + ".pdf";
             return File((byte[])Session["pdfData"], "application/pdf", fullFileName);
+        }
+
+        public virtual ActionResult OpenPDFinNewTab()
+        {
+            return File((byte[])Session["pdfData"], "application/pdf");
         }
 
         public AuthenticateUserResponse GetAuthentication(DbDetails dbdetails, string Apiname)
@@ -1016,7 +1233,7 @@ namespace OneposStamps.Controllers
 
         }
 
-        public OneposStamps.Models.CreateLabelRequest.CreateLabelResponse GetLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel, string AuthenticationId)
+        public OneposStamps.Models.CreateLabelRequest.CreateLabelResponse GetLabel(OneposStamps.Models.CreateLabelRequest.CreateLabelRequest getlabel, string AuthenticationId, string StoreId)
         {
             OneposStamps.Models.CreateLabelRequest.CreateLabelResponse Responses = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
             var client = new RestClient("https://api.shipengine.com/v1/labels");
@@ -1041,6 +1258,32 @@ namespace OneposStamps.Controllers
                 //OneposStamps.Models.GetRateResponse.Rate rate = rateResponse.rates.FirstOrDefault();
                 //Responses.Amount = rate.confirmation_amount.amount + rate.insurance_amount.amount + rate.shipping_amount.amount + rate.other_amount.amount;
                 //Responses.Deliverydate = rate.estimated_delivery_date.ToString("MM-dd-yyyy HH:mm:ss");
+                List<OneposStamps.Models.BatchLabelResponse.TrackNumberlist> trackNumberlists = new List<Models.BatchLabelResponse.TrackNumberlist>();
+                OneposStamps.Models.BatchLabelResponse.TrackNumberlist trackNumberlist = new Models.BatchLabelResponse.TrackNumberlist();
+                trackNumberlist.shipmentid = value1.shipment_id;
+                trackNumberlist.trackingnumber = value1.tracking_number;
+                //trackNumberlist.ShipmentDate = DateTime.ParseExact(value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss"), "MM-dd-yyyy HH:mm:ss", null);
+                trackNumberlist.ShipmentDate = DateTime.ParseExact(getlabel.ShipmentDate, "MM-dd-yyyy HH:mm:ss", null);
+                trackNumberlist.ServiceType = value1.service_code;
+                trackNumberlist.LabelId = value1.label_id;
+                trackNumberlist.LabelUrl = label.pdf;
+                trackNumberlists.Add(trackNumberlist);
+
+                var list = (from a in trackNumberlists
+                            select new
+                            {
+                                OrderId = getlabel.OrderId,
+                                ShipmentId = a.shipmentid,
+                                ShipmentDate = a.ShipmentDate,
+                                ServiceType = a.ServiceType,
+                                Trackingnumber = a.trackingnumber,
+                                StoreId = StoreId,
+                                labelId = a.LabelId,
+                                batch_Id = "",
+                                LabelUrl = a.LabelUrl
+                            }).ToList();
+                var jsondata = JsonConvert.SerializeObject(list);
+                DataSet ds = db.InsertShipDetails("USP_InsertShipmentDetails", jsondata);
             }
             return Responses;
         }
@@ -1569,11 +1812,12 @@ namespace OneposStamps.Controllers
         {
             DbDetails dbdetails = db.GetDbDetails(OrderIdList.StoreId);
             bool IsInHouse = false;
-
+            string ZoneName = string.Empty;
             DataSet dsCheckIsInHouse = db.GetZonesData("USP_GetIsInHouse", OrderIdList.StoreId, OrderIdList.SingleZoneId); //StoreId
             foreach (DataRow row in dsCheckIsInHouse.Tables[0].Rows)
             {
                 IsInHouse = Convert.ToBoolean(row["IsInHouse"]);
+                ZoneName = row["ZoneName"].ToString();
             }
             OneposStamps.Models.CreateLabelRequest.CreateMultipleLabelRequest multipleLabelRequest = new Models.CreateLabelRequest.CreateMultipleLabelRequest();
 
@@ -1634,6 +1878,7 @@ namespace OneposStamps.Controllers
                     createLabelRequest.shipment.ship_from = new Models.CreateLabelRequest.ShipFrom();
                     createLabelRequest.shipment.ship_to = new Models.CreateLabelRequest.ShipTo();
                     createLabelRequest.shipment.packages = new List<Models.CreateLabelRequest.Package>();
+                    createLabelRequest.OrderId = o.OrderId;
 
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
@@ -1659,6 +1904,56 @@ namespace OneposStamps.Controllers
                         createLabelRequest.shipment.ship_to.country_code = (row["Country"]).ToString();
                     }
 
+                    List<OrderItemDetail> orderdetails = new List<OrderItemDetail>();
+                    foreach (DataRow row in ds.Tables[2].Rows)
+                    {
+                        OrderItemDetail value = new OrderItemDetail();
+                        value.name = (row["ProductName"]).ToString();
+                        value.sku = (row["SKU"]).ToString();
+                        value.Itemlist = (row["ProductMetaDetails"]).ToString();
+                        value.UnitPrice = Convert.ToDecimal(row["UnitPrice"]);
+                        value.OrderQty = (row["OrderQty"]).ToString();
+                        value.TotalPrice = Convert.ToDecimal(row["TotalPrice"]);
+
+                        orderdetails.Add(value);
+
+                    }
+                    createLabelRequest.orderItemDetail = orderdetails;
+
+                    if (!string.IsNullOrEmpty(o.OrderId))
+                    {
+                        DataSet dsOrderLabel = db.GetOrderLabelCode("USP_GetOrderLabelCode", o.OrderId);
+                        if (dsOrderLabel != null)
+                        {
+                            if (dsOrderLabel.Tables.Count > 0)
+                            {
+                                if (dsOrderLabel.Tables[0].Rows.Count > 0)
+                                {
+                                    foreach (DataRow row in dsOrderLabel.Tables[0].Rows)
+                                    {
+                                        createLabelRequest.LabelCode = (row["LabelCode"]).ToString();
+                                    }
+                                }
+                                else
+                                {
+                                    createLabelRequest.LabelCode = "";
+                                }
+                            }
+                            else
+                            {
+                                createLabelRequest.LabelCode = "";
+                            }
+                        }
+                        else
+                        {
+                            createLabelRequest.LabelCode = "";
+                        }
+                    }
+                    else
+                    {
+                        createLabelRequest.LabelCode = "";
+                    }
+
                     try
                     {
                         createLabelRequest.barcodeBase64String = LoadImageForBarode(o.OrderId);
@@ -1678,12 +1973,28 @@ namespace OneposStamps.Controllers
             else
             {
                 List<String> shipmentids = new List<string>();
-
+                List<Models.ShipmentRequest.ShipmentDetails> shipmentDetails = new List<Models.ShipmentRequest.ShipmentDetails>();
+                List<OneposStamps.Models.BatchLabelResponse.TrackNumberlist> trackNumberlists = new List<Models.BatchLabelResponse.TrackNumberlist>();
 
                 DataSet ds1 = db.GetMysqlDataSet("USP_GetWareHouseId", OrderIdList.StoreId); //StoreId
                 var WareHouse_Id = string.Empty;
                 var BatchId = string.Empty;
                 var Pdf = string.Empty;
+
+                string servicecode = string.Empty;
+
+                if (ZoneName.ToLower() == "Countrywide".ToLower())
+                {
+                    servicecode = "ups_next_day_air_saver";
+                }
+                else if (ZoneName.ToLower() == "SoCal".ToLower())
+                {
+                    servicecode = "ups_ground";
+                }
+                else
+                {
+                    servicecode = "ups_next_day_air_saver";
+                }
                 foreach (DataRow row in ds1.Tables[0].Rows)
                 {
 
@@ -1738,9 +2049,10 @@ namespace OneposStamps.Controllers
                     OneposStamps.Models.ShipmentRequest.Root request = new OneposStamps.Models.ShipmentRequest.Root();
                     List<OneposStamps.Models.ShipmentRequest.Shipment> r1 = new List<OneposStamps.Models.ShipmentRequest.Shipment>();
                     OneposStamps.Models.ShipmentRequest.Shipment s1 = new OneposStamps.Models.ShipmentRequest.Shipment();
+                    Models.ShipmentRequest.ShipmentDetails shipments = new Models.ShipmentRequest.ShipmentDetails();
                     s1.warehouse_id = WareHouse_Id;
                     s1.validate_address = "no_validation";
-                    s1.service_code = "ups_next_day_air_saver";
+                    s1.service_code = servicecode;
                     s1.external_shipment_id = Guid.NewGuid().ToString();
                     s1.confirmation = "none";
                     s1.insurance_provider = "none";
@@ -1749,7 +2061,7 @@ namespace OneposStamps.Controllers
                     OneposStamps.Models.ShipmentRequest.Weight w = new Models.ShipmentRequest.Weight();
 
                     w.unit = "ounce";
-                    w.value = 1.0;
+                    w.value = 12.0;
                     p.weight = w;
                     s1.ship_to = ShippingDetails;
                     packagelist.Add(p);
@@ -1775,6 +2087,47 @@ namespace OneposStamps.Controllers
                             OneposStamps.Models.ShipmentResponse.Root resp = JsonConvert.DeserializeObject<OneposStamps.Models.ShipmentResponse.Root>(result);
                             OneposStamps.Models.ShipmentResponse.Shipment ship1 = resp.shipments.FirstOrDefault();
                             shipmentids.Add(ship1.shipment_id);
+                            shipments.OrderId = o.OrderId;
+                            shipments.ShipmentId = ship1.shipment_id;
+                            shipmentDetails.Add(shipments);
+
+                            //OneposStamps.Models.CreateLabelRequest.CreateLabelResponse Responses2 = new OneposStamps.Models.CreateLabelRequest.CreateLabelResponse();
+                            //string result2 = response.Content;
+                            //OneposStamps.Models.CreateLabelResponse.Root value1 = JsonConvert.DeserializeObject<OneposStamps.Models.CreateLabelResponse.Root>(result2);
+                            //Responses2.TrackingNumber = value1.tracking_number;
+                            //Responses2.ServiceType = value1.service_code;
+                            //Responses2.ShipDate = value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss");
+                            ////Responses.DeliveryDate= value1..ToString("MM-dd-yyyy HH:mm:ss");
+                            //OneposStamps.Models.CreateLabelResponse.LabelDownload label = value1.label_download;
+                            //Responses2.Url = label.pdf;
+
+                            //List<OneposStamps.Models.BatchLabelResponse.TrackNumberlist> trackNumberlists = new List<Models.BatchLabelResponse.TrackNumberlist>();
+                            //OneposStamps.Models.BatchLabelResponse.TrackNumberlist trackNumberlist = new Models.BatchLabelResponse.TrackNumberlist();
+                            //trackNumberlist.shipmentid = value1.shipment_id;
+                            //trackNumberlist.trackingnumber = value1.tracking_number;
+                            ////trackNumberlist.ShipmentDate = DateTime.ParseExact(value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss"), "MM-dd-yyyy HH:mm:ss", null);
+                            //string shipdate = value1.ship_date.ToString("MM-dd-yyyy HH:mm:ss");
+                            //trackNumberlist.ShipmentDate = DateTime.ParseExact(shipdate, "MM-dd-yyyy HH:mm:ss", null);
+                            //trackNumberlist.ServiceType = value1.service_code;
+                            //trackNumberlist.LabelId = value1.label_id;
+                            //trackNumberlist.LabelUrl = label.pdf;
+                            //trackNumberlists.Add(trackNumberlist);
+
+                            //var list = (from a in trackNumberlists
+                            //            select new
+                            //            {
+                            //                OrderId = o.OrderId,
+                            //                ShipmentId = a.shipmentid,
+                            //                ShipmentDate = a.ShipmentDate,
+                            //                ServiceType = a.ServiceType,
+                            //                Trackingnumber = a.trackingnumber,
+                            //                StoreId = OrderIdList.StoreId,
+                            //                labelId = a.LabelId,
+                            //                batch_Id = "",
+                            //                LabelUrl = a.LabelUrl
+                            //            }).ToList();
+                            //var jsondata = JsonConvert.SerializeObject(list);
+                            //DataSet ds2 = db.InsertShipDetails("USP_InsertShipmentDetails", jsondata);
                         }
                     }
                     catch (Exception ex)
@@ -1782,7 +2135,7 @@ namespace OneposStamps.Controllers
                         throw ex;
                     }
 
-
+                   
                 }
                 OneposStamps.Models.CreateBatchRequest.Root batchrequest = new OneposStamps.Models.CreateBatchRequest.Root();
                 List<object> rateids = new List<object>();
@@ -1812,61 +2165,209 @@ namespace OneposStamps.Controllers
                 {
                     throw ex;
                 }
-                OneposStamps.Models.LabelProcessRequest.Root lpr = new OneposStamps.Models.LabelProcessRequest.Root();
-                CultureInfo provider = CultureInfo.InvariantCulture;
-                lpr.label_format = "pdf";
-                lpr.label_layout = "4x6";
-                lpr.ship_date = DateTime.Now; //DateTime.ParseExact(OrderIdList.DeliverDate, "MM/dd/yyyy", provider);
-                var LabelProcessbody = JsonConvert.SerializeObject(lpr);
-                var LabelProcessclient = new RestClient("https://api.shipengine.com/v1/batches/" + BatchId + "/process/labels");
-                batchrequestclient.Timeout = -1;
-                var LabelProcessapirequest = new RestRequest(Method.POST);
-                LabelProcessapirequest.AddHeader("API-Key", dbdetails.IntegrationId);
-                LabelProcessapirequest.AddHeader("Content-Type", "application/json");
-                LabelProcessapirequest.AddParameter("application/json", LabelProcessbody, ParameterType.RequestBody);
-                IRestResponse LabelProcessapiresponse = LabelProcessclient.Execute(LabelProcessapirequest);
-                try
+                if (!string.IsNullOrWhiteSpace(BatchId))
                 {
-                    if (batchrequestapiresponse.StatusCode == HttpStatusCode.NoContent)
+                    OneposStamps.Models.LabelProcessRequest.Root lpr = new OneposStamps.Models.LabelProcessRequest.Root();
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+                    lpr.label_format = "pdf";
+                    lpr.label_layout = "4x6";
+                    lpr.ship_date = DateTime.Now; //DateTime.ParseExact(OrderIdList.DeliverDate, "MM/dd/yyyy", provider);
+                    var LabelProcessbody = JsonConvert.SerializeObject(lpr);
+                    var LabelProcessclient = new RestClient("https://api.shipengine.com/v1/batches/" + BatchId + "/process/labels");
+                    batchrequestclient.Timeout = -1;
+                    var LabelProcessapirequest = new RestRequest(Method.POST);
+                    LabelProcessapirequest.AddHeader("API-Key", dbdetails.IntegrationId);
+                    LabelProcessapirequest.AddHeader("Content-Type", "application/json");
+                    LabelProcessapirequest.AddParameter("application/json", LabelProcessbody, ParameterType.RequestBody);
+                    IRestResponse LabelProcessapiresponse = LabelProcessclient.Execute(LabelProcessapirequest);
+                    try
+                    {
+                        if (batchrequestapiresponse.StatusCode == HttpStatusCode.NoContent)
+                        {
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(BatchId))
+                {
+                    var Getclient = new RestClient("https://api.shipengine.com/v1/labels?batch_id=" + BatchId + "");
+                    Getclient.Timeout = -1;
+                    var Getlabelrequest = new RestRequest(Method.GET);
+                    Getlabelrequest.AddHeader("API-Key", dbdetails.IntegrationId);
+                    Getlabelrequest.AddHeader("Content-Type", "application/json");
+                    Getlabelrequest.AddParameter("application/json", "", ParameterType.RequestBody);
+                    System.Threading.Thread.Sleep(1000);
+                    IRestResponse Getlabelresponse = Getclient.Execute(Getlabelrequest);
+
+                    for (int i = 0; i < Getlabelresponse.ContentLength; i++)
+                    {
+                        if (Getlabelresponse.ContentLength < 400)
+                        {
+                            Getlabelresponse = Getclient.Execute(Getlabelrequest);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    
+                    try
+                    {
+                        if (Getlabelresponse.StatusCode == HttpStatusCode.OK)
+                        {
+
+                            string result = Getlabelresponse.Content;
+                            OneposStamps.Models.BatchLabelResponse.Root resp = JsonConvert.DeserializeObject<OneposStamps.Models.BatchLabelResponse.Root>(result);
+                            List<OneposStamps.Models.BatchLabelResponse.Label> lbl = resp.labels;
+
+                            foreach (var b in lbl)
+                            {
+                                OneposStamps.Models.BatchLabelResponse.LabelDownload label = b.label_download;
+                                OneposStamps.Models.BatchLabelResponse.TrackNumberlist trackNumberlist = new Models.BatchLabelResponse.TrackNumberlist();
+                                trackNumberlist.shipmentid = b.shipment_id;
+                                string shipdate = b.ship_date.ToString("MM-dd-yyyy HH:mm:ss");
+                                trackNumberlist.ShipmentDate = DateTime.ParseExact(shipdate, "MM-dd-yyyy HH:mm:ss", null);
+                                trackNumberlist.ServiceType = b.service_code;
+                                trackNumberlist.trackingnumber = b.tracking_number;
+                                trackNumberlist.LabelId = b.label_id;
+                                trackNumberlist.LabelUrl = label.pdf;
+                                trackNumberlists.Add(trackNumberlist);
+                            }
+                            var list = (from a in shipmentDetails
+                                        join b in trackNumberlists
+                                        on a.ShipmentId equals b.shipmentid
+                                        select new
+                                        {
+                                            OrderId = a.OrderId,
+                                            ShipmentId = a.ShipmentId,
+                                            ShipmentDate = b.ShipmentDate,
+                                            ServiceType = b.ServiceType,
+                                            Trackingnumber = b.trackingnumber,
+                                            StoreId = OrderIdList.StoreId,
+                                            labelId = b.LabelId,
+                                            batch_Id = BatchId,
+                                            LabelUrl = b.LabelUrl
+                                        }).ToList();
+                            var jsondata = JsonConvert.SerializeObject(list);
+                            DataSet ds = db.InsertShipDetails("USP_InsertShipmentDetails", jsondata);
+
+
+                        }
+                    }
+                    catch (Exception ex)
                     {
 
                     }
                 }
-                catch (Exception ex)
+                if (!string.IsNullOrWhiteSpace(BatchId))
                 {
-                    throw ex;
-                }
-                var Getlabelclient = new RestClient("https://api.shipengine.com/v1/batches/" + BatchId + "/");
-                Getlabelclient.Timeout = -1;
-                var Getlabelrequest = new RestRequest(Method.GET);
-                Getlabelrequest.AddHeader("API-Key", dbdetails.IntegrationId);
-                Getlabelrequest.AddHeader("Content-Type", "application/json");
-                Getlabelrequest.AddParameter("application/json", "", ParameterType.RequestBody);
-                IRestResponse Getlabelresponse = Getlabelclient.Execute(Getlabelrequest);
-                try
-                {
-                    if (Getlabelresponse.StatusCode == HttpStatusCode.OK)
+                    var Getlabelclient = new RestClient("https://api.shipengine.com/v1/batches/" + BatchId + "/");
+                    Getlabelclient.Timeout = -1;
+                    var Getlabelrequest = new RestRequest(Method.GET);
+                    Getlabelrequest.AddHeader("API-Key", dbdetails.IntegrationId);
+                    Getlabelrequest.AddHeader("Content-Type", "application/json");
+                    Getlabelrequest.AddParameter("application/json", "", ParameterType.RequestBody);
+                    IRestResponse Getlabelresponse = Getlabelclient.Execute(Getlabelrequest);
+                    try
                     {
-                        string result = Getlabelresponse.Content;
-                        OneposStamps.Models.GetBatchResponse.Root resp = JsonConvert.DeserializeObject<OneposStamps.Models.GetBatchResponse.Root>(result);
-                        OneposStamps.Models.GetBatchResponse.LabelDownload label = resp.label_download;
-                        Pdf = label.pdf;
+                        if (Getlabelresponse.StatusCode == HttpStatusCode.OK)
+                        {
+                            string result = Getlabelresponse.Content;
+                            OneposStamps.Models.GetBatchResponse.Root resp = JsonConvert.DeserializeObject<OneposStamps.Models.GetBatchResponse.Root>(result);
+                            OneposStamps.Models.GetBatchResponse.LabelDownload label = resp.label_download;
+                            Pdf = label.pdf;
 
-                        return Json(Pdf);
+                            Session["pdfData"] = null;
+                            if (label.pdf != null)
+                            {
+                                string url = label.pdf;
+
+                                string pdfFilePath = url;
+                                byte[] bytes = null;
+
+                                //using (var client = new WebClient())
+                                //{
+                                //    string Path = Server.MapPath("/Pdf/tm1.pdf");
+                                //    client.DownloadFile(url, Path);
+                                //    bytes = System.IO.File.ReadAllBytes(Path);
+                                //}
+
+                                //System.Net.HttpWebRequest request = null;
+                                //System.Net.HttpWebResponse response = null;
+
+                                //ServicePointManager.Expect100Continue = true;
+                                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                                //       | SecurityProtocolType.Tls11
+                                //       | SecurityProtocolType.Tls12
+                                //       | SecurityProtocolType.Ssl3;
+
+                                //request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
+                                //response = (System.Net.HttpWebResponse)request.GetResponse();
+
+                                //if (request.HaveResponse)
+                                //{
+                                //    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                                //    {
+                                //        Stream receiveStream = response.GetResponseStream();
+                                //        using (BinaryReader br = new BinaryReader(receiveStream))
+                                //        {
+                                //            bytes = br.ReadBytes(500000);
+                                //            br.Close();
+                                //        }
+                                //    }
+                                //}
+
+                                //HttpWebRequest imageRequest = (HttpWebRequest)WebRequest.Create(url);
+                                //WebResponse imageResponse = imageRequest.GetResponse();
+                                //Stream responseStream = imageResponse.GetResponseStream();
+                                //using (BinaryReader br = new BinaryReader(responseStream))
+                                //{
+                                //    bytes = br.ReadBytes(500000);
+                                //    br.Close();
+                                //}
+                                //responseStream.Close();
+                                //imageResponse.Close();
+
+                                //using (var myClient = new WebClient())
+                                //{
+                                //    bytes = myClient.DownloadData(pdfFilePath);
+                                //}
+                                //byte[] bytes = System.IO.File.ReadAllBytes(pdfFilePath);
+                                // save pdf document
+                                // byte[] pdf = doc.Save();
+
+                                // close pdf document
+                                //doc.Close();
+                                //Session["pdfData"] = bytes;
+                                //// return resulted pdf document
+                                //FileResult fileResult = new FileContentResult(pdf, "application/pdf");
+                                //fileResult.FileDownloadName = "Document.pdf";
+
+
+                                //string base64String = "data: application/pdf; base64, " + Convert.ToBase64String(pdf);
+                                //return Json(pdf);
+                                //return File(pdf, "application/pdf");
+                                //return fileResult;
+                                //return File((byte[])pdf, "application/pdf", fileResult.FileDownloadName);
+                            }
+
+                            return Json(Pdf);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
                 }
             }
 
             return PartialView("_MultipleInHouseLabel", multipleLabelRequest);
         }
-
-
-
-
+        
 
         //public ActionResult CreateMultiLabel(OrderIdList OrderIdList)
         //{

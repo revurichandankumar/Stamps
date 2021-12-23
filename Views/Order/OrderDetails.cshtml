@@ -26,21 +26,22 @@
                     <div class="col-sm-12">
 
                         <div class="card">
-                            <div class="card-body">
+                            <div class="card-body" >
 
+                                @*<div class="border-bottom mt-3 mb-3 py-2">*@
                                 <div class="border-bottom mt-3 mb-3 py-2">
                                     <div class="d-flex align-items-center">
                                         <span class="font-12 mr-2">Select Delivery Date</span>
                                         <div class="mr-2">
                                             <div class="input-group">
-                                                <input type="text" onchange="onFilterClick()" readonly="readonly" style="background-color:transparent" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="Select Date MM/DD/YYY">
-                                                <div class="input-group-append">
+                                                <input type="text" onchange="onFilterClick()" readonly="readonly" style="background-color:transparent" id="txtDeliverDate" name="txtDeliverDate" class="form-control form-control-sm" placeholder="MM/DD/YYY">
+                                                <div class="input-group-append" id="divCalendar">
                                                     <span class="input-group-text"><i class="fa fa-calendar-alt"></i></span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="btn-group" id="divZones">
-                                            <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
+                                            <button type="button" id="btnZoneFilter" class="btn btn-default btn-sm border dropdown-toggle mr-2" disabled style="opacity:1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
                                             <div class="dropdown-menu" x-placement="bottom-start">
                                                 @if (Model.ZoneList != null)
@@ -50,11 +51,13 @@
                                                         <a class="dropdown-item d-flex" href="#">
                                                             <div class="checkbox">
                                                                 <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" class="custom-control-input" value="@item.ZoneId" name="chkZoneList" id="customCheck_@item.ZoneId" data-parsley-multiple="groups" data-parsley-mincheck="2">
-                                                                    <label class="custom-control-label" for="customCheck_@item.ZoneId"></label>
+                                                                    <input type="checkbox" class="custom-control-input" value="@item.ZoneId" data-zonename="@item.ZoneName" name="chkZoneList" id="customCheck_@item.ZoneId" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                                                                    <label class="custom-control-label" for="customCheck_@item.ZoneId">@item.ZoneName</label>
+                                                                    @*<input type="checkbox" value="@item.ZoneId" data-zonename="@item.ZoneName" name="chkZoneList" id="customCheck_@item.ZoneId" aria-label="Single checkbox Two">
+                                            <label class="mb-0" for="customCheck_@item.ZoneId"></label>*@
                                                                 </div>
                                                             </div>
-                                                            @item.ZoneName
+
                                                         </a>
                                                     }
                                                 }
@@ -103,21 +106,21 @@
                                             </div>
                                         </div>
                                         @*<div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
+                    <button type="button" class="btn btn-default btn-sm border dropdown-toggle mr-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-filter text-info"></i> Select Zone <i class="mdi mdi-chevron-down"></i></button>
 
-                                    <div class="dropdown-menu" x-placement="bottom-start">
-                                        <a class="dropdown-item" href="#">USPA</a>
-                                        <a class="dropdown-item" href="#">FedEx</a>
-                                        <a class="dropdown-item" href="#">USA</a>
-                                        <a class="dropdown-item" href="#">Zone 2</a>
-                                    </div>
-                                </div>*@
+                    <div class="dropdown-menu" x-placement="bottom-start">
+                        <a class="dropdown-item" href="#">USPA</a>
+                        <a class="dropdown-item" href="#">FedEx</a>
+                        <a class="dropdown-item" href="#">USA</a>
+                        <a class="dropdown-item" href="#">Zone 2</a>
+                    </div>
+                </div>*@
 
                                         <!-- <a href="#" class="btn btn-link btn-sm text-primary">Clear Selection</a> -->
 
 
-                                        <div class="ml-auto mr-2">
-                                            <input type="text" class="form-control form-control-sm" placeholder="search" />
+                                        <div class="ml-auto mr-2" id="new-search-area">
+                                            <input type="text" class="form-control form-control-sm" placeholder="search" id="txtSearchOrder" />
                                         </div>
 
                                         <button class="btn btn-default btn-sm border mr-2" onclick="onMultiLabelCreateClick()"><i class="fa fa-file text-primary"></i> Create Label</button>
@@ -125,8 +128,25 @@
                                     </div>
                                 </div>
 
-                                <div id="divOrderDetails">
+                                <div id="div-afterFixed"></div>
+                                <div id="divSelectedFilterValues">
+                                    <p id="pSelectedFilterValues">
+                                        @*<strong class="font-12">Zones Selected (<span id="spnSelectedZoneCount">0</span>) :</strong>
+                <span class="btn btn-info table-btn" name="spnSelectedZoneName" data-value=""> ME Vane (<span id="spnSelectedZoneOrderCount">0</span>) <a href="#"><i class="fa fa-times text-white ml-1"></i></a></span>*@
 
+                                        @*<strong class="font-12 ml-2">Cities Selected (2) :</strong>
+                <span class="btn btn-info table-btn"> Livermore (5) <a href="#"><i class="fa fa-times text-white ml-1"></i></a></span>
+                <span class="btn btn-info table-btn"> San Fransisco (24) <a href="#"><i class="fa fa-times text-white ml-1"></i></a></span>*@
+                                    </p>
+                                </div>
+                                <div>
+                                    <label id="lblRowCountTop" style="display:none"><span id="gridRowCountTop"></span> records selected from grid</label>
+                                </div>
+                                <div id="divOrderDetails" class="tv-s">
+                                    @*@{ Html.RenderPartial("_OrderDetails", Model); }*@
+                                </div>
+                                <div>
+                                    <label id="lblRowCountBottom" style="display:none"><span id="gridRowCountBottom"></span> records selected from grid</label>
                                 </div>
                             </div>
                         </div>
@@ -148,19 +168,34 @@
     <!-- end page-wrapper -->
 
 </body>
+<style>
+    /*body{
+        position: absolute !important;
+    }*/
+    .datepicker-dropdown {
+        top: 151px !important;
+    }
+    /*top: 20% !important;*/
 
+</style>
 <script>
 
     $(document).ready(function () {
 
         var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-        $("#txtDeliverDate").datepicker({
+        
+        $("#txtDeliverDate").fdatepicker({
             format: 'mm/dd/yyyy',
             container: container,
+            disableDblClickSelection: true,
             todayHighlight: true,
-            endDate: '+0d',
+            //endDate: '+0d',
             autoclose: true,
-            orientation: "bottom"
+            orientation: 'top'
+        });
+        
+        $('#divCalendar').click(function () {
+            $('#txtDeliverDate').fdatepicker('show');
         });
 
         var DeliverDate = '@Model.DeliverDate';
@@ -175,6 +210,16 @@
                 zoneidList.push($(this).val());
             });
 
+            var zoneDetailList = [];
+            $('input[name="chkZoneList"]:checked').each(function () {
+                var zoneid = $(this).val();
+                var zonename = $(this).attr('data-zonename');
+                zoneDetailList.push({ ZoneId: zoneid, ZoneName: zonename, OrderCount:0 });
+            });
+
+            $('input[name="chkSelect"]').prop("checked", false);
+            $('input[name="chkSelectMaster"]').prop("checked", false);
+
             var tr = $("#datatable4 tbody tr") // select all the rows
 
             for (i = 0; i < tr.length; i++) {
@@ -185,14 +230,63 @@
                         return tdValue.indexOf(val) > -1
                     }); //check if any val in filterParam array is matching the tdValue
                     if (isMatched.length) //check length of filtered resultset
+                    {
                         tr[i].style.display = "";
+                        for (var j in zoneDetailList) {
+                            if (zoneDetailList[j].ZoneId == tdValue) {
+                                var count = zoneDetailList[j].OrderCount;
+                                zoneDetailList[j].OrderCount = count + 1;
+                                break; //Stop this loop, we found it!
+                            }
+                        }
+                    }
                     else
+                    {
                         tr[i].style.display = "none";
+                    }
                     if (zoneidList.length == 0) {
                         tr[i].style.display = "";
                     }
                 }
             }
+
+            var t = '<strong class="font-12" > Zones Selected(' + zoneDetailList.length + ') :</strong >';
+            var tchild = "";
+            if (zoneDetailList.length > 0) {
+                $.each(zoneDetailList, function (i, v) {
+                    var fzoneid = '';
+                    var fzonename = '';
+                    var fordercount = 0;
+
+                    if (v.ZoneId != null && v.ZoneId != "" && v.ZoneId != undefined) {
+                        fzoneid = v.ZoneId;
+                    }
+                    if (v.ZoneName != null && v.ZoneName != "" && v.ZoneName != undefined) {
+                        fzonename = v.ZoneName;
+                    }
+                    if (v.OrderCount != null && v.OrderCount != "" && v.OrderCount != undefined) {
+                        fordercount = v.OrderCount;
+                    }
+
+                    var child = '<span class="btn btn-info table-btn" style="margin-left: 5px;" name="spnSelectedZoneName" data-value= "' + fzoneid + '"> ' + fzonename + ' (' + fordercount + ') ' +
+                        '<a href = "#" > <i class="fa fa-times text-white ml-1"></i></a></span >';
+                    tchild += child;
+                });
+                $('#pSelectedFilterValues').empty();
+                $('#pSelectedFilterValues').append(t + tchild);
+
+            }
+            else {
+                $('#pSelectedFilterValues').empty();
+            }
+
+            var selectedrecords = $('input[name="chkSelect"]:checked').length;
+
+            $("#lblRowCountTop").removeAttr("style");
+            $("#gridRowCountTop")[0].innerText = selectedrecords;
+
+            $("#lblRowCountBottom").removeAttr("style");
+            $("#gridRowCountBottom")[0].innerText = selectedrecords;
 
             //$("#datatable4 tbody tr").filter(function () {
             //    $(this).toggle($(this).text().toLowerCase().indexOf(zoneidList) > -1);
@@ -200,10 +294,44 @@
 
         });
 
+        $(document)
+            .ajaxStart(function () {
+                //$('body').append($loading.show());
+                $.loading.start('<img src = "/Content/Loader_Files/mylapore-loader.gif" />');
+
+            });
+        $(document)
+            .ajaxStop(function () {
+                $.loading.end();
+                //$loading.hide();
+            });
     });
 
+    $(document).on('click', 'i', function () {
+        var spn = $(this).closest('span');
+
+        if (spn.attr("name") == "spnSelectedZoneName") {
+            var zoneid = spn.attr("data-value");
+
+            $('input[name="chkZoneList"]:checked').each(function () {
+                if ($(this).val() == zoneid) {
+                    $(this).prop("checked", false);
+                    $('input[name="chkZoneList"]').trigger("change");
+                    spn.remove();
+                    return false;
+                }
+            });
+        }
+       
+    });
 
     function onFilterClick() {
+        $('input[name="chkZoneList"]').prop("checked", false);
+        $('input[name="chkSelectMaster"]').prop("checked", false);
+
+        if ($('#pSelectedFilterValues').length > 0) {
+            $('#pSelectedFilterValues').empty();
+        }
 
         var data = {            
             DeliverDate: $("#txtDeliverDate").val(),
@@ -218,6 +346,38 @@
             data: data,
             success: function (response) {
                 $("#divOrderDetails").html(response);
+                var tr = $("#datatable4 tbody tr");
+                if (tr.length > 0 && $("#datatable4 tbody tr").find('td').text() != "No data found") {
+
+                    $("#datatable4").DataTable({
+                        "columnDefs": [
+                            {
+                                "targets": [1],
+                                "className": "hide_column",
+                                "searchable": false
+                            },
+                            {
+                                "targets": [8],
+                                "className": "hide_column",
+                                "searchable": true
+                            }
+                        ],
+                        "sDom": "ltipr",
+                        //initComplete: function () {
+                        //    $("#datatable4_filter").detach().appendTo('#new-search-area');
+                        //},
+                        "bPaginate": false,
+                        "bInfo": false,
+                        "language": { search: "", searchPlaceholder: "Search" },
+                    });
+                }
+                $("#btnZoneFilter").removeAttr("disabled");
+                                
+                $("#lblRowCountTop").removeAttr("style");
+                $("#gridRowCountTop")[0].innerText = 0;
+
+                $("#lblRowCountBottom").removeAttr("style");
+                $("#gridRowCountBottom")[0].innerText = 0;
             },
             error: function (response) {
                 alert(response.responseText);
@@ -225,12 +385,11 @@
         });
     }
 
-
     function onMultiLabelCreateClick() {
         var singlezoneid = null;
-        $('input[name="chkZoneList"]:checked').each(function () {
-            singlezoneid = $(this).val();
-        });
+        //$('input[name="chkZoneList"]:checked').each(function () {
+        //    singlezoneid = $(this).val();
+        //});
 
         var orderidList = [];
         $('input[name="chkSelect"]:checked').each(function () {
@@ -239,10 +398,28 @@
             orderidList.push({ OrderId: orderid, ZoneId: zoneid });
         });
 
-        //var onlyorderidList = [];
-        //$('input[name="chkSelect"]:checked').each(function () {
-        //    onlyorderidList.push($(this).val());
-        //});
+
+        var zoneidList = [];
+        $('input[name="chkSelect"]:checked').each(function () {
+            zoneidList.push($(this).closest('tr').find('td[name="zoneid"]').text());
+        });
+
+        var zoneidListDistinct = zoneidList.filter(function (item, i, zoneidList) {
+            return i == zoneidList.indexOf(item);
+        });
+        
+        if (orderidList.length < 1) {
+            alert("Please select at least one record!");
+            return false;
+        }
+
+        if (zoneidListDistinct.length != 1) {
+            alert("You can't select more than one zone at a time of creating labels! \nPlease select only one zone!");
+            return false;
+        }
+        else {
+            singlezoneid = zoneidListDistinct[0];
+        }
 
         var deliverydate = $("#txtDeliverDate").val();
         if (orderidList.length > 0) {
@@ -261,14 +438,19 @@
                  data: data,
                  success: function (response) {
                      if (response.match("\\.pdf$")) {
-                         var win = window.open(response, '_blank');
-                        if (win) {
-                            //Browser has allowed it to be opened
-                            win.focus();
-                        } else {
-                            //Browser has blocked it
-                            alert('Please allow popups for this website');
-                         }
+                         newWindow_method_12(response);
+                         //setTimeout(function () {
+                         //var win = window.open('/Order/OpenPDFinNewTab', '_blank');
+                         //var win = window.open(response, '_blank');
+                        
+                         //if (win) {
+                         //    //Browser has allowed it to be opened
+                         //    win.focus();                            
+                         //} else {
+                         //    //Browser has blocked it
+                         //    alert('Please allow popups for this website');
+                         //    }
+                         ////}, 100);
                      }
                      else {
                          $("#divmultiplelabel").html(response);
@@ -306,8 +488,32 @@
 
         $(wi.document.body).html(html);
         setTimeout(function () {
+            wi.document.title = "InHouse Labels";
             wi.print();
         }, 200);
+
     }
+
+    function newWindow_method_12(url) {
+        var wi = window.open();
+        var a = document.createElement("a"); //Create <a>
+        a.href = url;
+        var html = a;
+
+        $(wi.document.body).html(html);
+        setTimeout(function () {
+            wi.document.title = "UPS Labels";
+            a.click();
+            setTimeout(function () {
+                wi.location.href = url;
+                setTimeout(function () {
+                    wi.location.href = url;
+                }, 1000);
+            }, 1000);
+            //wi.print();
+        }, 200);
+
+    }
+
 
 </script>

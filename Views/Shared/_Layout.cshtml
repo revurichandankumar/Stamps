@@ -24,7 +24,8 @@
     <!-- Responsive datatable examples -->
     <link href="~/Content/assets/plugins/datatables/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
-    <link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" rel="stylesheet" />
+    @*<link href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" rel="stylesheet" />*@
+    <link href="//cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.6/css/foundation-datepicker.min.css" rel="stylesheet" />
 
     <!-- X-editable css -->
     <link href="~/Content/assets/plugins/x-editable/css/bootstrap-editable.css" rel="stylesheet" />
@@ -39,7 +40,9 @@
     <link href="~/Content/assets/css/app.min.css" rel="stylesheet" type="text/css" />
 
     <link href="https://printjs-4de6.kxcdn.com/print.min.css" rel="stylesheet" type="text/css" />
-    
+
+    <link href="~/Content/ManualCSS/CustomCss.css" rel="stylesheet" />
+
     @Scripts.Render("~/bundles/jquery")
     @*@Scripts.Render("~/bundles/bootstrap")
 
@@ -53,7 +56,7 @@
         <div class="topbar-inner">
             <!-- LOGO -->
             <div class="topbar-left text-center text-lg-left mr-5">
-                <a href="index.html" class="logo">
+                <a href="@Url.Action("OrderDetails", "Order")?StoreId=@storeid" class="logo">
                     <span>
                         @*@* "@Url.Action("LoadImageForStore", "Dashboard")" *@
                         @*@(Imagepath = Url.Action("LoadImageForStore", "Dashboard"));*@
@@ -149,7 +152,8 @@
 
     <script src="~/Content/assets/plugins/moment/moment.js"></script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>*@
+    <script src="//cdnjs.cloudflare.com/ajax/libs/foundation-datepicker/1.5.6/js/foundation-datepicker.min.js"></script>
 
     <!-- select box -->
     <script src="~/Content/assets/plugins/daterangepicker/daterangepicker.js"></script>
@@ -166,12 +170,43 @@
 
     <script type="text/javascript" src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 
+    <!-- Loader js -->
+    <script type="text/javascript" src="~/Scripts/loading.js"></script>
 
     @RenderSection("scripts", false)
 </body>
 </html>
-
 <script>
+
+    document.onreadystatechange = function () {
+        //var $loading = $('#loading').hide();
+        var state = document.readyState
+        if (state == 'interactive') {
+            $(document)
+                .ajaxStart(function () {
+                    //$('body').append($loading.show());
+                    $.loading.start('<img src = "/Content/Loader_Files/mylapore-loader.gif" />');
+
+                });
+        } else if (state == 'complete') {
+            //setTimeout(function () {
+            $(document)
+                .ajaxStop(function () {
+                    $.loading.end();
+                    //$loading.hide();
+                });
+            //}, 1000);
+            //setTimeout(function () {
+            //    if ($(".tips").length > 0 && document.readyState == 'complete') {
+            //        $(document).load()
+            //            .ajaxStop(function () {
+            //                $.loading.end();
+            //                //$loading.hide();
+            //            });
+            //    }
+            //}, 1000);
+        }        
+    }
 
      $(document).ready(function () {
          $.ajax({

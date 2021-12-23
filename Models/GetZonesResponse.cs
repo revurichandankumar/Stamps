@@ -19,6 +19,9 @@ namespace OneposStamps.Models
         public string State { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
+        public bool Box { get; set; }
+        public decimal Count { get; set; }
+        public decimal Amount { get; set; }
         public List<DeliveryDate> Dates { get; set; }
     }
 

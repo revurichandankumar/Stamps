@@ -15,7 +15,7 @@
                 <a href="" data-name="aCityNameAdd" class="text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="true" aria-controls="@collapseid">
                     @item.Select(x => x.Name).FirstOrDefault()
                 </a>
-                <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
+                <button name="btnAdd" class="btn btn-primary table-btn ml-auto" style="float:right">Add</button>
             </div>
 
             <div id="@collapseid" class="collapse show" aria-labelledby="@headerid" data-parent="#divSearchResult">
@@ -40,7 +40,7 @@
                 <a href="" data-name="aCityNameAdd" class="collapsed text-dark" data-toggle="collapse" data-target="#@collapseid" aria-expanded="false" aria-controls="@collapseid">
                     @item.Select(x => x.Name).FirstOrDefault()
                 </a>
-                <button name="btnAdd" class="btn btn-primary table-btn ml-auto">Add</button>
+                <button name="btnAdd" class="btn btn-primary table-btn ml-auto" style="float:right">Add</button>
             </div>
             <div id="@collapseid" class="collapse" aria-labelledby="@headerid" data-parent="#divSearchResult">
                 <div class="card-body">

@@ -1,0 +1,44 @@
+﻿@model OneposStamps.Models.GetZones
+
+<table id="datatable4" class="table table-bordered dt-responsive nowrap table-striped table-hover" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+    <thead>
+        <tr>
+            <td>
+                <div class="checkbox">
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="customCheck3" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                        <label class="custom-control-label" for="customCheck3"></label>
+                    </div>
+                </div>
+            </td>
+            <th>Zipcode</th>
+            <th>State name</th>
+            <th>City Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var d in Model.GetZoneList)
+        {
+            <tr>
+                <td>
+                    <div class="checkbox">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="customCheck1" data-parsley-multiple="groups" data-parsley-mincheck="2">
+                            <label class="custom-control-label" for="customCheck1"></label>
+                        </div>
+                    </div>
+                </td>
+                <td class="font-weight-bold text-dark" data-input="txtZipcode" name="zonezipcode"><span>@d.ZipCode</span></td>
+                <td data-input="txtState">@d.State</td>
+                <td data-input="txtCity">@d.City</td>
+                <td>
+                    <button class="btn btn-sm table-btn btn-danger btn-round mr-2" name="btnDeleteZipcode" id="btnDeleteZipcode" data-toggle="modal" data-target="#rejectOrder"><i class="fa fa-trash mr-1"></i> Delete</button>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

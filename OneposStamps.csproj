@@ -328,6 +328,7 @@
     <Compile Include="Controllers\GetZoneApiController.cs" />
     <Compile Include="Models\AddressVerify.cs" />
     <Compile Include="Models\AuthenticateUser.cs" />
+    <Compile Include="Models\BatchLabelResponse.cs" />
     <Compile Include="Models\BatchRequest.cs" />
     <Compile Include="Models\ClientAddress.cs" />
     <Compile Include="Models\CreateBatchRequest.cs" />
@@ -507,6 +508,8 @@
     <Content Include="Content\jquery-printthis\index.html" />
     <Content Include="Content\jquery-printthis\info.txt" />
     <Content Include="Content\jquery-printthis\printThis.js" />
+    <Content Include="Content\Loader_Files\mylapore-loader.gif" />
+    <Content Include="Content\ManualCSS\CustomCss.css" />
     <Content Include="Content\ManualCSS\PrintOrderTable.css" />
     <Content Include="Content\StoreLogo\jpg\Mylapore Logo – 1.jpg" />
     <Content Include="Content\StoreLogo\jpg\Mylapore Logo – 2.jpg" />
@@ -571,8 +574,11 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\loading.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -600,6 +606,9 @@
     <Content Include="Views\Order\_InHouseLabel.cshtml" />
     <Content Include="Views\ZipCode\_SearchedZipCodes.cshtml" />
     <Content Include="Views\Order\_MultipleInHouseLabel.cshtml" />
+    <Content Include="Views\Zone\_ZoneZipCodeList.cshtml" />
+    <Content Include="Views\Order\_ShipmentDetails.cshtml" />
+    <Content Include="Views\Order\_PackingSlipDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

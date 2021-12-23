@@ -517,6 +517,7 @@ namespace OneposStamps.Helper
             }
             return dataSet;
         }
+
         public DataTable GetDataTable(string sqlStmt)
         {
             OpenConnection();
@@ -593,6 +594,105 @@ namespace OneposStamps.Helper
                 cmd.Parameters.AddWithValue("@Myjason", data);
                 cmd.Parameters.AddWithValue("@StoreId", StoreId);
                 cmd.Parameters.AddWithValue("@Zone_Id", ZoneId);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
+        public DataSet GetOrderLabelCode(string sqlStmt = "", string OrderId = "")
+        {
+            try
+            {
+                var connectionString = string.Empty;
+                connectionString = ConfigurationManager.ConnectionStrings["OnePosRoutes"].ConnectionString; 
+                con.ConnectionString = connectionString;
+                con.Open();
+                //string rtn = "SuperCategory";
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@OrderId", OrderId);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
+        public DataSet InsertShipDetails(string sqlStmt = "", string data = "")
+        {
+            try
+            {
+                var connectionString = string.Empty;
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;                //MySqlConnection con = new MySqlConnection(connectionString);
+                con.ConnectionString = connectionString;
+                con.Open();
+                //string rtn = "SuperCategory";
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@Myjason", data);
+                //cmd.Parameters.AddWithValue("@StoreId", StoreId);
+                //cmd.Parameters.AddWithValue("@Zone_Id", ZoneId);
+                cmd.CommandTimeout = int.MaxValue;
+                adp.SelectCommand = cmd;
+                if (dataSet != null)
+                    dataSet.Reset();
+                adp.Fill(dataSet);
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(ex.Message);
+            }
+            finally
+            {
+                cmd.Dispose();
+                con.Close();
+                cmd.Parameters.Clear();
+            }
+            return dataSet;
+        }
+
+        public DataSet GetShipmentDetail(string sqlStmt = "", string OrderId = "", string StoreId = "")
+        {
+            try
+            {
+                var connectionString = string.Empty;
+                connectionString = ConfigurationManager.ConnectionStrings["OnePos"].ConnectionString;                //MySqlConnection con = new MySqlConnection(connectionString);
+                con.ConnectionString = connectionString;
+                con.Open();
+                //string rtn = "SuperCategory";
+                cmd.Connection = con;
+                cmd.CommandText = sqlStmt;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@StoreId", StoreId);
+                cmd.Parameters.AddWithValue("@Order_Id", OrderId);
                 cmd.CommandTimeout = int.MaxValue;
                 adp.SelectCommand = cmd;
                 if (dataSet != null)
