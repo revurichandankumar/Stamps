@@ -340,3 +340,4 @@ C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.cs
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csproj.CopyComplete
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.dll
 C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.pdb
+C:\Users\vaibhav.mistry\Documents\StampsProject\Stamps\obj\Debug\OneposStamps.csprojAssemblyReference.cache

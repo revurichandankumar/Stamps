@@ -484,9 +484,17 @@
 
     function newWindow_method_11() {
         var wi = window.open();
+
+        var qtycount = $("#hfQtyCount").val();
+
         var html = $("#divmultiplelabel").html();
 
         $(wi.document.body).html(html);
+
+        for (var i = 8; i <= qtycount && qtycount != 8; i += 8) {
+            $(wi.document.body).append(html);
+        }    
+
         setTimeout(function () {
             wi.document.title = "InHouse Labels";
             wi.print();

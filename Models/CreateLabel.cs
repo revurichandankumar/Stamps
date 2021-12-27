@@ -40,6 +40,7 @@ namespace OneposStamps.Models.CreateLabelRequest
         public string ShipmentDate { get; set; }        
         public Shipment shipment { get; set; }
         public List<OrderItemDetail> orderItemDetail { get; set; }
+        public List<List<OrderItemDetail>> OrderItemDetailsList { get; set; }
     }
     public class Shipment
     {

@@ -622,7 +622,27 @@ namespace OneposStamps.Controllers
                 orderdetails.Add(value);
 
             }
+
             od.OrderItemDetails = orderdetails;
+
+            List<List<OrderItemDetail>> orderdetailsList = new List<List<OrderItemDetail>>();
+            int l = 0;
+            for (int i = 6; i < orderdetails.Count + 6; i += 6)
+            {
+                List<OrderItemDetail> orderdetailsListchild = new List<OrderItemDetail>();
+                for (int j = l; j < orderdetails.Count; j++)
+                {
+                    if (j == i)
+                    {
+                        l = j;
+                        break;
+                    }
+                    orderdetailsListchild.Add(orderdetails[j]);                    
+                }
+                orderdetailsList.Add(orderdetailsListchild);
+            }
+
+            od.OrderItemDetailsList = orderdetailsList;
 
             DataSet dsZone = db.GetCarrierdata("USP_GetCarrier");
             List<CarrierData> cd = new List<CarrierData>();
@@ -1919,6 +1939,25 @@ namespace OneposStamps.Controllers
 
                     }
                     createLabelRequest.orderItemDetail = orderdetails;
+
+                    List<List<OrderItemDetail>> orderdetailsList = new List<List<OrderItemDetail>>();
+                    int l = 0;
+                    for (int i = 6; i < orderdetails.Count + 6; i += 6)
+                    {
+                        List<OrderItemDetail> orderdetailsListchild = new List<OrderItemDetail>();
+                        for (int j = l; j < orderdetails.Count; j++)
+                        {
+                            if (j == i)
+                            {
+                                l = j;
+                                break;
+                            }
+                            orderdetailsListchild.Add(orderdetails[j]);
+                        }
+                        orderdetailsList.Add(orderdetailsListchild);
+                    }
+
+                    createLabelRequest.OrderItemDetailsList = orderdetailsList;
 
                     if (!string.IsNullOrEmpty(o.OrderId))
                     {

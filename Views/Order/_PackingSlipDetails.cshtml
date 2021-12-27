@@ -11,9 +11,13 @@
 
         .clsInhouseMultiple {
             page: clsInhouseMultiple;
+            page-break-after: always;
         }
     </style>
 </head>
+
+@foreach (var od in Model.OrderItemDetailsList)
+{
 
 <table name="tblInhouseMultiple" class="clsInhouseMultiple" id="tbl_PackingSlip" style="width: 500px; max-height:750px; border: 1px solid rgba(0,0,0,0.1);margin-top:5px;">
     @*style=" display:flex;justify-content:center;align-items:center;height:100%;"*@
@@ -32,7 +36,7 @@
                         <strong style="font-size: 16px;">Order ID : @Model.OrderId</strong>
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td style="border: 1px solid #eaf0f7; padding: 0.75rem;"><strong>Ship To</strong></td>
                     <td style="font-size: 14px; border: 1px solid #eaf0f7; padding: 0.75rem;" colspan="4" id="td_shiptodetails">
@@ -57,14 +61,14 @@
                 @if (Model.OrderItemDetails != null && Model.OrderItemDetails.Count > 0)
                 {
                     int m = 1;
-                    foreach (var od in Model.OrderItemDetails)
+                    foreach (var odchild in od)
                     {
-                <tr>
-                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="1">@od.sku</td>
-                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="2">@od.name</td>
-                    <td style="border: 1px solid #eaf0f7; padding: 0.5rem; text-align:right; font-size: 14px;" colspan="1">@od.OrderQty</td>
-                </tr>
-                        m++;
+                        <tr>
+                            <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="1">@odchild.sku</td>
+                            <td style="border: 1px solid #eaf0f7; padding: 0.5rem;  font-size: 14px;" colspan="2">@odchild.name</td>
+                            <td style="border: 1px solid #eaf0f7; padding: 0.5rem; text-align:right; font-size: 14px;" colspan="1">@odchild.OrderQty</td>
+                        </tr>
+                    m++;
                     }
                 }
 
@@ -85,3 +89,5 @@
     </tr>
 </table>
 
+
+}

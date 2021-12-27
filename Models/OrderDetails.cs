@@ -10,6 +10,7 @@ namespace OneposStamps.Models
         public OrderDetail orderSummary { get; set; }
         public ShippingDetail BuyersDetails { get; set; }
         public List<OrderItemDetail> OrderItemDetails { get; set; }
+        public List<List<OrderItemDetail>> OrderItemDetailsList { get; set; }
         public ShippingInfo ShippingInfodetails { get; set; }
         public List<CarrierData> CarrierList { get; set; }
         public List<ServicetypeData> ServiceList { get; set; }

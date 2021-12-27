@@ -1191,15 +1191,15 @@
         //    css: 'PrintOrderTable.css' // your css
         //});
 
-        @*var qtycount = '@qtyCount';*@
+        var qtycount = '@qtyCount';
 
         $(wi.document.body).html(html);
         $(wi.document.body).append(html2);
 
-        //for (var i = 8; i <= qtycount && qtycount != 8; i+=8) {
-        //    $(wi.document.body).append(html);
-        //    $(wi.document.body).append(html2);
-        //}    
+        for (var i = 8; i <= qtycount && qtycount != 8; i+=8) {
+            $(wi.document.body).append(html);
+            $(wi.document.body).append(html2);
+        }    
         
         setTimeout(function () {
             wi.document.title = "InHouseLabels";
